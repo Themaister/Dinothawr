@@ -6,20 +6,27 @@
 
 #include <string>
 #include <set>
+#include <map>
 
 namespace Blit
 {
    class Tilemap : public Renderable
    {
       public:
+         struct Layer
+         {
+            SurfaceCluster cluster;
+            std::map<std::string, std::string> attr;
+            std::string name;
+         };
 
          Tilemap() = default;
          Tilemap(const std::string& path);
          Tilemap(Tilemap&&) = default;
          Tilemap& operator=(Tilemap&&) = default;
 
-         std::vector<SurfaceCluster>& layers();
-         const std::vector<SurfaceCluster>& layers() const;
+         std::vector<Layer>& layers() { return m_layers; }
+         const std::vector<Layer>& layers() const { return m_layers; }
 
          void pos(Pos position);
          void render(RenderTarget& target);
@@ -34,7 +41,7 @@ namespace Blit
          bool collision(Pos tile) const;
 
       private:
-         std::vector<SurfaceCluster> m_layers;
+         std::vector<Layer> m_layers;
          std::set<Pos> collisions;
 
          int width, height, tilewidth, tileheight;

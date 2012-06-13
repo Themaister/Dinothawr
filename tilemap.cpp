@@ -79,11 +79,11 @@ namespace Blit
       {
          int id = first_gid + tile.attribute("id").as_int();
 
-         for (auto property = tile.child("properties").child("property"); property; property = property.next_sibling())
+         for (auto prop = tile.child("properties").child("property"); prop; prop = prop.next_sibling())
          {
             auto& attrs = tiles[id].attr();
-            auto name   = property.attribute("name").value();
-            auto value  = property.attribute("value").value();
+            auto name   = prop.attribute("name").value();
+            auto value  = prop.attribute("value").value();
 
             //std::cerr << "Setting attr (" << name << " => " << value << ") to tile #" << id << std::endl;
             attrs[std::move(name)] = std::move(value);
@@ -94,7 +94,7 @@ namespace Blit
    void Tilemap::add_layer(std::map<unsigned, Surface>& tiles, xml_node node,
          int tilewidth, int tileheight)
    {
-      SurfaceCluster cluster;
+      Layer layer;
       int width  = node.attribute("width").as_int();
       int height = node.attribute("height").as_int();
 
@@ -112,11 +112,20 @@ namespace Blit
          {
             unsigned gid = tile.attribute("gid").as_int();
             if (gid)
-               cluster.vec().push_back({tiles[gid], {x * tilewidth, y * tileheight}});
+               layer.cluster.vec().push_back({tiles[gid], {x * tilewidth, y * tileheight}});
          }
       }
 
-      m_layers.push_back(std::move(cluster));
+      layer.name = node.attribute("name").value();
+      for (auto prop = node.child("properties").child("property"); prop; prop = prop.next_sibling("property"))
+      {
+         auto name  = prop.attribute("name").value();
+         auto value = prop.attribute("value").value();
+         //std::cerr << "Setting attr (" << name << " => " << value << ") to layer " << layer.name << std::endl;
+         layer.attr[std::move(name)] = std::move(value);
+      }
+
+      m_layers.push_back(std::move(layer));
    }
 
    void Tilemap::add_collision_layer(std::map<unsigned, Surface>& tiles, xml_node node)
@@ -142,24 +151,14 @@ namespace Blit
    void Tilemap::pos(Pos position)
    {
       for (auto& layer : m_layers)
-         layer.pos(position);
+         layer.cluster.pos(position);
       Renderable::pos(position);
    }
 
    void Tilemap::render(RenderTarget& target)
    {
       for (auto& layer : m_layers)
-         layer.render(target);
-   }
-
-   std::vector<SurfaceCluster>& Tilemap::layers()
-   {
-      return m_layers;
-   }
-
-   const std::vector<SurfaceCluster>& Tilemap::layers() const
-   {
-      return m_layers;
+         layer.cluster.render(target);
    }
 
    bool Tilemap::collision(Pos tile) const
