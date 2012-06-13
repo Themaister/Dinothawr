@@ -97,7 +97,10 @@ namespace Blit
    class RenderTarget
    {
       public:
+         RenderTarget() = default;
          RenderTarget(int width, int height);
+         RenderTarget(RenderTarget&&) = default;
+         RenderTarget& operator=(RenderTarget&&) = default;
 
          Surface convert_surface();
 
@@ -116,6 +119,8 @@ namespace Blit
 
          void blit(const Surface& surf, Rect subrect);
          void blit_offset(const Surface& surf, Rect subrect, Pos offset);
+
+         void finalize();
 
       private:
          std::vector<Pixel> m_buffer;
