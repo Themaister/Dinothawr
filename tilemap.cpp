@@ -17,11 +17,11 @@ namespace Blit
       if (!doc.load_file(path.c_str()))
          throw std::runtime_error(Utils::join("Failed to load XML map: ", path, "."));
 
-      auto map       = doc.child("map");
-      int width      = map.attribute("width").as_int();
-      int height     = map.attribute("height").as_int();
-      int tilewidth  = map.attribute("tilewidth").as_int();
-      int tileheight = map.attribute("tileheight").as_int();
+      auto map   = doc.child("map");
+      width      = map.attribute("width").as_int();
+      height     = map.attribute("height").as_int();
+      tilewidth  = map.attribute("tilewidth").as_int();
+      tileheight = map.attribute("tileheight").as_int();
 
       if (!width || !height || !tilewidth || !tileheight)
          throw std::logic_error("Tilemap is malformed.");
@@ -44,6 +44,14 @@ namespace Blit
       auto source    = image.attribute("source").value();
       int width      = image.attribute("width").as_int();
       int height     = image.attribute("height").as_int();
+
+      //std::cerr << "Adding tileset:" <<
+      //   " Gid: " << first_gid <<
+      //   " Tilewidth: " << tilewidth <<
+      //   " Tileheight: " << tileheight <<
+      //   " Source: " << source <<
+      //   " Width: " << width <<
+      //   " Height: " << height << std::endl;
 
       if (!width || !height || !tilewidth || !tileheight)
          throw std::logic_error("Tilemap is malformed.");
@@ -71,12 +79,16 @@ namespace Blit
       if (!width || !height)
          throw std::logic_error("Layer is empty.");
 
+      //std::cerr << "Adding layer:" <<
+      //   " Width: " << width <<
+      //   " Height: " << height << std::endl;
+
       auto tile = node.child("data").child("tile");
       for (int y = 0; y < height; y++)
       {
          for (int x = 0; x < width; x++, tile = tile.next_sibling("tile"))
          {
-            unsigned gid = node.attribute("gid").as_int();
+            unsigned gid = tile.attribute("gid").as_int();
             if (gid)
                cluster.vec().push_back({tiles[gid], {x * tilewidth, y * tileheight}});
          }

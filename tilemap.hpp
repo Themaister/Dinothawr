@@ -22,9 +22,17 @@ namespace Blit
          void pos(Pos position);
          void render(RenderTarget& target);
 
+         int tile_width() const { return tilewidth; }
+         int tile_height() const { return tileheight; }
+         int tiles_width() const { return width; }
+         int tiles_height() const { return height; }
+         int pix_width() const { return width * tilewidth; }
+         int pix_height() const { return height * tileheight; }
+
       private:
          std::vector<SurfaceCluster> m_layers;
 
+         int width, height, tilewidth, tileheight;
          std::string dir;
 
          void add_tileset(std::map<unsigned, Surface>& tiles,

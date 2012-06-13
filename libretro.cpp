@@ -10,9 +10,7 @@
 #include "tilemap.hpp"
 
 static std::unique_ptr<Blit::RenderTarget> target;
-static Blit::Surface img;
-static Blit::SurfaceCache cache;
-static Blit::Tilemap map("/tmp/cave.tmx");
+static Blit::Tilemap map;
 
 void retro_init(void)
 {}
@@ -41,7 +39,7 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
 {
    info->timing = { 60.0, 32000.0 };
    
-   unsigned width = img.rect().w, height = img.rect().h;
+   unsigned width = map.pix_width(), height = map.pix_height();
    info->geometry = { width, height, width, height };
 }
 
@@ -89,26 +87,14 @@ static void update_input()
 {
    input_poll_cb();
 
-   Blit::Pos dir;
-   if (input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_LEFT))
-      dir += {-1, 0};
-   if (input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_RIGHT))
-      dir += {1,  0};
-   if (input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_DOWN))
-      dir += {0,  1};
-   if (input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_UP))
-      dir += {0, -1};
-
-   img.rect() += dir;
-
    Blit::Pos camera_dir;
-   if (input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_X))
+   if (input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_UP))
       camera_dir += {0, -1};
-   if (input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_Y))
+   if (input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_LEFT))
       camera_dir += {-1, 0};
-   if (input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_A))
+   if (input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_RIGHT))
       camera_dir += {1, 0};
-   if (input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_B))
+   if (input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_DOWN))
       camera_dir += {0, 1};
 
    target->camera_move(camera_dir);
@@ -118,36 +104,8 @@ static unsigned frame_cnt = 0;
 
 static void render_video()
 {
-   Blit::SurfaceCluster clust;
-   auto surf = cache.from_image("test.png");
-   auto& vec = clust.vec();
-   vec.push_back({surf, {}});
-
-   for (int i = 0; i < 300; i++)
-   {
-      vec.push_back({surf, {1 * i, 0}});
-      vec.push_back({surf, {-1 * i, 0}});
-      vec.push_back({surf, {0, 1 * i}});
-      vec.push_back({surf, {0, -1 * i}});
-   }
-   clust.pos({150, 150});
-
-   clust.set_transform([=](Blit::Pos pos) -> Blit::Pos {
-         float angle  = frame_cnt / 20.0f;
-         float sine   = std::sin(angle);
-         float cosine = std::cos(angle);
-         return { static_cast<int>(pos.x * cosine - pos.y * sine), static_cast<int>(pos.x * sine + pos.y * cosine) };
-   });
-
-
    target->clear(Blit::Pixel::ARGB(0xff, 0x80, 0x80, 0x80));
-
    map.render(*target);
-   target->blit(img, {});
-
-   clust.render(*target);
-   clust.move({20, 0});
-   clust.render(*target);
 
    video_cb(target->buffer(), target->width(), target->height(), target->width() * sizeof(Blit::Pixel));
    
@@ -168,9 +126,8 @@ bool retro_load_game(const struct retro_game_info* info)
 {
    try
    {
-      img = cache.from_image(info->path);
-      target = std::unique_ptr<Blit::RenderTarget>(new Blit::RenderTarget(img.rect().w,
-               img.rect().h));
+      map = {info->path};
+      target = std::unique_ptr<Blit::RenderTarget>(new Blit::RenderTarget(map.pix_width(), map.pix_height()));
       return true;
    }
    catch(const std::exception& e)
