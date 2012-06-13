@@ -26,16 +26,6 @@ namespace Blit
       return target.convert_surface();
    }
 
-   Rect& Surface::rect()
-   {
-      return m_rect;
-   }
-
-   const Rect& Surface::rect() const
-   {
-      return m_rect;
-   }
-
    Pixel Surface::pixel(Pos pos) const
    {
       pos -= m_rect.pos;

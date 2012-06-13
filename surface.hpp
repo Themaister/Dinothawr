@@ -28,8 +28,8 @@ namespace Blit
 
          Surface sub(Rect rect) const;
 
-         Rect& rect();
-         const Rect& rect() const;
+         Rect& rect() { return m_rect; }
+         const Rect& rect() const { return m_rect; }
 
          void ignore_camera(bool ignore);
          bool ignore_camera() const;
@@ -37,8 +37,12 @@ namespace Blit
          Pixel pixel(Pos pos) const;
          const Pixel* pixel_raw(Pos pos) const;
 
+         std::map<std::string, std::string>& attr() { return attribs; }
+         const std::map<std::string, std::string>& attr() const { return attribs; }
+
       private:
          std::shared_ptr<const Data> data;
+         std::map<std::string, std::string> attribs;
          Rect m_rect;
          bool m_ignore_camera;
    };

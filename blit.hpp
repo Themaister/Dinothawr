@@ -134,6 +134,23 @@ namespace Blit
       Pos& operator-=(Pos pos)       { x -= pos.x; y -= pos.y; return *this; }
       Pos  operator+ (Pos pos) const { return { x + pos.x, y + pos.y }; }
       Pos  operator- (Pos pos) const { return { x - pos.x, y - pos.y }; }
+      bool operator==(Pos pos) const { return x == pos.x && y == pos.y; }
+      bool operator!=(Pos pos) const { return !(*this == pos); }
+
+      // Allows Pos to be placed in binary trees.
+      bool operator<(Pos pos) const
+      {
+         static_assert(CHAR_BIT * sizeof(int) == 32, "int is not 32-bit. This algorithm will fail.");
+         std::uint64_t self = static_cast<std::uint32_t>(x);
+         self <<= 32;
+         self |= static_cast<std::uint32_t>(y);
+
+         std::uint64_t other = static_cast<std::uint32_t>(pos.x);
+         other <<= 32;
+         other |= static_cast<std::uint32_t>(pos.y);
+
+         return self < other;
+      }
 
       int x, y;
    };

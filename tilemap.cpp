@@ -31,12 +31,18 @@ namespace Blit
          add_tileset(tiles, set);
 
       for (auto layer = map.child("layer"); layer; layer = layer.next_sibling("layer"))
-         add_layer(tiles, layer, tilewidth, tileheight);
+      {
+         if (Utils::tolower(layer.attribute("name").value()) == "collision")
+            add_collision_layer(tiles, layer);
+         else
+            add_layer(tiles, layer, tilewidth, tileheight);
+      }
    }
 
    void Tilemap::add_tileset(std::map<unsigned, Surface>& tiles, xml_node node)
    {
       int first_gid  = node.attribute("firstgid").as_int();
+      int gid_cnt    = 0;
       int tilewidth  = node.attribute("tilewidth").as_int();
       int tileheight = node.attribute("tileheight").as_int();
 
@@ -66,7 +72,23 @@ namespace Blit
 
       for (int y = 0; y < height; y += tileheight)
          for (int x = 0; x < width; x += tilewidth)
-            tiles[first_gid++] = surf.sub({{x, y}, tilewidth, tileheight});
+            tiles[first_gid + gid_cnt++] = surf.sub({{x, y}, tilewidth, tileheight});
+
+      // Load all attributes for a tile into the surface.
+      for (auto tile = node.child("tile"); tile; tile = tile.next_sibling("tile"))
+      {
+         int id = first_gid + tile.attribute("id").as_int();
+
+         for (auto property = tile.child("properties").child("property"); property; property = property.next_sibling())
+         {
+            auto& attrs = tiles[id].attr();
+            auto name   = property.attribute("name").value();
+            auto value  = property.attribute("value").value();
+
+            //std::cerr << "Setting attr (" << name << " => " << value << ") to tile #" << id << std::endl;
+            attrs[std::move(name)] = std::move(value);
+         }
+      }
    }
 
    void Tilemap::add_layer(std::map<unsigned, Surface>& tiles, xml_node node,
@@ -97,6 +119,26 @@ namespace Blit
       m_layers.push_back(std::move(cluster));
    }
 
+   void Tilemap::add_collision_layer(std::map<unsigned, Surface>& tiles, xml_node node)
+   {
+      int width  = node.attribute("width").as_int();
+      int height = node.attribute("height").as_int();
+
+      if (!width || !height)
+         throw std::logic_error("Layer is empty.");
+
+      auto tile = node.child("data").child("tile");
+      for (int y = 0; y < height; y++)
+      {
+         for (int x = 0; x < width; x++, tile = tile.next_sibling("tile"))
+         {
+            unsigned gid = tile.attribute("gid").as_int();
+            if (gid)
+               collisions.insert({x, y});
+         }
+      }
+   }
+
    void Tilemap::pos(Pos position)
    {
       for (auto& layer : m_layers)
@@ -118,6 +160,11 @@ namespace Blit
    const std::vector<SurfaceCluster>& Tilemap::layers() const
    {
       return m_layers;
+   }
+
+   bool Tilemap::collision(Pos tile) const
+   {
+      return collisions.count(tile);
    }
 }
 

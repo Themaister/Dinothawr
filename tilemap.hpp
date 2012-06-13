@@ -5,12 +5,14 @@
 #include "pugixml/pugixml.hpp"
 
 #include <string>
+#include <set>
 
 namespace Blit
 {
    class Tilemap : public Renderable
    {
       public:
+
          Tilemap() = default;
          Tilemap(const std::string& path);
          Tilemap(Tilemap&&) = default;
@@ -29,8 +31,11 @@ namespace Blit
          int pix_width() const { return width * tilewidth; }
          int pix_height() const { return height * tileheight; }
 
+         bool collision(Pos tile) const;
+
       private:
          std::vector<SurfaceCluster> m_layers;
+         std::set<Pos> collisions;
 
          int width, height, tilewidth, tileheight;
          std::string dir;
@@ -39,6 +44,8 @@ namespace Blit
                pugi::xml_node node);
          void add_layer(std::map<unsigned, Surface>& tiles,
                pugi::xml_node node, int tilewidth, int tileheight);
+         void add_collision_layer(std::map<unsigned, Surface>& tiles,
+               pugi::xml_node node);
    };
 }
 

@@ -34,7 +34,9 @@ else
    CXXFLAGS += -O3
 endif
 
-SOURCES := $(wildcard *.cpp) $(wildcard pugixml/*.cpp)
+HEADERS := $(wildcard *.hpp) $(wildcard */*.hpp)
+
+SOURCES := $(wildcard *.cpp) $(wildcard */*.cpp)
 OBJECTS := $(SOURCES:.cpp=.o)
 CXXFLAGS += -std=gnu++0x -Wall -pedantic $(fpic) $(shell pkg-config imlib2 --cflags) -DUSE_SIMD
 LIBS := $(shell pkg-config imlib2 --libs)
@@ -44,7 +46,7 @@ all: $(TARGET)
 $(TARGET): $(OBJECTS)
 	$(CXX) $(fpic) $(SHARED) $(INCLUDES) -o $@ $(OBJECTS) $(LIBS) -lm 
 
-%.o: %.c
+%.o: %.cpp $(HEADERS)
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 clean:

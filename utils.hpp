@@ -3,6 +3,9 @@
 
 #include <string>
 #include <sstream>
+#include <cctype>
+#include <algorithm>
+#include <iterator>
 
 namespace Blit
 {
@@ -31,6 +34,20 @@ namespace Blit
             return path.substr(0, last);
          else
             return ".";
+      }
+
+      inline std::string tolower(const std::string& str)
+      {
+         std::string tmp;
+         std::transform(std::begin(str), std::end(str), std::back_inserter(tmp), [](char c) -> char { return ::tolower(c); });
+         return tmp;
+      }
+
+      inline std::string toupper(const std::string& str)
+      {
+         std::string tmp;
+         std::transform(std::begin(str), std::end(str), std::back_inserter(tmp), [](char c) -> char { return ::toupper(c); });
+         return tmp;
       }
    }
 }
