@@ -108,8 +108,7 @@ namespace Blit
 
    void RenderTarget::finalize()
    {
-      for (auto& pix : m_buffer)
-         pix &= Pixel::rgb_mask;
+      Pixel::mask_rgb(m_buffer.data(), m_buffer.size());
    }
 }
 

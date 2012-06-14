@@ -42,12 +42,12 @@ namespace Blit
 
       self_type operator|(self_type pix)
       {
-         return { pixel | pix.pixel };
+         return { static_cast<T>(pixel | pix.pixel) };
       }
 
       self_type operator&(self_type pix)
       {
-         return { pixel & pix.pixel };
+         return { static_cast<T>(pixel & pix.pixel) };
       }
 
       self_type& operator|=(self_type pix)
@@ -110,6 +110,23 @@ namespace Blit
       {
          for (unsigned x = 0; x < pix; x++)
             dst[x].set_if_alpha(src[x]);
+      }
+#endif
+
+#if defined(__SSE2__) && defined(USE_SIMD)
+      static void mask_rgb(self_type *dst, std::size_t size)
+      {
+         __m128i mask = _mm_set1_epi16(static_cast<T>(rgb_mask));
+         unsigned x;
+         for (x = 0; x + 8 < size; x += 8)
+            _mm_storeu_si128(reinterpret_cast<__m128i*>(dst + x), _mm_and_si128(_mm_loadu_si128(reinterpret_cast<__m128i*>(dst + x)), mask));
+
+         std::transform(dst + x, dst + size, dst + x, [](self_type pix) -> self_type { return pix & rgb_mask; });
+      }
+#else
+      static void mask_rgb(self_type *dst, std::size_t size)
+      {
+         std::transform(dst, dst + size, dst, [](self_type pix) -> self_type { return pix & rgb_mask; });
       }
 #endif
 

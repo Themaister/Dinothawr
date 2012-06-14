@@ -31,6 +31,14 @@ namespace Icy
       if (!m_input_cb)
          return;
 
+      run_stepper();
+
+      if (!stepper)
+         update_input();
+   }
+
+   void Game::update_input()
+   {
       if (m_input_cb(Input::Up))
          move_if_no_collision({0, -1});
       if (m_input_cb(Input::Down))
@@ -56,7 +64,20 @@ namespace Icy
             if (map.collision({x, y}))
                return;
 
-      player.rect() += offset;
+      stepper = std::bind(&Game::tile_stepper, this);
+      step_dir = offset;
+   }
+
+   bool Game::tile_stepper()
+   {
+      player.rect() += step_dir;
+      return player.rect().pos.x % map.tile_width() || player.rect().pos.y % map.tile_height();
+   }
+
+   void Game::run_stepper()
+   {
+      if (stepper && !stepper())
+         stepper = {};
    }
 }
 

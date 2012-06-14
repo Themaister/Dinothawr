@@ -41,8 +41,15 @@ namespace Icy
          std::function<bool (Input)> m_input_cb;
          std::function<void (const void*, unsigned, unsigned, std::size_t)> m_video_cb;
 
+         std::function<bool ()> stepper;
+         Blit::Pos step_dir;
+         void run_stepper();
+
          void update_player();
+         void update_input();
          void move_if_no_collision(Blit::Pos offset);
+
+         bool tile_stepper();
    };
 }
 
