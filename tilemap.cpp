@@ -165,5 +165,20 @@ namespace Blit
    {
       return collisions.count(tile);
    }
+
+   const Surface* Tilemap::find_tile(unsigned layer_index, Pos offset) const
+   {
+      auto& layer = m_layers.at(layer_index);
+      auto& elems = layer.cluster.vec();
+
+      auto itr = std::find_if(std::begin(elems), std::end(elems), [offset](const SurfaceCluster::Elem& elem) {
+               return elem.offset == offset;
+            });
+
+      if (itr == std::end(elems))
+         return nullptr;
+
+      return &itr->surf;
+   }
 }
 

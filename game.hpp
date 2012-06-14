@@ -37,6 +37,7 @@ namespace Icy
          Blit::RenderTarget target;
          Blit::Surface player;
          Blit::SurfaceCache cache;
+         Input facing;
 
          std::function<bool (Input)> m_input_cb;
          std::function<void (const void*, unsigned, unsigned, std::size_t)> m_video_cb;
@@ -47,9 +48,12 @@ namespace Icy
 
          void update_player();
          void update_input();
-         void move_if_no_collision(Blit::Pos offset);
+         void move_if_no_collision(Input input);
+         bool is_offset_collision(Blit::Pos offset);
 
          bool tile_stepper();
+
+         static Blit::Pos input_to_offset(Input input);
    };
 }
 

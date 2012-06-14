@@ -40,16 +40,28 @@ namespace Icy
    void Game::update_input()
    {
       if (m_input_cb(Input::Up))
-         move_if_no_collision({0, -1});
-      if (m_input_cb(Input::Down))
-         move_if_no_collision({0, 1});
-      if (m_input_cb(Input::Left))
-         move_if_no_collision({-1, 0});
-      if (m_input_cb(Input::Right))
-         move_if_no_collision({1, 0});
+         move_if_no_collision(Input::Up);
+      else if (m_input_cb(Input::Down))
+         move_if_no_collision(Input::Down);
+      else if (m_input_cb(Input::Left))
+         move_if_no_collision(Input::Left);
+      else if (m_input_cb(Input::Right))
+         move_if_no_collision(Input::Right);
    }
 
-   void Game::move_if_no_collision(Pos offset)
+   Blit::Pos Game::input_to_offset(Input input)
+   {
+      switch (input)
+      {
+         case Input::Up:    return {0, -1};
+         case Input::Left:  return {-1, 0};
+         case Input::Right: return {1, 0};
+         case Input::Down:  return {0, 1};
+         default:           return {};
+      }
+   }
+
+   bool Game::is_offset_collision(Blit::Pos offset)
    {
       auto new_rect = player.rect() + offset;
 
@@ -62,16 +74,42 @@ namespace Icy
       for (int y = min_tile_y; y <= max_tile_y; y++)
          for (int x = min_tile_x; x <= max_tile_x; x++)
             if (map.collision({x, y}))
-               return;
+               return true;
 
-      stepper = std::bind(&Game::tile_stepper, this);
-      step_dir = offset;
+      return false;
+   }
+
+   void Game::move_if_no_collision(Input input)
+   {
+      auto offset    = input_to_offset(input);
+      bool collision = is_offset_collision(offset);
+
+      if (!collision)
+      {
+         stepper = std::bind(&Game::tile_stepper, this);
+         step_dir = offset;
+      }
    }
 
    bool Game::tile_stepper()
    {
       player.rect() += step_dir;
-      return player.rect().pos.x % map.tile_width() || player.rect().pos.y % map.tile_height();
+
+      bool outside_tile_grid = player.rect().pos.x % map.tile_width() || player.rect().pos.y % map.tile_height();
+      bool is_collision = is_offset_collision(step_dir);
+
+      auto surf = map.find_tile(0, player.rect().pos);
+
+      bool slippery = false;
+      if (surf)
+      {
+         auto& attr = surf->attr();
+         auto elem  = attr.find("slippery_player");
+         if (elem != std::end(attr))
+            slippery = elem->second == "true";
+      }
+
+      return outside_tile_grid || (slippery && !is_collision);
    }
 
    void Game::run_stepper()

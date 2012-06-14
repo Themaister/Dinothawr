@@ -38,6 +38,8 @@ namespace Blit
          int pix_width() const { return width * tilewidth; }
          int pix_height() const { return height * tileheight; }
 
+         const Surface* find_tile(unsigned layer, Pos pos) const;
+
          bool collision(Pos tile) const;
 
       private:
