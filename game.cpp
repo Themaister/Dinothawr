@@ -104,7 +104,7 @@ namespace Icy
       Pos tile_pos{tile_x, tile_y};
 
       if (!map.collision(tile_pos + (2 * offset)))
-         stepper = std::bind(&Game::tile_stepper, this, &*tile, offset);
+         stepper = std::bind(&Game::tile_stepper, this, std::ref(*tile), offset);
    }
 
    void Game::move_if_no_collision(Input input)
@@ -113,22 +113,22 @@ namespace Icy
 
       auto offset = input_to_offset(input);
       if (!is_offset_collision(player, offset))
-         stepper = std::bind(&Game::tile_stepper, this, &player, offset);
+         stepper = std::bind(&Game::tile_stepper, this, std::ref(player), offset);
    }
 
-   bool Game::tile_stepper(Surface* surf, Pos step_dir)
+   bool Game::tile_stepper(Surface& surf, Pos step_dir)
    {
-      surf->rect() += step_dir;
+      surf.rect() += step_dir;
 
-      if (surf->rect().pos.x % map.tile_width() || surf->rect().pos.y % map.tile_height())
+      if (surf.rect().pos.x % map.tile_width() || surf.rect().pos.y % map.tile_height())
          return true;
 
-      if (is_offset_collision(*surf, step_dir))
+      if (is_offset_collision(surf, step_dir))
          return false;
 
       //std::cerr << "Player: " << player.rect().pos << " Surf: " << surf->rect().pos << std::endl; 
-      auto surface = map.find_tile("floor", surf->rect().pos);
-      return surface && surface->attr().find(surf == &player ? "slippery_player" : "slippery_block") != std::end(surface->attr());
+      auto surface = map.find_tile("floor", surf.rect().pos);
+      return surface && surface->attr().find(&surf == &player ? "slippery_player" : "slippery_block") != std::end(surface->attr());
    }
 
    void Game::run_stepper()

@@ -51,7 +51,7 @@ namespace Icy
          void push_block();
          bool is_offset_collision(Blit::Surface& surf, Blit::Pos offset);
 
-         bool tile_stepper(Blit::Surface* surf, Blit::Pos step_dir);
+         bool tile_stepper(Blit::Surface& surf, Blit::Pos step_dir);
 
          static Blit::Pos input_to_offset(Input input);
    };
