@@ -9,6 +9,7 @@
 #include "game.hpp"
 
 static std::unique_ptr<Icy::Game> game;
+static std::string game_path;
 
 void retro_init(void)
 {}
@@ -78,9 +79,6 @@ void retro_set_video_refresh(retro_video_refresh_t cb)
    video_cb = cb;
 }
 
-void retro_reset(void)
-{}
-
 void retro_run(void)
 {
    input_poll_cb();
@@ -90,31 +88,41 @@ void retro_run(void)
       environ_cb(RETRO_ENVIRONMENT_SHUTDOWN, nullptr);
 }
 
+static void load_game(const std::string& path)
+{
+   game = std::unique_ptr<Icy::Game>(new Icy::Game(path));
+
+   game->input_cb([&](Icy::Input input) -> bool {
+         unsigned btn;
+         switch (input)
+         {
+            case Icy::Input::Up:    btn = RETRO_DEVICE_ID_JOYPAD_UP; break;
+            case Icy::Input::Down:  btn = RETRO_DEVICE_ID_JOYPAD_DOWN; break;
+            case Icy::Input::Left:  btn = RETRO_DEVICE_ID_JOYPAD_LEFT; break;
+            case Icy::Input::Right: btn = RETRO_DEVICE_ID_JOYPAD_RIGHT; break;
+            case Icy::Input::Push:  btn = RETRO_DEVICE_ID_JOYPAD_A; break;
+            default: return false;
+         }
+
+         return input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, btn);
+      });
+
+   game->video_cb([&](const void* data, unsigned width, unsigned height, std::size_t pitch) {
+         video_cb(data, width, height, pitch);
+         });
+}
+
+void retro_reset(void)
+{
+   load_game(game_path);
+}
+
 bool retro_load_game(const struct retro_game_info* info)
 {
    try
    {
-      game = std::unique_ptr<Icy::Game>(new Icy::Game(info->path));
-
-      game->input_cb([&](Icy::Input input) -> bool {
-               unsigned btn;
-               switch (input)
-               {
-                  case Icy::Input::Up:    btn = RETRO_DEVICE_ID_JOYPAD_UP; break;
-                  case Icy::Input::Down:  btn = RETRO_DEVICE_ID_JOYPAD_DOWN; break;
-                  case Icy::Input::Left:  btn = RETRO_DEVICE_ID_JOYPAD_LEFT; break;
-                  case Icy::Input::Right: btn = RETRO_DEVICE_ID_JOYPAD_RIGHT; break;
-                  case Icy::Input::Push:  btn = RETRO_DEVICE_ID_JOYPAD_A; break;
-                  default: return false;
-               }
-
-               return input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, btn);
-            });
-
-      game->video_cb([&](const void* data, unsigned width, unsigned height, std::size_t pitch) {
-               video_cb(data, width, height, pitch);
-            });
-
+      game_path = info->path;
+      load_game(game_path);
       return true;
    }
    catch(const std::exception& e)
