@@ -112,7 +112,10 @@ namespace Blit
          {
             unsigned gid = tile.attribute("gid").as_int();
             if (gid)
-               layer.cluster.vec().push_back({tiles[gid], {x * tilewidth, y * tileheight}});
+            {
+               tiles[gid].rect().pos = Pos{x, y} * Pos{tilewidth, tileheight};
+               layer.cluster.vec().push_back(SurfaceCluster::Elem{tiles[gid], Pos{}});
+            }
          }
       }
 
@@ -163,7 +166,35 @@ namespace Blit
 
    bool Tilemap::collision(Pos tile) const
    {
-      return collisions.count(tile);
+      return collisions.count(tile) ||
+         find_tile("blocks", {tile.x * tilewidth, tile.y * tileheight});
+   }
+
+   Surface* Tilemap::find_tile(unsigned layer_index, Pos offset)
+   {
+      auto& layer = m_layers.at(layer_index);
+      auto& elems = layer.cluster.vec();
+
+      auto itr = std::find_if(std::begin(elems), std::end(elems), [offset](const SurfaceCluster::Elem& elem) {
+               return (elem.surf.rect().pos + elem.offset) == offset;
+            });
+
+      if (itr == std::end(elems))
+         return nullptr;
+
+      return &itr->surf;
+   }
+
+   Surface* Tilemap::find_tile(const std::string& name, Pos pos)
+   {
+      auto layer = std::find_if(std::begin(m_layers), std::end(m_layers), [&name](const Layer& layer) {
+               return Utils::tolower(layer.name) == name;
+            });
+
+      if (layer == std::end(m_layers))
+         return nullptr;
+
+      return find_tile(std::distance(std::begin(m_layers), layer), pos);
    }
 
    const Surface* Tilemap::find_tile(unsigned layer_index, Pos offset) const
@@ -172,13 +203,25 @@ namespace Blit
       auto& elems = layer.cluster.vec();
 
       auto itr = std::find_if(std::begin(elems), std::end(elems), [offset](const SurfaceCluster::Elem& elem) {
-               return elem.offset == offset;
+               return (elem.surf.rect().pos + elem.offset) == offset;
             });
 
       if (itr == std::end(elems))
          return nullptr;
 
       return &itr->surf;
+   }
+
+   const Surface* Tilemap::find_tile(const std::string& name, Pos pos) const
+   {
+      auto layer = std::find_if(std::begin(m_layers), std::end(m_layers), [&name](const Layer& layer) {
+               return Utils::tolower(layer.name) == name;
+            });
+
+      if (layer == std::end(m_layers))
+         return nullptr;
+
+      return find_tile(std::distance(std::begin(m_layers), layer), pos);
    }
 }
 

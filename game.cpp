@@ -1,5 +1,7 @@
 #include "game.hpp"
 #include "utils.hpp"
+#include <iostream>
+#include <stdexcept>
 
 using namespace Blit;
 
@@ -39,7 +41,9 @@ namespace Icy
 
    void Game::update_input()
    {
-      if (m_input_cb(Input::Up))
+      if (m_input_cb(Input::Push))
+         push_block();
+      else if (m_input_cb(Input::Up))
          move_if_no_collision(Input::Up);
       else if (m_input_cb(Input::Down))
          move_if_no_collision(Input::Down);
@@ -61,9 +65,16 @@ namespace Icy
       }
    }
 
-   bool Game::is_offset_collision(Blit::Pos offset)
+   bool Game::is_offset_collision(Surface& surf, Pos offset)
    {
-      auto new_rect = player.rect() + offset;
+      auto new_rect = surf.rect() + offset;
+
+      bool outside_grid = surf.rect().pos.x % map.tile_width() || surf.rect().pos.y % map.tile_height();
+      if (outside_grid)
+         throw std::logic_error("Offset collision check was performed outside tile grid.");
+
+      int current_x = surf.rect().pos.x / map.tile_width();
+      int current_y = surf.rect().pos.y / map.tile_height();
 
       int min_tile_x = new_rect.pos.x / map.tile_width();
       int max_tile_x = (new_rect.pos.x + new_rect.w - 1) / map.tile_width();
@@ -73,43 +84,51 @@ namespace Icy
 
       for (int y = min_tile_y; y <= max_tile_y; y++)
          for (int x = min_tile_x; x <= max_tile_x; x++)
-            if (map.collision({x, y}))
+            if (Pos{x, y} != Pos{current_x, current_y} && map.collision({x, y})) // Can't collide against ourselves.
                return true;
 
       return false;
    }
 
-   void Game::move_if_no_collision(Input input)
+   void Game::push_block()
    {
-      auto offset    = input_to_offset(input);
-      bool collision = is_offset_collision(offset);
+      auto offset = input_to_offset(facing);
+      auto dir    = offset * Pos{map.tile_width(), map.tile_height()};
+      auto tile   = map.find_tile("blocks", player.rect().pos + dir);
 
-      if (!collision)
-      {
-         stepper = std::bind(&Game::tile_stepper, this);
-         step_dir = offset;
-      }
+      if (!tile)
+         return;
+
+      int tile_x = player.rect().pos.x / map.tile_width();
+      int tile_y = player.rect().pos.y / map.tile_height();
+      Pos tile_pos{tile_x, tile_y};
+
+      if (!map.collision(tile_pos + (2 * offset)))
+         stepper = std::bind(&Game::tile_stepper, this, &*tile, offset);
    }
 
-   bool Game::tile_stepper()
+   void Game::move_if_no_collision(Input input)
    {
-      player.rect() += step_dir;
+      facing = input;
 
-      bool outside_tile_grid = player.rect().pos.x % map.tile_width() || player.rect().pos.y % map.tile_height();
-      bool is_collision = is_offset_collision(step_dir);
+      auto offset = input_to_offset(input);
+      if (!is_offset_collision(player, offset))
+         stepper = std::bind(&Game::tile_stepper, this, &player, offset);
+   }
 
-      auto surf = map.find_tile(0, player.rect().pos);
+   bool Game::tile_stepper(Surface* surf, Pos step_dir)
+   {
+      surf->rect() += step_dir;
 
-      bool slippery = false;
-      if (surf)
-      {
-         auto& attr = surf->attr();
-         auto elem  = attr.find("slippery_player");
-         if (elem != std::end(attr))
-            slippery = elem->second == "true";
-      }
+      if (surf->rect().pos.x % map.tile_width() || surf->rect().pos.y % map.tile_height())
+         return true;
 
-      return outside_tile_grid || (slippery && !is_collision);
+      if (is_offset_collision(*surf, step_dir))
+         return false;
+
+      //std::cerr << "Player: " << player.rect().pos << " Surf: " << surf->rect().pos << std::endl; 
+      auto surface = map.find_tile("floor", surf->rect().pos);
+      return surface && surface->attr().find(surf == &player ? "slippery_player" : "slippery_block") != std::end(surface->attr());
    }
 
    void Game::run_stepper()

@@ -72,7 +72,6 @@ namespace Blit
             unsigned tag;
          };
 
-         void pos(Pos position);
          std::vector<Elem>& vec();
          const std::vector<Elem>& vec() const;
 

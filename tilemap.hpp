@@ -39,6 +39,9 @@ namespace Blit
          int pix_height() const { return height * tileheight; }
 
          const Surface* find_tile(unsigned layer, Pos pos) const;
+         const Surface* find_tile(const std::string& name, Pos pos) const;
+         Surface* find_tile(unsigned layer, Pos pos);
+         Surface* find_tile(const std::string& name, Pos pos);
 
          bool collision(Pos tile) const;
 

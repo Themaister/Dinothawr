@@ -149,8 +149,10 @@ namespace Blit
 
       Pos& operator+=(Pos pos)       { x += pos.x; y += pos.y; return *this; }
       Pos& operator-=(Pos pos)       { x -= pos.x; y -= pos.y; return *this; }
+      Pos& operator*=(Pos pos)       { x *= pos.x; y *= pos.y; return *this; }
       Pos  operator+ (Pos pos) const { return { x + pos.x, y + pos.y }; }
       Pos  operator- (Pos pos) const { return { x - pos.x, y - pos.y }; }
+      Pos  operator* (Pos pos) const { return { x * pos.x, y * pos.y }; }
       bool operator==(Pos pos) const { return x == pos.x && y == pos.y; }
       bool operator!=(Pos pos) const { return !(*this == pos); }
 
@@ -175,6 +177,17 @@ namespace Blit
    inline Pos operator-(Pos pos)
    {
       return {-pos.x, -pos.y};
+   }
+
+   inline Pos operator*(int scale, Pos pos)
+   {
+      return {scale * pos.x, scale * pos.y};
+   }
+
+   inline std::ostream& operator<<(std::ostream& ostr, Pos pos)
+   {
+      ostr << "[ " << pos.x << ", " << pos.y << " ]";
+      return ostr;
    }
 
    struct Rect
