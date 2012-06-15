@@ -177,7 +177,7 @@ namespace Icy
 
    bool Game::tile_stepper(Surface& surf, Pos step_dir)
    {
-      surf.rect() += step_dir;
+      surf.rect() += 2 * step_dir;
 
       if (surf.rect().pos.x % map.tile_width() || surf.rect().pos.y % map.tile_height())
          return true;
