@@ -54,6 +54,7 @@ namespace Icy
          bool tile_stepper(Blit::Surface& surf, Blit::Pos step_dir);
 
          static Blit::Pos input_to_offset(Input input);
+         std::string input_to_string(Input input);
    };
 }
 

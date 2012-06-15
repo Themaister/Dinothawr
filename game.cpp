@@ -10,7 +10,10 @@ namespace Icy
    Game::Game(const std::string& level)
       : map(level), target(map.pix_width(), map.pix_height())
    {
-      player = cache.from_image(Utils::join(level, ".png"));
+      player = cache.from_sprite(Utils::join(level, ".sprite"));
+      facing = Input::Right;
+      player.active_alt(input_to_string(facing));
+
       player.rect().pos = {16, 16};
    }
 
@@ -51,6 +54,18 @@ namespace Icy
          move_if_no_collision(Input::Left);
       else if (m_input_cb(Input::Right))
          move_if_no_collision(Input::Right);
+   }
+
+   std::string Game::input_to_string(Input input)
+   {
+      switch (input)
+      {
+         case Input::Up:    return "up";
+         case Input::Left:  return "left";
+         case Input::Right: return "right";
+         case Input::Down:  return "down";
+         default:           return "";
+      }
    }
 
    Blit::Pos Game::input_to_offset(Input input)
@@ -110,6 +125,7 @@ namespace Icy
    void Game::move_if_no_collision(Input input)
    {
       facing = input;
+      player.active_alt(input_to_string(facing));
 
       auto offset = input_to_offset(input);
       if (!is_offset_collision(player, offset))

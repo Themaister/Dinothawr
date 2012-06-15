@@ -13,6 +13,37 @@ namespace Blit
       : data(data), m_rect({0, 0}, data->w, data->h), m_ignore_camera(false)
    {}
 
+   Surface::Surface(const std::vector<Alt>& alts, const std::string& start_id) : m_ignore_camera(false)
+   {
+      if (alts.empty())
+         throw std::logic_error("Alts is empty.");
+
+      Pos size{alts.front().data->w, alts.front().data->h};
+      m_rect = {{0, 0}, size.x, size.y};
+
+      bool same_size = std::all_of(std::begin(alts) + 1, std::end(alts), [&alts, size](const Alt& alt) {
+               return size == Pos{alt.data->w, alt.data->h};
+            });
+
+      if (!same_size)
+         throw std::logic_error("Not all alts are of same size.");
+
+      for (auto& alt : alts)
+         this->alts[alt.tag] = alt.data;
+
+      active_alt(start_id);
+   }
+
+   void Surface::active_alt(const std::string& id)
+   {
+      auto ptr = alts[id];
+      if (!ptr)
+         throw std::logic_error(Utils::join("Alt ID ", id, " does not exist."));
+
+      m_active_alt = id;
+      data = ptr;
+   }
+
    Surface::Surface()
       : m_rect({0, 0}, 0, 0), m_ignore_camera(false)
    {}

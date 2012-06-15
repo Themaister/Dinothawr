@@ -22,9 +22,16 @@ namespace Blit
             int w, h;
          };
 
+         struct Alt
+         {
+            std::shared_ptr<const Data> data;
+            std::string tag; 
+         };
+
          Surface();
          Surface(Pixel pix, int width, int height);
          Surface(std::shared_ptr<const Data> data);
+         Surface(const std::vector<Alt>& alts, const std::string& start_id);
 
          Surface sub(Rect rect) const;
 
@@ -37,11 +44,18 @@ namespace Blit
          Pixel pixel(Pos pos) const;
          const Pixel* pixel_raw(Pos pos) const;
 
+         const std::string& active_alt() const { return m_active_alt; }
+         void active_alt(const std::string& id);
+
          std::map<std::string, std::string>& attr() { return attribs; }
          const std::map<std::string, std::string>& attr() const { return attribs; }
 
       private:
          std::shared_ptr<const Data> data;
+
+         std::map<std::string, std::shared_ptr<const Data>> alts;
+         std::string m_active_alt;
+
          std::map<std::string, std::string> attribs;
          Rect m_rect;
          bool m_ignore_camera;
@@ -87,6 +101,7 @@ namespace Blit
    {
       public:
          Surface from_image(const std::string& path);
+         Surface from_sprite(const std::string& path);
 
       private:
          std::map<std::string, std::shared_ptr<const Surface::Data>> cache;
