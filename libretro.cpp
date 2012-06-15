@@ -85,6 +85,9 @@ void retro_run(void)
 {
    input_poll_cb();
    game->iterate();
+
+   if (game->won())
+      environ_cb(RETRO_ENVIRONMENT_SHUTDOWN, nullptr);
 }
 
 bool retro_load_game(const struct retro_game_info* info)

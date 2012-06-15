@@ -31,6 +31,49 @@ namespace Icy
          m_video_cb(target.buffer(), target.width(), target.height(), target.width() * sizeof(Pixel));
    }
 
+   std::vector<SurfaceCluster::Elem> Game::get_tiles_with_attr(const std::string& name,
+         const std::string& attr, const std::string& val) const
+   {
+      std::vector<SurfaceCluster::Elem> surfs;
+      auto layer = map.find_layer(name);
+      if (!layer)
+         return surfs;
+
+      std::copy_if(std::begin(layer->cluster.vec()),
+            std::end(layer->cluster.vec()),
+            std::back_inserter(surfs), [&attr, &val](const SurfaceCluster::Elem& surf) -> bool {
+               auto itr = surf.surf.attr().find(attr);
+               return itr != std::end(surf.surf.attr()) && itr->second == val; 
+            });
+
+      return surfs;
+   }
+
+   // Checks if all goals on floor and blocks are aligned with each other.
+   bool Game::won() const
+   {
+      auto goal_floor  = get_tiles_with_attr("floor", "goal", "true");
+      auto goal_blocks = get_tiles_with_attr("blocks", "goal", "true");
+
+      if (goal_floor.size() != goal_blocks.size())
+         throw std::logic_error("Number of goal floors and goal blocks do not match.");
+
+      if (goal_floor.empty() || goal_blocks.empty())
+         throw std::logic_error("Goal floor or blocks are empty.");
+
+      auto func = [](const SurfaceCluster::Elem& a, const SurfaceCluster::Elem& b) {
+         return a.surf.rect().pos < b.surf.rect().pos;
+      };
+
+      std::sort(std::begin(goal_floor), std::end(goal_floor), func);
+      std::sort(std::begin(goal_blocks), std::end(goal_blocks), func);
+
+      return std::equal(std::begin(goal_floor), std::end(goal_floor),
+            std::begin(goal_blocks), [](const SurfaceCluster::Elem& a, const SurfaceCluster::Elem& b) {
+               return a.surf.rect().pos == b.surf.rect().pos;
+            });
+   }
+
    void Game::update_player()
    {
       if (!m_input_cb)

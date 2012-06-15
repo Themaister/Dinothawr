@@ -31,6 +31,7 @@ namespace Icy
          int height() const { return map.pix_height(); }
 
          void iterate();
+         bool won() const;
 
       private:
          Blit::Tilemap map;
@@ -55,6 +56,9 @@ namespace Icy
 
          static Blit::Pos input_to_offset(Input input);
          std::string input_to_string(Input input);
+
+         std::vector<Blit::SurfaceCluster::Elem> get_tiles_with_attr(const std::string& layer,
+               const std::string& attr, const std::string& val) const;
    };
 }
 
