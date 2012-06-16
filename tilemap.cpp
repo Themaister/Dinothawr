@@ -247,5 +247,17 @@ namespace Blit
       else
          return nullptr;
    }
+
+   Tilemap::Layer* Tilemap::find_layer(const std::string& name)
+   {
+      auto layer = std::find_if(std::begin(m_layers), std::end(m_layers), [&name](const Layer& layer) {
+               return Utils::tolower(layer.name) == name;
+            });
+
+      if (layer != std::end(m_layers))
+         return &*layer;
+      else
+         return nullptr;
+   }
 }
 

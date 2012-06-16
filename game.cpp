@@ -8,7 +8,7 @@ using namespace Blit;
 namespace Icy
 {
    Game::Game(const std::string& level)
-      : map(level), target(map.pix_width(), map.pix_height())
+      : map(level), target(map.pix_width(), map.pix_height()), won_frame_cnt(0)
    {
       set_initial_pos(level);
    }
@@ -48,10 +48,10 @@ namespace Icy
          m_video_cb(target.buffer(), target.width(), target.height(), target.width() * sizeof(Pixel));
    }
 
-   std::vector<SurfaceCluster::Elem> Game::get_tiles_with_attr(const std::string& name,
-         const std::string& attr, const std::string& val) const
+   std::vector<std::reference_wrapper<SurfaceCluster::Elem>> Game::get_tiles_with_attr(const std::string& name,
+         const std::string& attr, const std::string& val)
    {
-      std::vector<SurfaceCluster::Elem> surfs;
+      std::vector<std::reference_wrapper<SurfaceCluster::Elem>> surfs;
       auto layer = map.find_layer(name);
       if (!layer)
          return surfs;
@@ -65,8 +65,50 @@ namespace Icy
       return surfs;
    }
 
-   // Checks if all goals on floor and blocks are aligned with each other.
+   bool Game::win_animation_stepper()
+   {
+      won_frame_cnt++;
+
+      auto goal_blocks = get_tiles_with_attr("blocks", "goal", "true");
+
+      const unsigned frame_per_iter = 24;
+
+      auto state = "frozen";
+      if (won_frame_cnt >= 3 * frame_per_iter)
+      {
+         unsigned index = (won_frame_cnt / frame_per_iter - 3) & 2;
+         state = index ? "cheer" : "down";
+         player.active_alt(state);
+      }
+      else if (won_frame_cnt >= 2 * frame_per_iter)
+         state = "defrost2";
+      else if (won_frame_cnt >= 1 * frame_per_iter)
+         state = "defrost1";
+
+      for (auto& block : goal_blocks)
+      {
+         SurfaceCluster::Elem& elem = block;
+         elem.surf.active_alt(state);
+      }
+
+      return true;
+   }
+
+   void Game::prepare_won_animation()
+   {
+      won_frame_cnt = 1;
+      player_walking = false;
+
+      stepper = std::bind(&Game::win_animation_stepper, this);
+   }
+
    bool Game::won() const
+   {
+      return won_frame_cnt >= won_frame_cnt_limit;
+   }
+
+   // Checks if all goals on floor and blocks are aligned with each other.
+   bool Game::won_condition()
    {
       auto goal_floor  = get_tiles_with_attr("floor", "goal", "true");
       auto goal_blocks = get_tiles_with_attr("blocks", "goal", "true");
@@ -98,6 +140,9 @@ namespace Icy
       bool had_stepper = static_cast<bool>(stepper);
       run_stepper();
 
+      if (won_frame_cnt)
+         return;
+
       if (!stepper)
          update_input();
 
@@ -112,6 +157,9 @@ namespace Icy
 
       if (stepper && player_walking)
          update_animation();
+
+      if (won_condition())
+         prepare_won_animation();
    }
 
    void Game::update_animation()

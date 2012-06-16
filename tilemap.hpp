@@ -43,6 +43,7 @@ namespace Blit
          Surface* find_tile(unsigned layer, Pos pos);
          Surface* find_tile(const std::string& name, Pos pos);
          const Layer* find_layer(const std::string& name) const;
+         Layer* find_layer(const std::string& name);
 
          bool collision(Pos tile) const;
 

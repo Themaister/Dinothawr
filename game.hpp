@@ -41,6 +41,10 @@ namespace Icy
          Blit::SurfaceCache cache;
          Input facing;
 
+         unsigned won_frame_cnt;
+         enum { won_frame_cnt_limit = 60 * 5 };
+         bool won_condition();
+
          std::function<bool (Input)> m_input_cb;
          std::function<void (const void*, unsigned, unsigned, std::size_t)> m_video_cb;
 
@@ -54,19 +58,21 @@ namespace Icy
          void set_initial_pos(const std::string& level);
          void update_player();
          void update_animation();
+         void prepare_won_animation();
          void update_input();
          void move_if_no_collision(Input input);
          void push_block();
          bool is_offset_collision(Blit::Surface& surf, Blit::Pos offset);
 
          bool tile_stepper(Blit::Surface& surf, Blit::Pos step_dir);
+         bool win_animation_stepper();
 
          static Blit::Pos input_to_offset(Input input);
          std::string input_to_string(Input input);
          Input string_to_input(const std::string& dir);
 
-         std::vector<Blit::SurfaceCluster::Elem> get_tiles_with_attr(const std::string& layer,
-               const std::string& attr, const std::string& val = "") const;
+         std::vector<std::reference_wrapper<Blit::SurfaceCluster::Elem>> get_tiles_with_attr(const std::string& layer,
+               const std::string& attr, const std::string& val = "");
    };
 }
 
