@@ -51,13 +51,14 @@ namespace Blit
       int width      = image.attribute("width").as_int();
       int height     = image.attribute("height").as_int();
 
-      //std::cerr << "Adding tileset:" <<
-      //   " Gid: " << first_gid <<
-      //   " Tilewidth: " << tilewidth <<
-      //   " Tileheight: " << tileheight <<
-      //   " Source: " << source <<
-      //   " Width: " << width <<
-      //   " Height: " << height << std::endl;
+      std::cerr << "Adding tileset:" <<
+         " Name: " << node.attribute("name").value() <<
+         " Gid: " << first_gid <<
+         " Tilewidth: " << tilewidth <<
+         " Tileheight: " << tileheight <<
+         " Source: " << source <<
+         " Width: " << width <<
+         " Height: " << height << std::endl;
 
       if (!width || !height || !tilewidth || !tileheight)
          throw std::logic_error("Tilemap is malformed.");
@@ -85,7 +86,7 @@ namespace Blit
             // Override tile with a sprite
             if (name == "sprite")
             {
-               std::cerr << "Setting sprite: " << value << " to tile." << std::endl;
+               std::cerr << "Setting sprite: " << value << " to tile #" << id << "." << std::endl;
 
                auto old_attr = std::move(tiles[id].attr());
                tiles[id] = cache.from_sprite(Utils::join(dir, "/", value));
@@ -93,7 +94,7 @@ namespace Blit
             }
             else
             {
-               std::cerr << "Setting attr (" << name << " => " << value << ") to tile #" << id << std::endl;
+               std::cerr << "Setting attr (" << name << " => " << value << ") to tile #" << id << "." << std::endl;
                tiles[id].attr()[std::move(name)] = std::move(value);
             }
          }
@@ -110,9 +111,10 @@ namespace Blit
       if (!width || !height)
          throw std::logic_error("Layer is empty.");
 
-      //std::cerr << "Adding layer:" <<
-      //   " Width: " << width <<
-      //   " Height: " << height << std::endl;
+      std::cerr << "Adding layer:" <<
+         " Name: " << node.attribute("name").value() <<
+         " Width: " << width <<
+         " Height: " << height << std::endl;
 
       auto tile = node.child("data").child("tile");
       for (int y = 0; y < height; y++)
@@ -133,7 +135,8 @@ namespace Blit
       {
          auto name  = prop.attribute("name").value();
          auto value = prop.attribute("value").value();
-         //std::cerr << "Setting attr (" << name << " => " << value << ") to layer " << layer.name << std::endl;
+
+         std::cerr << "Setting attr (" << name << " => " << value << ") to layer " << layer.name << std::endl;
          layer.attr[std::move(name)] = std::move(value);
       }
 
