@@ -10,16 +10,20 @@ namespace Icy
    Game::Game(const std::string& level)
       : map(level), target(map.pix_width(), map.pix_height())
    {
-      player = cache.from_sprite(Utils::join(level, ".sprite"));
-
-      set_initial_pos();
+      set_initial_pos(level);
    }
 
-   void Game::set_initial_pos()
+   void Game::set_initial_pos(const std::string& level)
    {
       auto layer = map.find_layer("floor");
       if (!layer)
          throw std::runtime_error("Floor layer not found.");
+
+      auto sprite_path = Utils::find_or_default(layer->attr, "player_sprite", "");
+      if (sprite_path.empty())
+         player = cache.from_sprite(Utils::join(level, ".sprite"));
+      else
+         player = cache.from_sprite(Utils::join(Utils::basedir(level), "/", sprite_path));
 
       unsigned x = Utils::string_cast<unsigned>(Utils::find_or_default(layer->attr, "start_x", "1"));
       unsigned y = Utils::string_cast<unsigned>(Utils::find_or_default(layer->attr, "start_y", "1"));

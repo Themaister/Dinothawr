@@ -51,7 +51,7 @@ namespace Icy
          bool player_walking;
          bool is_sliding;
 
-         void set_initial_pos();
+         void set_initial_pos(const std::string& level);
          void update_player();
          void update_animation();
          void update_input();
