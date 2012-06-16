@@ -115,7 +115,7 @@ namespace Icy
       frame_cnt++;
 
       // Animation from index 1 to 4, "neutral position" in 0.
-      unsigned anim_index = (frame_cnt / 16) % 4 + 1;
+      unsigned anim_index = (frame_cnt / 10) % 4 + 1;
       player.active_alt_index(anim_index);
    }
 
