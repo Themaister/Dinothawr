@@ -21,9 +21,9 @@ namespace Icy
       if (!layer)
          throw std::runtime_error("Floor layer not found.");
 
-      unsigned x = Utils::string_cast<unsigned>(Utils::find_or_default(layer->attr, "start_x", ""));
-      unsigned y = Utils::string_cast<unsigned>(Utils::find_or_default(layer->attr, "start_y", ""));
-      auto face = Utils::find_or_default(layer->attr, "start_facing", "");
+      unsigned x = Utils::string_cast<unsigned>(Utils::find_or_default(layer->attr, "start_x", "1"));
+      unsigned y = Utils::string_cast<unsigned>(Utils::find_or_default(layer->attr, "start_y", "1"));
+      auto face = Utils::find_or_default(layer->attr, "start_facing", "right");
 
       player.rect().pos = {x * map.tile_width(), y * map.tile_height()};
       facing = string_to_input(face);
