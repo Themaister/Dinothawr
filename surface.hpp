@@ -7,6 +7,7 @@
 #include <vector>
 #include <map>
 #include <functional>
+#include <utility>
 
 namespace Blit
 {
@@ -44,8 +45,9 @@ namespace Blit
          Pixel pixel(Pos pos) const;
          const Pixel* pixel_raw(Pos pos) const;
 
-         const std::string& active_alt() const { return m_active_alt; }
-         void active_alt(const std::string& id);
+         std::pair<std::string, unsigned> active_alt() const { return { m_active_alt, m_active_alt_index }; }
+         void active_alt(const std::string& id, unsigned index = 0);
+         void active_alt_index(unsigned index);
 
          std::map<std::string, std::string>& attr() { return attribs; }
          const std::map<std::string, std::string>& attr() const { return attribs; }
@@ -53,8 +55,9 @@ namespace Blit
       private:
          std::shared_ptr<const Data> data;
 
-         std::map<std::string, std::shared_ptr<const Data>> alts;
+         std::multimap<std::string, std::shared_ptr<const Data>> alts;
          std::string m_active_alt;
+         unsigned m_active_alt_index;
 
          std::map<std::string, std::string> attribs;
          Rect m_rect;

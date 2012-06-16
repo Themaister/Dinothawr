@@ -6,11 +6,11 @@ namespace Blit
 {
    Surface::Surface(Pixel pix, int width, int height)
       : data(std::make_shared<const Data>(pix, width, height)),
-      m_rect({0, 0}, width, height), m_ignore_camera(false)
+      m_active_alt_index(0), m_rect({0, 0}, width, height), m_ignore_camera(false)
    {}
 
    Surface::Surface(std::shared_ptr<const Data> data)
-      : data(data), m_rect({0, 0}, data->w, data->h), m_ignore_camera(false)
+      : data(data), m_active_alt_index(0), m_rect({0, 0}, data->w, data->h), m_ignore_camera(false)
    {}
 
    Surface::Surface(const std::vector<Alt>& alts, const std::string& start_id) : m_ignore_camera(false)
@@ -29,19 +29,31 @@ namespace Blit
          throw std::logic_error("Not all alts are of same size.");
 
       for (auto& alt : alts)
-         this->alts[alt.tag] = alt.data;
+         this->alts.insert({alt.tag, alt.data});
 
       active_alt(start_id);
    }
 
-   void Surface::active_alt(const std::string& id)
+   void Surface::active_alt(const std::string& id, unsigned index)
    {
-      auto ptr = alts[id];
+      auto itr = alts.equal_range(id);
+      auto dist = std::distance(itr.first, itr.second);
+      if (dist <= index)
+         throw std::logic_error(Utils::join("Subindex is out of bounds."));
+
+      std::advance(itr.first, index);
+      auto ptr = itr.first->second;
       if (!ptr)
          throw std::logic_error(Utils::join("Alt ID ", id, " does not exist."));
 
       m_active_alt = id;
+      m_active_alt_index = index;
       data = ptr;
+   }
+
+   void Surface::active_alt_index(unsigned index)
+   {
+      active_alt(m_active_alt, index);
    }
 
    Surface::Surface()

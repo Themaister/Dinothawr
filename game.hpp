@@ -16,7 +16,8 @@ namespace Icy
       Down,
       Left,
       Right,
-      Push
+      Push,
+      None
    };
 
    class Game
@@ -46,7 +47,12 @@ namespace Icy
          std::function<bool ()> stepper;
          void run_stepper();
 
+         unsigned frame_cnt;
+         bool player_walking;
+
+         void set_initial_pos();
          void update_player();
+         void update_animation();
          void update_input();
          void move_if_no_collision(Input input);
          void push_block();
@@ -56,9 +62,10 @@ namespace Icy
 
          static Blit::Pos input_to_offset(Input input);
          std::string input_to_string(Input input);
+         Input string_to_input(const std::string& dir);
 
          std::vector<Blit::SurfaceCluster::Elem> get_tiles_with_attr(const std::string& layer,
-               const std::string& attr, const std::string& val) const;
+               const std::string& attr, const std::string& val = "") const;
    };
 }
 

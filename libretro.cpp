@@ -28,7 +28,7 @@ void retro_set_controller_port_device(unsigned, unsigned)
 void retro_get_system_info(struct retro_system_info *info)
 {
    memset(info, 0, sizeof(*info));
-   info->library_name     = "IcyPuzzle";
+   info->library_name     = "Dino Defrost";
    info->library_version  = "v0";
    info->need_fullpath    = true;
    info->valid_extensions = "tmx";

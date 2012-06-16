@@ -11,17 +11,30 @@ namespace Icy
       : map(level), target(map.pix_width(), map.pix_height())
    {
       player = cache.from_sprite(Utils::join(level, ".sprite"));
-      facing = Input::Right;
-      player.active_alt(input_to_string(facing));
 
-      player.rect().pos = {16, 16};
+      set_initial_pos();
+   }
+
+   void Game::set_initial_pos()
+   {
+      auto layer = map.find_layer("floor");
+      if (!layer)
+         throw std::runtime_error("Floor layer not found.");
+
+      unsigned x = Utils::string_cast<unsigned>(Utils::find_or_default(layer->attr, "start_x", ""));
+      unsigned y = Utils::string_cast<unsigned>(Utils::find_or_default(layer->attr, "start_y", ""));
+      auto face = Utils::find_or_default(layer->attr, "start_facing", "");
+
+      player.rect().pos = {x * map.tile_width(), y * map.tile_height()};
+      facing = string_to_input(face);
+      player.active_alt(face);
    }
 
    void Game::iterate()
    {
       update_player();
 
-      target.clear(Pixel::ARGB(0xff, 0xa0, 0x80, 0x80));
+      target.clear(Pixel::ARGB(0x00, 0x00, 0x00, 0x00));
       map.render(target);
       target.blit(player, {});
 
@@ -42,8 +55,7 @@ namespace Icy
       std::copy_if(std::begin(layer->cluster.vec()),
             std::end(layer->cluster.vec()),
             std::back_inserter(surfs), [&attr, &val](const SurfaceCluster::Elem& surf) -> bool {
-               auto itr = surf.surf.attr().find(attr);
-               return itr != std::end(surf.surf.attr()) && itr->second == val; 
+               return val.empty() || Utils::find_or_default(surf.surf.attr(), attr, "") == val; 
             });
 
       return surfs;
@@ -78,11 +90,33 @@ namespace Icy
    {
       if (!m_input_cb)
          return;
-
+      
+      bool had_stepper = static_cast<bool>(stepper);
       run_stepper();
 
       if (!stepper)
          update_input();
+
+      // Reset animation.
+      if (!had_stepper && stepper)
+         frame_cnt = 0;
+      else if (!stepper)
+      {
+         frame_cnt = 0;
+         player.active_alt_index(0);
+      }
+
+      if (stepper && player_walking)
+         update_animation();
+   }
+
+   void Game::update_animation()
+   {
+      frame_cnt++;
+
+      // Animation from index 1 to 4, "neutral position" in 0.
+      unsigned anim_index = (frame_cnt / 16) % 4 + 1;
+      player.active_alt_index(anim_index);
    }
 
    void Game::update_input()
@@ -121,6 +155,15 @@ namespace Icy
          case Input::Down:  return {0, 1};
          default:           return {};
       }
+   }
+
+   Input Game::string_to_input(const std::string& dir)
+   {
+      if (dir == "up") return Input::Up;
+      if (dir == "down") return Input::Down;
+      if (dir == "left") return Input::Left;
+      if (dir == "right") return Input::Right;
+      return Input::None;
    }
 
    bool Game::is_offset_collision(Surface& surf, Pos offset)
@@ -162,7 +205,10 @@ namespace Icy
       Pos tile_pos{tile_x, tile_y};
 
       if (!map.collision(tile_pos + (2 * offset)))
+      {
          stepper = std::bind(&Game::tile_stepper, this, std::ref(*tile), offset);
+         player_walking = false;
+      }
    }
 
    void Game::move_if_no_collision(Input input)
@@ -172,7 +218,10 @@ namespace Icy
 
       auto offset = input_to_offset(input);
       if (!is_offset_collision(player, offset))
+      {
          stepper = std::bind(&Game::tile_stepper, this, std::ref(player), offset);
+         player_walking = true;
+      }
    }
 
    bool Game::tile_stepper(Surface& surf, Pos step_dir)
