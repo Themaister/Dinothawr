@@ -25,8 +25,8 @@ namespace Icy
       else
          player = cache.from_sprite(Utils::join(Utils::basedir(level), "/", sprite_path));
 
-      unsigned x = Utils::string_cast<unsigned>(Utils::find_or_default(layer->attr, "start_x", "1"));
-      unsigned y = Utils::string_cast<unsigned>(Utils::find_or_default(layer->attr, "start_y", "1"));
+      int x = Utils::string_cast<int>(Utils::find_or_default(layer->attr, "start_x", "1"));
+      int y = Utils::string_cast<int>(Utils::find_or_default(layer->attr, "start_y", "1"));
       auto face = Utils::find_or_default(layer->attr, "start_facing", "right");
 
       player.rect().pos = {x * map.tile_width(), y * map.tile_height()};
@@ -265,6 +265,7 @@ namespace Icy
       {
          stepper = std::bind(&Game::tile_stepper, this, std::ref(*tile), offset);
          player_walking = false;
+         player.active_alt_index(0);
       }
    }
 

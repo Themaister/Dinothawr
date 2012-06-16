@@ -61,7 +61,7 @@ namespace Blit
          char *endptr;
          unsigned ret = std::strtoul(str.c_str(), &endptr, 0);
 
-         if (endptr - str.c_str() != str.size())
+         if (endptr - str.c_str() != static_cast<std::ptrdiff_t>(str.size()))
             throw std::logic_error(Utils::join(str, " is not a valid unsigned."));
 
          return ret;
@@ -73,7 +73,7 @@ namespace Blit
          char *endptr;
          int ret = std::strtol(str.c_str(), &endptr, 0);
 
-         if (endptr - str.c_str() != str.size())
+         if (endptr - str.c_str() != static_cast<std::ptrdiff_t>(str.size()))
             throw std::logic_error(Utils::join(str, " is not a valid unsigned."));
 
          return ret;
