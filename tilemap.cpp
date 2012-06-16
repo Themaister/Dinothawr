@@ -42,7 +42,7 @@ namespace Blit
    void Tilemap::add_tileset(std::map<unsigned, Surface>& tiles, xml_node node)
    {
       int first_gid  = node.attribute("firstgid").as_int();
-      int gid_cnt    = 0;
+      int id_cnt     = 0;
       int tilewidth  = node.attribute("tilewidth").as_int();
       int tileheight = node.attribute("tileheight").as_int();
 
@@ -62,17 +62,15 @@ namespace Blit
       if (!width || !height || !tilewidth || !tileheight)
          throw std::logic_error("Tilemap is malformed.");
 
-      auto path = Utils::join(dir, "/", source);
-
       SurfaceCache cache;
-      auto surf = cache.from_image(path);
+      auto surf = cache.from_image(Utils::join(dir, "/", source));
 
       if (surf.rect().w != width || surf.rect().h != height)
          throw std::logic_error("Tilemap geometry does not correspond with image values.");
 
       for (int y = 0; y < height; y += tileheight)
          for (int x = 0; x < width; x += tilewidth)
-            tiles[first_gid + gid_cnt++] = surf.sub({{x, y}, tilewidth, tileheight});
+            tiles[first_gid + id_cnt++] = surf.sub({{x, y}, tilewidth, tileheight});
 
       // Load all attributes for a tile into the surface.
       for (auto tile = node.child("tile"); tile; tile = tile.next_sibling("tile"))
@@ -81,12 +79,23 @@ namespace Blit
 
          for (auto prop = tile.child("properties").child("property"); prop; prop = prop.next_sibling())
          {
-            auto& attrs = tiles[id].attr();
-            auto name   = prop.attribute("name").value();
-            auto value  = prop.attribute("value").value();
+            std::string name  = prop.attribute("name").value();
+            std::string value = prop.attribute("value").value();
 
-            //std::cerr << "Setting attr (" << name << " => " << value << ") to tile #" << id << std::endl;
-            attrs[std::move(name)] = std::move(value);
+            // Override tile with a sprite
+            if (name == "sprite")
+            {
+               std::cerr << "Setting sprite: " << value << " to tile." << std::endl;
+
+               auto old_attr = std::move(tiles[id].attr());
+               tiles[id] = cache.from_sprite(Utils::join(dir, "/", value));
+               tiles[id].attr() = std::move(old_attr);
+            }
+            else
+            {
+               std::cerr << "Setting attr (" << name << " => " << value << ") to tile #" << id << std::endl;
+               tiles[id].attr()[std::move(name)] = std::move(value);
+            }
          }
       }
    }
