@@ -114,8 +114,13 @@ namespace Icy
    {
       frame_cnt++;
 
-      // Animation from index 1 to 4, "neutral position" in 0.
-      unsigned anim_index = (frame_cnt / 10) % 4 + 1;
+      // Animation from index 1 to 4, "neutral position" in 0. "Slippery" animations in 5 and 6.
+      unsigned anim_index;
+      if (is_sliding)
+         anim_index = (frame_cnt / 10) % 2 + 5;
+      else
+         anim_index = (frame_cnt / 10) % 4 + 1;
+
       player.active_alt_index(anim_index);
    }
 
@@ -232,11 +237,18 @@ namespace Icy
          return true;
 
       if (is_offset_collision(surf, step_dir))
+      {
+         is_sliding = false;
          return false;
+      }
 
       //std::cerr << "Player: " << player.rect().pos << " Surf: " << surf->rect().pos << std::endl; 
-      auto surface = map.find_tile("floor", surf.rect().pos);
-      return surface && surface->attr().find(&surf == &player ? "slippery_player" : "slippery_block") != std::end(surface->attr());
+      auto surface  = map.find_tile("floor", surf.rect().pos);
+      bool slippery = surface && Utils::find_or_default(surface->attr(),
+            &surf == &player ? "slippery_player" : "slippery_block", "") == "true";
+
+      is_sliding = slippery;
+      return slippery;
    }
 
    void Game::run_stepper()

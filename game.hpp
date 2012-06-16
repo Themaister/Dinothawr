@@ -49,6 +49,7 @@ namespace Icy
 
          unsigned frame_cnt;
          bool player_walking;
+         bool is_sliding;
 
          void set_initial_pos();
          void update_player();
