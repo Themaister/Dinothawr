@@ -86,10 +86,7 @@ namespace Icy
          state = "defrost1";
 
       for (auto& block : goal_blocks)
-      {
-         SurfaceCluster::Elem& elem = block;
-         elem.surf.active_alt(state);
-      }
+         block.get().surf.active_alt(state);
 
       return true;
    }
