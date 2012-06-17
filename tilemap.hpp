@@ -58,8 +58,6 @@ namespace Blit
                pugi::xml_node node);
          void add_layer(std::map<unsigned, Surface>& tiles,
                pugi::xml_node node, int tilewidth, int tileheight);
-         void add_collision_layer(std::map<unsigned, Surface>& tiles,
-               pugi::xml_node node);
 
          std::map<std::string, std::string> get_attributes(pugi::xml_node, const std::string& child) const;
    };

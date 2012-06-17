@@ -31,12 +31,7 @@ namespace Blit
          add_tileset(tiles, set);
 
       for (auto layer = map.child("layer"); layer; layer = layer.next_sibling("layer"))
-      {
-         if (Utils::tolower(layer.attribute("name").value()) == "collision")
-            add_collision_layer(tiles, layer);
-         else
-            add_layer(tiles, layer, tilewidth, tileheight);
-      }
+         add_layer(tiles, layer, tilewidth, tileheight);
    }
 
    std::map<std::string, std::string> Tilemap::get_attributes(xml_node parent, const std::string& child) const
@@ -138,45 +133,22 @@ namespace Blit
          for (int x = 0; x < width; x++, tile = tile.next_sibling("tile"))
          {
             unsigned gid = tile.attribute("gid").as_int();
-            if (gid)
-            {
-               tiles[gid].rect().pos = Pos{x, y} * Pos{tilewidth, tileheight};
-               layer.cluster.vec().push_back(SurfaceCluster::Elem{tiles[gid], Pos{}});
-            }
-         }
-      }
+            if (!gid)
+               continue;
 
-      layer.name = node.attribute("name").value();
-      for (auto prop = node.child("properties").child("property"); prop; prop = prop.next_sibling("property"))
-      {
-         auto name  = prop.attribute("name").value();
-         auto value = prop.attribute("value").value();
+            auto& surf = tiles[gid];
+            surf.rect().pos = Pos{x, y} * Pos{tilewidth, tileheight};
 
-         std::cerr << "Setting attr (" << name << " => " << value << ") to layer " << layer.name << std::endl;
-         layer.attr[std::move(name)] = std::move(value);
-      }
+            layer.cluster.vec().push_back(SurfaceCluster::Elem{surf, Pos{}});
 
-      m_layers.push_back(std::move(layer));
-   }
-
-   void Tilemap::add_collision_layer(std::map<unsigned, Surface>& tiles, xml_node node)
-   {
-      int width  = node.attribute("width").as_int();
-      int height = node.attribute("height").as_int();
-
-      if (!width || !height)
-         throw std::logic_error("Layer is empty.");
-
-      auto tile = node.child("data").child("tile");
-      for (int y = 0; y < height; y++)
-      {
-         for (int x = 0; x < width; x++, tile = tile.next_sibling("tile"))
-         {
-            unsigned gid = tile.attribute("gid").as_int();
-            if (gid)
+            if (Utils::find_or_default(surf.attr(), "collision", "") == "true")
                collisions.insert({x, y});
          }
       }
+
+      layer.attr = get_attributes(node.child("properties"), "property");
+      layer.name = node.attribute("name").value();
+      m_layers.push_back(std::move(layer));
    }
 
    void Tilemap::pos(Pos position)
