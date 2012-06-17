@@ -96,12 +96,7 @@ namespace Blit
          {
             int id = first_gid + id_cnt;
             tiles[id] = surf.sub({{x, y}, tilewidth, tileheight});
-
-            for (auto& attr : global_attr)
-            {
-               std::cerr << "Adding global attr (" << attr.first << " => " << attr.second << ") to tile #" << id << "." << std::endl;
-               tiles[id].attr().insert(attr);
-            }
+            std::copy(std::begin(global_attr), std::end(global_attr), std::inserter(tiles[id].attr(), std::begin(tiles[id].attr()))); 
          }
       }
 
