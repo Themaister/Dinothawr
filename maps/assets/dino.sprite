@@ -28,6 +28,6 @@
    <face id="right" source="dino_right_walk4.png"/>
    <face id="right" source="dino_right_slide1.png"/>
    <face id="right" source="dino_right_slide2.png"/>
-   <face id="cheer" source="frozen_dino_cheer.png"/>
+   <face id="cheer" source="dino_cheer.png"/>
 </sprite>
 
