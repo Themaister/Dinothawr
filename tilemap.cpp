@@ -39,6 +39,20 @@ namespace Blit
       }
    }
 
+   std::map<std::string, std::string> Tilemap::get_attributes(xml_node parent, const std::string& child) const
+   {
+      std::map<std::string, std::string> attrs;
+
+      for (auto node = parent.child(child.c_str()); node; node = node.next_sibling(child.c_str()))
+      {
+         auto name = node.attribute("name").value();
+         auto value = node.attribute("value").value();
+         attrs.insert({name, value});
+      }
+
+      return attrs;
+   }
+
    void Tilemap::add_tileset(std::map<unsigned, Surface>& tiles, xml_node node)
    {
       int first_gid  = node.attribute("firstgid").as_int();
@@ -69,35 +83,42 @@ namespace Blit
       if (surf.rect().w != width || surf.rect().h != height)
          throw std::logic_error("Tilemap geometry does not correspond with image values.");
 
+      auto global_attr = get_attributes(node.child("properties"), "property");
+
+      std::cerr << "Dumping attrs:" << std::endl;
+      for (auto& attr : global_attr)
+         std::cerr << "Found global attr (" << attr.first << " => " << attr.second << ")." << std::endl;
+      std::cerr << "Dumped attrs." << std::endl;
+
       for (int y = 0; y < height; y += tileheight)
-         for (int x = 0; x < width; x += tilewidth)
-            tiles[first_gid + id_cnt++] = surf.sub({{x, y}, tilewidth, tileheight});
+      {
+         for (int x = 0; x < width; x += tilewidth, id_cnt++)
+         {
+            int id = first_gid + id_cnt;
+            tiles[id] = surf.sub({{x, y}, tilewidth, tileheight});
+
+            for (auto& attr : global_attr)
+            {
+               std::cerr << "Adding global attr (" << attr.first << " => " << attr.second << ") to tile #" << id << "." << std::endl;
+               tiles[id].attr().insert(attr);
+            }
+         }
+      }
 
       // Load all attributes for a tile into the surface.
       for (auto tile = node.child("tile"); tile; tile = tile.next_sibling("tile"))
       {
          int id = first_gid + tile.attribute("id").as_int();
 
-         for (auto prop = tile.child("properties").child("property"); prop; prop = prop.next_sibling())
-         {
-            std::string name  = prop.attribute("name").value();
-            std::string value = prop.attribute("value").value();
+         auto attrs = get_attributes(tile.child("properties"), "property");
+         std::copy(std::begin(global_attr), std::end(global_attr), std::inserter(attrs, std::begin(attrs)));
 
-            // Override tile with a sprite
-            if (name == "sprite")
-            {
-               std::cerr << "Setting sprite: " << value << " to tile #" << id << "." << std::endl;
+         auto itr = attrs.find("sprite");
 
-               auto old_attr = std::move(tiles[id].attr());
-               tiles[id] = cache.from_sprite(Utils::join(dir, "/", value));
-               tiles[id].attr() = std::move(old_attr);
-            }
-            else
-            {
-               std::cerr << "Setting attr (" << name << " => " << value << ") to tile #" << id << "." << std::endl;
-               tiles[id].attr()[std::move(name)] = std::move(value);
-            }
-         }
+         if (itr != std::end(attrs))
+            tiles[id] = cache.from_sprite(Utils::join(dir, "/", itr->second));
+
+         tiles[id].attr() = std::move(attrs);
       }
    }
 

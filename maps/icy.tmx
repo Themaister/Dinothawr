@@ -5,14 +5,29 @@
  </tileset>
  <tileset firstgid="4" name="misc" tilewidth="16" tileheight="16">
   <image source="assets/tileset-misc.png" width="64" height="16"/>
+  <tile id="3">
+   <properties>
+    <property name="goal" value="true"/>
+   </properties>
+  </tile>
  </tileset>
  <tileset firstgid="8" name="pushblocks" tilewidth="16" tileheight="16">
   <image source="assets/tileset-pushblocks.png" width="48" height="16"/>
+  <tile id="1">
+   <properties>
+    <property name="goal" value="true"/>
+    <property name="sprite" value="assets/frozen.sprite"/>
+   </properties>
+  </tile>
  </tileset>
  <tileset firstgid="11" name="rocks" tilewidth="16" tileheight="16">
   <image source="assets/tileset-rocks.png" width="256" height="48"/>
  </tileset>
  <tileset firstgid="59" name="slippery" tilewidth="16" tileheight="16">
+  <properties>
+   <property name="slippery_block" value="true"/>
+   <property name="slippery_player" value="true"/>
+  </properties>
   <image source="assets/tileset-slippery.png" width="256" height="48"/>
  </tileset>
  <layer name="Bottom" width="20" height="12">
