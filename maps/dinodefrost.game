@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<game>
+   <map source="icy.tmx"/>
+   <map source="icy2.tmx"/>
+   <map source="icy3.tmx"/>
+   <map source="icy4.tmx"/>
+</game>

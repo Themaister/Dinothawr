@@ -91,6 +91,35 @@ namespace Icy
          std::vector<std::reference_wrapper<Blit::SurfaceCluster::Elem>> get_tiles_with_attr(const std::string& layer,
                const std::string& attr, const std::string& val = "");
    };
+
+   class GameManager
+   {
+      public:
+         GameManager(const std::string& path_game);
+         GameManager();
+         GameManager(GameManager&&) = default;
+         GameManager& operator=(GameManager&&) = default;
+
+         void input_cb(std::function<bool (Input)> cb) { m_input_cb = cb; }
+         void video_cb(std::function<void (const void*, unsigned, unsigned, std::size_t)> cb) { m_video_cb = cb; }
+
+         void iterate();
+
+         bool done() const;
+
+         void reset_level();
+         void change_level(unsigned level);
+         unsigned current_level() const { return m_current_level; }
+
+      private:
+         std::vector<std::string> levels;
+         std::unique_ptr<Game> game;
+         std::string dir;
+         unsigned m_current_level;
+
+         std::function<bool (Input)> m_input_cb;
+         std::function<void (const void*, unsigned, unsigned, std::size_t)> m_video_cb;
+   };
 }
 
 #endif

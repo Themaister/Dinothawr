@@ -8,7 +8,7 @@
 
 #include "game.hpp"
 
-static std::unique_ptr<Icy::Game> game;
+static Icy::GameManager game;
 static std::string game_path;
 
 void retro_init(void)
@@ -82,17 +82,17 @@ void retro_set_video_refresh(retro_video_refresh_t cb)
 void retro_run(void)
 {
    input_poll_cb();
-   game->iterate();
+   game.iterate();
 
-   if (game->won())
+   if (game.done())
       environ_cb(RETRO_ENVIRONMENT_SHUTDOWN, nullptr);
 }
 
 static void load_game(const std::string& path)
 {
-   game = std::unique_ptr<Icy::Game>(new Icy::Game(path));
+   game = Icy::GameManager(path);
 
-   game->input_cb([&](Icy::Input input) -> bool {
+   game.input_cb([&](Icy::Input input) -> bool {
          unsigned btn;
          switch (input)
          {
@@ -107,14 +107,16 @@ static void load_game(const std::string& path)
          return input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, btn);
       });
 
-   game->video_cb([&](const void* data, unsigned width, unsigned height, std::size_t pitch) {
+   game.video_cb([&](const void* data, unsigned width, unsigned height, std::size_t pitch) {
          video_cb(data, width, height, pitch);
          });
+
+   game.reset_level();
 }
 
 void retro_reset(void)
 {
-   load_game(game_path);
+   game.reset_level();
 }
 
 bool retro_load_game(const struct retro_game_info* info)
@@ -139,7 +141,7 @@ bool retro_load_game_special(unsigned, const struct retro_game_info*, size_t)
 
 void retro_unload_game(void)
 {
-   game.reset();
+   game = Icy::GameManager();
 }
 
 unsigned retro_get_region(void)

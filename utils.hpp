@@ -8,6 +8,9 @@
 #include <iterator>
 #include <cstdlib>
 #include <stdexcept>
+#include <iterator>
+
+#include "pugixml/pugixml.hpp"
 
 namespace Blit
 {
@@ -88,6 +91,50 @@ namespace Blit
 
          return itr->second;
       }
+
+      class xml_node_walker
+      {
+         public:
+            xml_node_walker(pugi::xml_node parent, const std::string& child, const std::string& attr)
+               : parent(parent), child(child), attr(attr)
+            {}
+
+            class iterator
+            {
+               public:
+                  iterator(pugi::xml_node parent, const char* child, const char* attr) :
+                     child_name(child), attr(attr), node(parent.child(child)), val(node.attribute(attr).value()) {}
+
+                  iterator() : child_name(nullptr), attr(nullptr) {}
+
+                  const std::string& operator*() const { return val; }
+                  const std::string* operator->() const { return &val; }
+
+                  iterator& operator++()
+                  {
+                     node = node.next_sibling(child_name);
+                     val  = node.attribute(attr).value();
+                     return *this;
+                  }
+
+                  bool operator==(const iterator& itr) const { return node == itr.node; }
+                  bool operator!=(const iterator& itr) const { return node != itr.node; }
+
+               private:
+                  const char* child_name;
+                  const char* attr;
+                  pugi::xml_node node;
+                  std::string val;
+            };
+
+            iterator begin() { return iterator(parent, child.c_str(), attr.c_str()); }
+            iterator end() { return iterator(); }
+
+         private:
+            pugi::xml_node parent;
+            std::string child;
+            std::string attr;
+      };
    }
 }
 
