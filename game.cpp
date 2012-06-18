@@ -8,7 +8,9 @@ using namespace Blit;
 namespace Icy
 {
    Game::Game(const std::string& level)
-      : map(level), target(map.pix_width(), map.pix_height()), won_frame_cnt(0)
+      : map(level), target(fb_width, fb_height),
+         camera(target, player.rect(), {map.pix_width(), map.pix_height()}),
+         won_frame_cnt(0)
    {
       set_initial_pos(level);
    }
@@ -39,6 +41,7 @@ namespace Icy
       update_player();
 
       target.clear(Pixel::ARGB(0x00, 0x00, 0x00, 0x00));
+      camera.update();
       map.render(target);
       target.blit(player, {});
 
@@ -306,5 +309,37 @@ namespace Icy
       if (stepper && !stepper())
          stepper = {};
    }
+
+   CameraManager::CameraManager(RenderTarget& target, const Rect& rect, Blit::Pos map_size)
+      : target(&target), rect(&rect), map_size(map_size)
+   {}
+
+   void CameraManager::update()
+   {
+      // Map can fit completely inside our rect, just center it.
+      if (target->width() >= map_size.x && target->height() >= map_size.y)
+         target->camera_set((map_size - Pos{target->width(), target->height()}) / 2);
+      else // Center around player, but clamp if player isn't near walls.
+      {
+         auto pos = rect->pos;
+         Pos target_size{target->width(), target->height()};
+
+         auto pos_base = pos - target_size / 2;
+         auto pos_max  = pos_base + target_size;
+
+         if (pos_base.x < 0)
+            pos_base.x = 0;
+         else if (pos_max.x > target_size.x)
+            pos_base.x -= pos_max.x - target_size.x;
+
+         if (pos_base.y < 0)
+            pos_base.y = 0;
+         else if (pos_max.y > target_size.y)
+            pos_base.y -= pos_max.y - target_size.y;
+
+         target->camera_set(pos_base);
+      }
+   }
 }
+
 

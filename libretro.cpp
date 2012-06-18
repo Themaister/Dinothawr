@@ -38,7 +38,7 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
 {
    info->timing = { 60.0, 32000.0 };
    
-   unsigned width = game->width(), height = game->height();
+   unsigned width = Icy::Game::fb_width, height = Icy::Game::fb_height;
    info->geometry = { width, height, width, height };
 }
 

@@ -20,6 +20,18 @@ namespace Icy
       None
    };
 
+   class CameraManager
+   {
+      public:
+         CameraManager(Blit::RenderTarget& target, const Blit::Rect& rect, Blit::Pos map_size);
+         void update();
+
+      private:
+         Blit::RenderTarget* target;
+         const Blit::Rect* rect;
+         Blit::Pos map_size;
+   };
+
    class Game
    {
       public:
@@ -34,12 +46,17 @@ namespace Icy
          void iterate();
          bool won() const;
 
+         static const unsigned fb_width = 320;
+         static const unsigned fb_height = 200;
+
       private:
          Blit::Tilemap map;
          Blit::RenderTarget target;
          Blit::Surface player;
          Blit::SurfaceCache cache;
          Input facing;
+
+         CameraManager camera;
 
          unsigned won_frame_cnt;
          enum { won_frame_cnt_limit = 60 * 5 };
