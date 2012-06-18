@@ -90,28 +90,26 @@ void retro_run(void)
 
 static void load_game(const std::string& path)
 {
-   game = Icy::GameManager(path);
+   auto input_cb = [&](Icy::Input input) -> bool {
+      unsigned btn;
+      switch (input)
+      {
+         case Icy::Input::Up:    btn = RETRO_DEVICE_ID_JOYPAD_UP; break;
+         case Icy::Input::Down:  btn = RETRO_DEVICE_ID_JOYPAD_DOWN; break;
+         case Icy::Input::Left:  btn = RETRO_DEVICE_ID_JOYPAD_LEFT; break;
+         case Icy::Input::Right: btn = RETRO_DEVICE_ID_JOYPAD_RIGHT; break;
+         case Icy::Input::Push:  btn = RETRO_DEVICE_ID_JOYPAD_A; break;
+         default: return false;
+      }
 
-   game.input_cb([&](Icy::Input input) -> bool {
-         unsigned btn;
-         switch (input)
-         {
-            case Icy::Input::Up:    btn = RETRO_DEVICE_ID_JOYPAD_UP; break;
-            case Icy::Input::Down:  btn = RETRO_DEVICE_ID_JOYPAD_DOWN; break;
-            case Icy::Input::Left:  btn = RETRO_DEVICE_ID_JOYPAD_LEFT; break;
-            case Icy::Input::Right: btn = RETRO_DEVICE_ID_JOYPAD_RIGHT; break;
-            case Icy::Input::Push:  btn = RETRO_DEVICE_ID_JOYPAD_A; break;
-            default: return false;
+      return input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, btn);
+   };
+
+   game = Icy::GameManager(path, input_cb,
+         [&](const void* data, unsigned width, unsigned height, std::size_t pitch) {
+            video_cb(data, width, height, pitch);
          }
-
-         return input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, btn);
-      });
-
-   game.video_cb([&](const void* data, unsigned width, unsigned height, std::size_t pitch) {
-         video_cb(data, width, height, pitch);
-         });
-
-   game.reset_level();
+   );
 }
 
 void retro_reset(void)

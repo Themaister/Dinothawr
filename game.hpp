@@ -7,6 +7,7 @@
 #include <string>
 #include <functional>
 #include <cstddef>
+#include <functional>
 
 namespace Icy
 {
@@ -95,7 +96,10 @@ namespace Icy
    class GameManager
    {
       public:
-         GameManager(const std::string& path_game);
+         GameManager(const std::string& path_game,
+               std::function<bool (Input)> input_cb,
+               std::function<void (const void*, unsigned, unsigned, std::size_t)> video_cb);
+
          GameManager();
          GameManager(GameManager&&) = default;
          GameManager& operator=(GameManager&&) = default;
@@ -110,15 +114,26 @@ namespace Icy
          void reset_level();
          void change_level(unsigned level);
          unsigned current_level() const { return m_current_level; }
+         bool in_menu() const { return m_in_menu; }
 
       private:
          std::vector<std::string> levels;
          std::unique_ptr<Game> game;
          std::string dir;
          unsigned m_current_level;
+         bool m_in_menu;
+
+         Blit::SurfaceCache cache;
+         Blit::RenderTarget target;
 
          std::function<bool (Input)> m_input_cb;
          std::function<void (const void*, unsigned, unsigned, std::size_t)> m_video_cb;
+
+         void init_menu(const std::string& title);
+         void init_level(unsigned level);
+
+         void step_menu();
+         void step_game();
    };
 }
 
