@@ -127,23 +127,25 @@ namespace Blit
          " Width: " << width <<
          " Height: " << height << std::endl;
 
-      auto tile = node.child("data").child("tile");
-      for (int y = 0; y < height; y++)
+      Utils::xml_node_walker walk{node.child("data"), "tile", "gid"};
+      int index = 0;
+      for (auto& gid_str : walk)
       {
-         for (int x = 0; x < width; x++, tile = tile.next_sibling("tile"))
-         {
-            unsigned gid = tile.attribute("gid").as_int();
-            if (!gid)
-               continue;
+         Pos pos = {index % width, index / width};
 
+         unsigned gid = Utils::string_cast<unsigned>(gid_str);
+         if (gid)
+         {
             auto& surf = tiles[gid];
-            surf.rect().pos = Pos{x, y} * Pos{tilewidth, tileheight};
+            surf.rect().pos = pos * Pos{tilewidth, tileheight};
 
             layer.cluster.vec().push_back(SurfaceCluster::Elem{surf, Pos{}});
 
             if (Utils::find_or_default(surf.attr(), "collision", "") == "true")
-               collisions.insert({x, y});
+               collisions.insert(pos);
          }
+
+         index++;
       }
 
       layer.attr = get_attributes(node.child("properties"), "property");
