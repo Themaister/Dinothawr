@@ -322,6 +322,8 @@ namespace Icy
       else // Center around player, but clamp if player isn't near walls.
       {
          auto pos = rect->pos;
+         pos += Pos{rect->w, rect->h} / 2;
+
          Pos target_size{target->width(), target->height()};
 
          auto pos_base = pos - target_size / 2;
@@ -329,13 +331,13 @@ namespace Icy
 
          if (pos_base.x < 0)
             pos_base.x = 0;
-         else if (pos_max.x > target_size.x)
-            pos_base.x -= pos_max.x - target_size.x;
+         else if (pos_max.x > map_size.x)
+            pos_base.x -= pos_max.x - map_size.x;
 
          if (pos_base.y < 0)
             pos_base.y = 0;
-         else if (pos_max.y > target_size.y)
-            pos_base.y -= pos_max.y - target_size.y;
+         else if (pos_max.y > map_size.y)
+            pos_base.y -= pos_max.y - map_size.y;
 
          target->camera_set(pos_base);
       }
