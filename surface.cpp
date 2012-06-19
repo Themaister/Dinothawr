@@ -98,12 +98,13 @@ namespace Blit
 
    void Surface::refill_color(Pixel pixel)
    {
-      std::vector<Pixel> pix(data->w * data->h);
-      auto& orig = data->pixels;
+      std::vector<Pixel> pix;
+      pix.reserve(data->w * data->h);
 
-      size_t size = pix.size();
-      for (size_t i = 0; i < size; i++)
-         pix[i] = orig[i] & static_cast<Pixel>(Pixel::alpha_mask) ? pixel : static_cast<Pixel>(0);
+      auto& orig = data->pixels;
+      std::transform(std::begin(orig), std::end(orig), std::back_inserter(pix), [pixel](Pixel old) {
+            return old & static_cast<Pixel>(Pixel::alpha_mask) ? pixel : Pixel();
+         });
 
       data = std::make_shared<Surface::Data>(std::move(pix), data->w, data->h);
    }
