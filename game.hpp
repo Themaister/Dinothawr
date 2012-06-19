@@ -3,6 +3,7 @@
 
 #include "surface.hpp"
 #include "tilemap.hpp"
+#include "font.hpp"
 
 #include <string>
 #include <functional>
@@ -125,6 +126,7 @@ namespace Icy
 
          Blit::SurfaceCache cache;
          Blit::RenderTarget target;
+         Blit::Font font;
 
          std::function<bool (Input)> m_input_cb;
          std::function<void (const void*, unsigned, unsigned, std::size_t)> m_video_cb;

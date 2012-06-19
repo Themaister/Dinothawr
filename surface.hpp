@@ -33,6 +33,10 @@ namespace Blit
          Surface(Pixel pix, int width, int height);
          Surface(std::shared_ptr<const Data> data);
          Surface(const std::vector<Alt>& alts, const std::string& start_id);
+         Surface(const Surface&) = default;
+         Surface& operator=(const Surface&) = default;
+         Surface(Surface&&) = default;
+         Surface& operator=(Surface&&) = default;
 
          Surface sub(Rect rect) const;
 
@@ -88,6 +92,10 @@ namespace Blit
             Pos offset;
             unsigned tag;
          };
+
+         SurfaceCluster() = default;
+         SurfaceCluster(SurfaceCluster&&) = default;
+         SurfaceCluster& operator=(SurfaceCluster&&) = default;
 
          std::vector<Elem>& vec();
          const std::vector<Elem>& vec() const;

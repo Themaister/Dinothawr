@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <game title="assets/titlescreen.png">
+   <font source="dino.font"/>
    <map source="icy.tmx"/>
    <map source="icy2.tmx"/>
    <map source="icy3.tmx"/>
