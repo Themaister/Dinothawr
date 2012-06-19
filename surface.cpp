@@ -1,6 +1,7 @@
 #include "surface.hpp"
 #include <stdexcept>
 #include <utility>
+#include <memory>
 
 namespace Blit
 {
@@ -93,6 +94,18 @@ namespace Blit
                   ));
 
       return &data->pixels[y * data->w + x];
+   }
+
+   void Surface::refill_color(Pixel pixel)
+   {
+      std::vector<Pixel> pix(data->w * data->h);
+      auto& orig = data->pixels;
+
+      size_t size = pix.size();
+      for (size_t i = 0; i < size; i++)
+         pix[i] = orig[i] & static_cast<Pixel>(Pixel::alpha_mask) ? pixel : static_cast<Pixel>(0);
+
+      data = std::make_shared<Surface::Data>(std::move(pix), data->w, data->h);
    }
 
    void Surface::ignore_camera(bool ignore)

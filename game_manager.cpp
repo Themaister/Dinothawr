@@ -28,6 +28,7 @@ namespace Icy
          std::cerr << "Found level: " << str << std::endl;
 
       font = Font(Utils::join(dir, "/", doc.child("game").child("font").attribute("source").value()));
+      font.set_color(Pixel::ARGB(0xff, 0x00, 0xff, 0xff));
       init_menu(doc.child("game").attribute("title").value());
    }
 
@@ -68,7 +69,7 @@ namespace Icy
       if (m_input_cb(Input::Push))
          init_level(0);
 
-      font.render_msg(target, "Hurra for fonts! :D", 150, 30); 
+      font.render_msg(target, "Hurra for fonts! :D\nNO RLY.", 150, 30, 2); 
       m_video_cb(target.buffer(), target.width(), target.height(), target.width() * sizeof(Pixel));
    }
 

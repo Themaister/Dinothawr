@@ -39,6 +39,7 @@ namespace Blit
          Surface& operator=(Surface&&) = default;
 
          Surface sub(Rect rect) const;
+         void refill_color(Pixel pix);
 
          Rect& rect() { return m_rect; }
          const Rect& rect() const { return m_rect; }

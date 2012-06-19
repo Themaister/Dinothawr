@@ -56,7 +56,13 @@ namespace Blit
       return itr->second;
    }
 
-   void Font::render_msg(RenderTarget& target, const std::string& map, int x, int y) const
+   void Font::set_color(Pixel pix)
+   {
+      for (auto& itr : surf_map)
+         itr.second.refill_color(pix);
+   }
+
+   void Font::render_msg(RenderTarget& target, const std::string& map, int x, int y, int newline_offset) const
    {
       int orig_x = x;
 
@@ -70,7 +76,7 @@ namespace Blit
          }
          else
          {
-            y += glyphheight;
+            y += glyphheight + newline_offset;
             x = orig_x;
          }
       }

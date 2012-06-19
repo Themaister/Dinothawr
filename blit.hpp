@@ -40,12 +40,14 @@ namespace Blit
       PixelBase(T pixel) : pixel(pixel) {}
       PixelBase() : pixel(0) {}
 
-      self_type operator|(self_type pix)
+      operator bool() const { return pixel; }
+
+      self_type operator|(self_type pix) const
       {
          return { static_cast<T>(pixel | pix.pixel) };
       }
 
-      self_type operator&(self_type pix)
+      self_type operator&(self_type pix) const
       {
          return { static_cast<T>(pixel & pix.pixel) };
       }
@@ -121,12 +123,12 @@ namespace Blit
          for (x = 0; x + 8 < size; x += 8)
             _mm_storeu_si128(reinterpret_cast<__m128i*>(dst + x), _mm_and_si128(_mm_loadu_si128(reinterpret_cast<__m128i*>(dst + x)), mask));
 
-         std::transform(dst + x, dst + size, dst + x, [](self_type pix) -> self_type { return pix & rgb_mask; });
+         std::transform(dst + x, dst + size, dst + x, [](self_type pix) -> self_type { return pix & static_cast<self_type>(rgb_mask); });
       }
 #else
       static void mask_rgb(self_type *dst, std::size_t size)
       {
-         std::transform(dst, dst + size, dst, [](self_type pix) -> self_type { return pix & rgb_mask; });
+         std::transform(dst, dst + size, dst, [](self_type pix) -> self_type { return pix & static_cast<self_type>(rgb_mask); });
       }
 #endif
 
