@@ -10,7 +10,7 @@ namespace Icy
    Game::Game(const std::string& level)
       : map(level), target(fb_width, fb_height),
          camera(target, player.rect(), {map.pix_width(), map.pix_height()}),
-         won_frame_cnt(0)
+         won_frame_cnt(0), is_sliding(false)
    {
       set_initial_pos(level);
    }
