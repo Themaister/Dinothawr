@@ -19,6 +19,9 @@ namespace Icy
       Left,
       Right,
       Push,
+      Cancel,
+      Start,
+      Select,
       None
    };
 

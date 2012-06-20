@@ -31,7 +31,7 @@ void retro_get_system_info(struct retro_system_info *info)
    info->library_name     = "Dino Defrost";
    info->library_version  = "v0";
    info->need_fullpath    = true;
-   info->valid_extensions = "tmx";
+   info->valid_extensions = "game";
 }
 
 void retro_get_system_av_info(struct retro_system_av_info *info)
@@ -94,11 +94,14 @@ static void load_game(const std::string& path)
       unsigned btn;
       switch (input)
       {
-         case Icy::Input::Up:    btn = RETRO_DEVICE_ID_JOYPAD_UP; break;
-         case Icy::Input::Down:  btn = RETRO_DEVICE_ID_JOYPAD_DOWN; break;
-         case Icy::Input::Left:  btn = RETRO_DEVICE_ID_JOYPAD_LEFT; break;
-         case Icy::Input::Right: btn = RETRO_DEVICE_ID_JOYPAD_RIGHT; break;
-         case Icy::Input::Push:  btn = RETRO_DEVICE_ID_JOYPAD_A; break;
+         case Icy::Input::Up:     btn = RETRO_DEVICE_ID_JOYPAD_UP; break;
+         case Icy::Input::Down:   btn = RETRO_DEVICE_ID_JOYPAD_DOWN; break;
+         case Icy::Input::Left:   btn = RETRO_DEVICE_ID_JOYPAD_LEFT; break;
+         case Icy::Input::Right:  btn = RETRO_DEVICE_ID_JOYPAD_RIGHT; break;
+         case Icy::Input::Push:   btn = RETRO_DEVICE_ID_JOYPAD_A; break;
+         case Icy::Input::Cancel: btn = RETRO_DEVICE_ID_JOYPAD_B; break;
+         case Icy::Input::Select: btn = RETRO_DEVICE_ID_JOYPAD_SELECT; break;
+         case Icy::Input::Start:  btn = RETRO_DEVICE_ID_JOYPAD_START; break;
          default: return false;
       }
 

@@ -80,6 +80,9 @@ namespace Icy
 
       game->iterate();
 
+      if (m_input_cb(Input::Select) && m_input_cb(Input::Start))
+         reset_level();
+
       if (game->won())
       {
          m_current_level++;
