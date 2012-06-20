@@ -29,7 +29,7 @@ namespace Icy
 
       font = Font(Utils::join(dir, "/", doc.child("game").child("font").attribute("source").value()));
       font.set_color(Pixel::ARGB(0xff, 0x00, 0xff, 0xff));
-      init_menu(doc.child("game").attribute("title").value());
+      init_menu(doc.child("game").child("title").attribute("source").value());
    }
 
    GameManager::GameManager() : m_current_level(0), m_in_menu(false) {}
