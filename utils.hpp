@@ -56,33 +56,6 @@ namespace Blit
       }
 
       template <typename T>
-      inline T string_cast(const std::string&);
-
-      template <>
-      inline unsigned string_cast<unsigned>(const std::string& str)
-      {
-         char *endptr;
-         unsigned ret = std::strtoul(str.c_str(), &endptr, 0);
-
-         if (endptr - str.c_str() != static_cast<std::ptrdiff_t>(str.size()))
-            throw std::logic_error(Utils::join(str, " is not a valid unsigned."));
-
-         return ret;
-      }
-
-      template <>
-      inline int string_cast<int>(const std::string& str)
-      {
-         char *endptr;
-         int ret = std::strtol(str.c_str(), &endptr, 0);
-
-         if (endptr - str.c_str() != static_cast<std::ptrdiff_t>(str.size()))
-            throw std::logic_error(Utils::join(str, " is not a valid unsigned."));
-
-         return ret;
-      }
-
-      template <typename T>
       inline auto find_or_default(const T& mapper, const typename T::key_type& key, const typename T::mapped_type& def) -> typename T::mapped_type
       {
          auto itr = mapper.find(key);

@@ -133,7 +133,7 @@ namespace Blit
       {
          Pos pos = {index % width, index / width};
 
-         unsigned gid = Utils::string_cast<unsigned>(gid_str);
+         unsigned gid = std::stoi(gid_str);
          if (gid)
          {
             auto& surf = tiles[gid];

@@ -27,8 +27,8 @@ namespace Icy
       else
          player = cache.from_sprite(Utils::join(Utils::basedir(level), "/", sprite_path));
 
-      int x = Utils::string_cast<int>(Utils::find_or_default(layer->attr, "start_x", "1"));
-      int y = Utils::string_cast<int>(Utils::find_or_default(layer->attr, "start_y", "1"));
+      int x = std::stoi(Utils::find_or_default(layer->attr, "start_x", "1"));
+      int y = std::stoi(Utils::find_or_default(layer->attr, "start_y", "1"));
       auto face = Utils::find_or_default(layer->attr, "start_facing", "right");
 
       player.rect().pos = {x * map.tile_width(), y * map.tile_height()};
