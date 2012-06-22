@@ -22,6 +22,7 @@ namespace Icy
       Cancel,
       Start,
       Select,
+      Menu,
       None
    };
 
@@ -100,6 +101,14 @@ namespace Icy
    class GameManager
    {
       public:
+
+         enum class State
+         {
+            Title,
+            Menu,
+            Game
+         };
+
          GameManager(const std::string& path_game,
                std::function<bool (Input)> input_cb,
                std::function<void (const void*, unsigned, unsigned, std::size_t)> video_cb);
@@ -118,18 +127,21 @@ namespace Icy
          void reset_level();
          void change_level(unsigned level);
          unsigned current_level() const { return m_current_level; }
-         bool in_menu() const { return m_in_menu; }
+         State game_state() const { return m_game_state; }
 
       private:
          std::vector<std::string> levels;
          std::unique_ptr<Game> game;
          std::string dir;
          unsigned m_current_level;
-         bool m_in_menu;
+         State m_game_state;
 
          Blit::SurfaceCache cache;
          Blit::RenderTarget target;
-         Blit::Font font;
+
+         Blit::RenderTarget font_bg;
+         Blit::Font font_sel;
+         Blit::Font font_unsel;
 
          std::function<bool (Input)> m_input_cb;
          std::function<void (const void*, unsigned, unsigned, std::size_t)> m_video_cb;
@@ -137,8 +149,14 @@ namespace Icy
          void init_menu(const std::string& title);
          void init_level(unsigned level);
 
-         void step_menu();
+         void step_title();
          void step_game();
+
+         void enter_menu();
+         void step_menu();
+         int level_select;
+         bool old_pressed_menu_up;
+         bool old_pressed_menu_down;
    };
 }
 

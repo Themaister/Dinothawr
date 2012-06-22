@@ -39,7 +39,7 @@ namespace Blit
    {
       auto itr = alts.equal_range(id);
       auto dist = std::distance(itr.first, itr.second);
-      if (dist <= index)
+      if (dist <= static_cast<int>(index))
          throw std::logic_error(Utils::join("Subindex is out of bounds. Requested Alt: \"", id, "\" Index: ", index));
 
       std::advance(itr.first, index);
