@@ -34,12 +34,14 @@ else
    CXXFLAGS += -O3
 endif
 
+PKG_CONFIG = pkg-config
+
 HEADERS := $(wildcard *.hpp) $(wildcard */*.hpp)
 
 SOURCES := $(wildcard *.cpp) $(wildcard */*.cpp)
 OBJECTS := $(SOURCES:.cpp=.o)
-CXXFLAGS += -std=gnu++0x -Wall -pedantic $(fpic) $(shell pkg-config imlib2 --cflags) -DUSE_SIMD
-LIBS := $(shell pkg-config imlib2 --libs)
+CXXFLAGS += -std=gnu++0x -Wall -pedantic $(fpic) $(shell $(PKG_CONFIG) libpng --cflags) -DUSE_SIMD
+LIBS := $(shell $(PKG_CONFIG) libpng --libs)
 
 all: $(TARGET)
 
