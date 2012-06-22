@@ -9,6 +9,7 @@
 #include <cstdlib>
 #include <stdexcept>
 #include <iterator>
+#include <limits>
 
 #include "pugixml/pugixml.hpp"
 
@@ -53,6 +54,24 @@ namespace Blit
          std::string tmp;
          std::transform(std::begin(str), std::end(str), std::back_inserter(tmp), [](char c) -> char { return ::toupper(c); });
          return tmp;
+      }
+
+      // Mirrors std::stoi, as it doesn't seem to work on Mingw 64-bit.
+      inline int stoi(const std::string& str)
+      {
+         char *next = nullptr;
+         errno = 0;
+         long res = strtol(str.c_str(), &next, 10);
+         if (errno)
+            throw std::invalid_argument("stoi");
+
+         if (next - str.c_str() != static_cast<std::ptrdiff_t>(str.length()))
+            throw std::invalid_argument("stoi");
+
+         if (res < std::numeric_limits<int>::min() || res > std::numeric_limits<int>::max())
+            throw std::out_of_range("stoi");
+
+         return res;
       }
 
       template <typename T>

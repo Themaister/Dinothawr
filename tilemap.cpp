@@ -5,6 +5,7 @@
 #include <stdexcept>
 #include <map>
 #include <utility>
+#include <string>
 #include "pugixml/pugixml.hpp"
 
 using namespace pugi;
@@ -133,7 +134,7 @@ namespace Blit
       {
          Pos pos = {index % width, index / width};
 
-         unsigned gid = std::stoi(gid_str);
+         unsigned gid = Utils::stoi(gid_str);
          if (gid)
          {
             auto& surf = tiles[gid];
