@@ -62,7 +62,10 @@ namespace Icy
       std::copy_if(std::begin(layer->cluster.vec()),
             std::end(layer->cluster.vec()),
             std::back_inserter(surfs), [&attr, &val](const SurfaceCluster::Elem& surf) -> bool {
-               return val.empty() || Utils::find_or_default(surf.surf.attr(), attr, "") == val; 
+               if (val.empty())
+                  return surf.surf.attr().find(attr) != std::end(surf.surf.attr());
+               else
+                  return Utils::find_or_default(surf.surf.attr(), attr, "") == val; 
             });
 
       return surfs;
