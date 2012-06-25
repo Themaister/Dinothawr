@@ -44,7 +44,13 @@ namespace Blit
       private:
          struct OffsetFont : public Font
          {
+            OffsetFont() = default;
             OffsetFont(const std::string& font);
+            OffsetFont(const OffsetFont&) = default;
+            OffsetFont& operator=(const OffsetFont&) = default;
+            OffsetFont(OffsetFont&&) = default;
+            OffsetFont& operator=(OffsetFont&&) = default;
+
             void render_msg(RenderTarget& target, const std::string& msg, int x, int y, int newline_offset = 0) const;
             Pos offset;
          };
