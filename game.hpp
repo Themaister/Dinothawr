@@ -140,8 +140,8 @@ namespace Icy
          Blit::RenderTarget target;
 
          Blit::RenderTarget font_bg;
-         Blit::Font font_sel;
-         Blit::Font font_unsel;
+         Blit::FontCluster font_sel;
+         Blit::FontCluster font_unsel;
 
          std::function<bool (Input)> m_input_cb;
          std::function<void (const void*, unsigned, unsigned, std::size_t)> m_video_cb;

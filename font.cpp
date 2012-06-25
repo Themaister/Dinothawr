@@ -81,5 +81,45 @@ namespace Blit
          }
       }
    }
+
+   void FontCluster::add_font(const std::string& font, Pos offset, Pixel color)
+   {
+      OffsetFont tmp{font};
+      tmp.set_color(color);
+      tmp.offset = offset;
+
+      fonts.push_back(std::move(tmp));
+   }
+
+   Pos FontCluster::glyph_size() const
+   {
+      auto func_x = [](const OffsetFont& a, const OffsetFont& b) {
+         return a.glyph_size().x < b.glyph_size().x;
+      };
+      auto func_y = [](const OffsetFont& a, const OffsetFont& b) {
+         return a.glyph_size().y < b.glyph_size().y;
+      };
+
+      auto max_x = std::max_element(std::begin(fonts), std::end(fonts), func_x);
+      auto max_y = std::max_element(std::begin(fonts), std::end(fonts), func_y);
+
+      return {max_x->glyph_size().x, max_y->glyph_size().y};
+   }
+
+   void FontCluster::render_msg(RenderTarget& target, const std::string& msg,
+         int x, int y, int newline_offset) const
+   {
+      for (auto& font : fonts)
+         font.render_msg(target, msg, x, y, newline_offset);
+   }
+
+   FontCluster::OffsetFont::OffsetFont(const std::string& font) : Font(font)
+   {}
+
+   void FontCluster::OffsetFont::render_msg(RenderTarget& target, const std::string& msg,
+         int x, int y, int newline_offset) const
+   {
+      Font::render_msg(target, msg, x + offset.x, y + offset.y, newline_offset);
+   }
 }
 

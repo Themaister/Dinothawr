@@ -27,9 +27,11 @@ namespace Icy
       for (auto& str : levels)
          std::cerr << "Found level: " << str << std::endl;
 
-      font_sel = font_unsel = Font(Utils::join(dir, "/", doc.child("game").child("font").attribute("source").value()));
-      font_sel.set_color(Pixel::ARGB(0xff, 0xff, 0xff, 0x00));
-      font_unsel.set_color(Pixel::ARGB(0xff, 0x00, 0xff, 0xff));
+      auto font_path = Utils::join(dir, "/", doc.child("game").child("font").attribute("source").value());
+      font_sel.add_font(font_path,   {-1, 1}, Pixel::ARGB(0xff, 0x1f, 0x1f, 0x00));
+      font_sel.add_font(font_path,   { 0, 0}, Pixel::ARGB(0xff, 0xff, 0xff, 0x00));
+      font_unsel.add_font(font_path, {-1, 1}, Pixel::ARGB(0xff, 0x00, 0x1f, 0x1f));
+      font_unsel.add_font(font_path, { 0, 0}, Pixel::ARGB(0xff, 0x00, 0xff, 0xff));
 
       font_bg = RenderTarget(Game::fb_width, Game::fb_height);
 
@@ -98,7 +100,7 @@ namespace Icy
       for (int i = start_level; i < end_level; i++,
             y += font_sel.glyph_size().y + 2)
       {
-         const Font& font =
+         const FontCluster& font =
             i == level_select ? font_sel : font_unsel;
          font.render_msg(font_bg, levels[i], x, y);
       }
