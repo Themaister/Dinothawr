@@ -132,6 +132,28 @@ namespace Blit
       }
 #endif
 
+      template <T shift, T bits>
+      T extract_color() const
+      {
+         return (pixel >> shift) & ((1 << bits) - 1);
+      }
+
+      static self_type blend(self_type a, self_type b)
+      {
+         T a_r = a.extract_color<red_shift, red_bits>();
+         T a_g = a.extract_color<green_shift, green_bits>();
+         T a_b = a.extract_color<blue_shift, blue_bits>();
+         T b_r = b.extract_color<red_shift, red_bits>();
+         T b_g = b.extract_color<green_shift, green_bits>();
+         T b_b = b.extract_color<blue_shift, blue_bits>();
+
+         T res_r = (a_r + b_r + 1) >> 1;
+         T res_g = (a_g + b_g + 1) >> 1;
+         T res_b = (a_b + b_b + 1) >> 1;
+
+         return (res_r << red_shift) | (res_g << green_shift) | (res_b << blue_shift);
+      }
+
       T pixel;
    };
 

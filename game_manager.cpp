@@ -186,8 +186,18 @@ namespace Icy
                pitch /= sizeof(Pixel);
 
                for (unsigned y = 0; y < height; y += scale_factor)
+               {
                   for (unsigned x = 0; x < width; x += scale_factor)
-                     data[preview_width * (y / scale_factor) + (x / scale_factor)] = pix[pitch * y + x] | static_cast<Pixel>(Pixel::alpha_mask);
+                  {
+                     auto a0 = pix[pitch * (y + 0) + (x + 0)];
+                     auto a1 = pix[pitch * (y + 0) + (x + 1)];
+                     auto b0 = pix[pitch * (y + 1) + (x + 0)];
+                     auto b1 = pix[pitch * (y + 1) + (x + 1)];
+                     auto res = Pixel::blend(Pixel::blend(a0, a1), Pixel::blend(b0, b1));
+                     
+                     data[preview_width * (y / scale_factor) + (x / scale_factor)] = res | static_cast<Pixel>(Pixel::alpha_mask);
+                  }
+               }
             });
 
       game.iterate();
