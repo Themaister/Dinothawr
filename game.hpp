@@ -130,7 +130,27 @@ namespace Icy
          State game_state() const { return m_game_state; }
 
       private:
-         std::vector<std::string> levels;
+
+         class Level : public Blit::Renderable
+         {
+            public:
+               Level() = default;
+               Level& operator=(const Level&) = default;
+               Level(const Level&) = default;
+               Level& operator=(Level&&) = default;
+               Level(Level&&) = default;
+
+               Level(const std::string& path);
+               const std::string& path() const { return m_path; }
+
+               void render(Blit::RenderTarget& target);
+
+            private:
+               std::string m_path;
+               Blit::Surface preview;
+         };
+
+         std::vector<Level> levels;
          std::unique_ptr<Game> game;
          std::string dir;
          unsigned m_current_level;

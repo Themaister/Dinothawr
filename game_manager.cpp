@@ -25,12 +25,11 @@ namespace Icy
          levels.push_back(Utils::join(dir, "/", val));
       
       for (auto& str : levels)
-         std::cerr << "Found level: " << str << std::endl;
+         std::cerr << "Found level: " << str.path() << std::endl;
 
       auto font_path = Utils::join(dir, "/", doc.child("game").child("font").attribute("source").value());
-      font_sel.add_font(font_path,   {-1, 1}, Pixel::ARGB(0xff, 0x1f, 0x1f, 0x00));
+      font_sel.add_font(font_path,   {-1, 1}, Pixel::ARGB(0xff, 0x3f, 0x3f, 0x00));
       font_sel.add_font(font_path,   { 0, 0}, Pixel::ARGB(0xff, 0xff, 0xff, 0x00));
-      font_unsel.add_font(font_path, {-1, 1}, Pixel::ARGB(0xff, 0x00, 0x1f, 0x1f));
       font_unsel.add_font(font_path, { 0, 0}, Pixel::ARGB(0xff, 0x00, 0xff, 0xff));
 
       font_bg = RenderTarget(Game::fb_width, Game::fb_height);
@@ -56,7 +55,7 @@ namespace Icy
 
    void GameManager::change_level(unsigned level) 
    {
-      game = std::unique_ptr<Game>(new Game(levels.at(level)));
+      game = std::unique_ptr<Game>(new Game(levels.at(level).path()));
       game->input_cb(m_input_cb);
       game->video_cb(m_video_cb);
 
@@ -85,7 +84,8 @@ namespace Icy
 
    void GameManager::step_menu()
    {
-      font_bg.clear(Pixel::ARGB(0xff, 0x18, 0x18, 0x18));
+      font_bg.clear(Pixel::ARGB(0xff, 0x10, 0x10, 0x10));
+      levels.at(level_select).render(font_bg);
 
       bool pressed_menu_up     = m_input_cb(Input::Up);
       bool pressed_menu_down   = m_input_cb(Input::Down);
@@ -102,7 +102,7 @@ namespace Icy
       {
          const FontCluster& font =
             i == level_select ? font_sel : font_unsel;
-         font.render_msg(font_bg, levels[i], x, y);
+         font.render_msg(font_bg, levels[i].path(), x, y);
       }
 
       if (pressed_menu_up && !old_pressed_menu_up)
@@ -158,6 +158,40 @@ namespace Icy
    bool GameManager::done() const
    {
       return !game && m_game_state == State::Game;
+   }
+
+   GameManager::Level::Level(const std::string& path)
+      : m_path(path)
+   {
+      Game game{path};
+
+      static const unsigned scale_factor = 2;
+      int preview_width  = Game::fb_width / scale_factor;
+      int preview_height = Game::fb_height / scale_factor;
+
+      std::vector<Pixel> data(preview_width * preview_height);
+
+      game.input_cb([](Input) { return false; });
+      game.video_cb([&data, preview_width](const void* pix_data, unsigned width, unsigned height, size_t pitch) {
+               const Pixel* pix = reinterpret_cast<const Pixel*>(pix_data);
+               pitch /= sizeof(Pixel);
+
+               for (unsigned y = 0; y < height; y += scale_factor)
+                  for (unsigned x = 0; x < width; x += scale_factor)
+                     data[preview_width * (y / scale_factor) + (x / scale_factor)] = pix[pitch * y + x] | static_cast<Pixel>(Pixel::alpha_mask);
+            });
+
+      game.iterate();
+
+      preview = Surface(std::make_shared<const Surface::Data>(std::move(data), preview_width, preview_height));
+      preview.ignore_camera();
+      pos(Pos{Game::fb_width, Game::fb_height} / scale_factor - Pos{5, 5});
+   }
+
+   void GameManager::Level::render(RenderTarget& target)
+   {
+      preview.rect().pos = position;
+      target.blit(preview, {}); 
    }
 }
 

@@ -89,8 +89,8 @@ namespace Blit
       if (x >= data->w || y >= data->h || x < 0 || y < 0)
          throw std::logic_error(Utils::join(
                   "Pixel was fetched out-of-bounds. ",
-                  "Asked for: (", x, ", ", y, ". ",
-                  "Real dimension: ", data->w, ", ", data->h, "."
+                  "Asked for: (", x, ", ", y, "). ",
+                  "Real dimension: (", data->w, ", ", data->h, ")."
                   ));
 
       return &data->pixels[y * data->w + x];
