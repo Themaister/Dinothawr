@@ -21,9 +21,18 @@ namespace Icy
          throw std::runtime_error(Utils::join("Failed to load game: ", path_game, "."));
 
       Utils::xml_node_walker walk{doc.child("game"), "map", "source"};
+      Utils::xml_node_walker walk_name{doc.child("game"), "map", "name"};
+
       for (auto& val : walk)
          levels.push_back(Utils::join(dir, "/", val));
-      
+
+      auto itr = std::begin(levels);
+      for (auto& val : walk_name)
+      {
+         itr->set_name(val);
+         ++itr;
+      }
+
       for (auto& str : levels)
          std::cerr << "Found level: " << str.path() << std::endl;
 
@@ -102,7 +111,7 @@ namespace Icy
       {
          const FontCluster& font =
             i == level_select ? font_sel : font_unsel;
-         font.render_msg(font_bg, levels[i].path(), x, y);
+         font.render_msg(font_bg, levels[i].name(), x, y);
       }
 
       if (pressed_menu_up && !old_pressed_menu_up)

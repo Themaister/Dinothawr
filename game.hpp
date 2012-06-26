@@ -143,10 +143,14 @@ namespace Icy
                Level(const std::string& path);
                const std::string& path() const { return m_path; }
 
+               void set_name(const std::string& name) { m_name = name; }
+               const std::string& name() const { return m_name; }
+
                void render(Blit::RenderTarget& target);
 
             private:
                std::string m_path;
+               std::string m_name;
                Blit::Surface preview;
          };
 
