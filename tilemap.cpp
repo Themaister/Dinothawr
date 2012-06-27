@@ -140,7 +140,7 @@ namespace Blit
             auto& surf = tiles[gid];
             surf.rect().pos = pos * Pos{tilewidth, tileheight};
 
-            layer.cluster.vec().push_back(SurfaceCluster::Elem{surf, Pos{}});
+            layer.cluster.vec().push_back({surf, Pos{}});
 
             if (Utils::find_or_default(surf.attr(), "collision", "") == "true")
                collisions.insert(pos);

@@ -39,7 +39,7 @@ namespace Blit
       {
          for (int x = 0; x < width; x++, start_ascii++)
          {
-            surf_map[start_ascii] = surf.sub(Rect{Pos{x * glyphwidth, y * glyphheight},
+            surf_map[start_ascii] = surf.sub({{x * glyphwidth, y * glyphheight},
                   glyphwidth, glyphheight});
 
             surf_map[start_ascii].ignore_camera();

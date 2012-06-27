@@ -14,7 +14,7 @@ namespace Audio
    class Stream
    {
       public:
-         Stream() : m_volume(1.0) {}
+         Stream() : m_volume(1.0), m_loop(false) {}
 
          virtual std::size_t render(float* buffer, std::size_t frames) = 0;
          virtual bool valid() const = 0;
@@ -23,8 +23,12 @@ namespace Audio
          float volume() const { return m_volume; }
          void volume(float vol) { m_volume = vol; }
 
+         bool loop() const { return m_loop; }
+         void loop(bool l) { m_loop = l; }
+
       private:
          float m_volume;
+         bool m_loop;
    };
 
    class SineStream : public Stream
