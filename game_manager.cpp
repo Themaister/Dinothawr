@@ -64,7 +64,7 @@ namespace Icy
 
    void GameManager::change_level(unsigned level) 
    {
-      game = std::unique_ptr<Game>(new Game(levels.at(level).path()));
+      game = Utils::make_unique<Game>(levels.at(level).path());
       game->input_cb(m_input_cb);
       game->video_cb(m_video_cb);
 

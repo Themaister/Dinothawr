@@ -21,12 +21,7 @@ static std::int16_t audio_buffer[2 * AUDIO_FRAMES];
 void retro_init(void)
 {
    mixer = Audio::Mixer();
-   mixer.add_stream(Blit::Utils::make_unique<Audio::SineStream>(440.0, 44100.0));
-   mixer.add_stream(Blit::Utils::make_unique<Audio::SineStream>(440.0 * std::pow(2.0, 4.0 / 12.0), 44100.0));
-   mixer.add_stream(Blit::Utils::make_unique<Audio::SineStream>(440.0 * std::pow(2.0, 7.0 / 12.0), 44100.0));
-   mixer.add_stream(Blit::Utils::make_unique<Audio::SineStream>(440.0 * std::pow(2.0, -12.0 / 12.0), 44100.0));
-   mixer.add_stream(Blit::Utils::make_unique<Audio::SineStream>(440.0 * std::pow(2.0, -24.0 / 12.0), 44100.0));
-   mixer.master_volume(0.01f);
+   //mixer.add_stream(Blit::Utils::make_unique<Audio::VorbisFile>("/tmp/test.ogg"));
 }
 
 void retro_deinit(void)

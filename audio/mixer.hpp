@@ -7,6 +7,8 @@
 #include <utility>
 #include <cmath>
 
+#include <vorbis/vorbisfile.h>
+
 namespace Audio
 {
    class Stream
@@ -46,6 +48,24 @@ namespace Audio
       private:
          double omega;
          double index;
+   };
+
+   class VorbisFile : public Stream
+   {
+      public:
+         VorbisFile(const std::string& path);
+         VorbisFile& operator=(const VorbisFile&) = delete;
+         VorbisFile(const VorbisFile&) = delete;
+
+         ~VorbisFile() noexcept(true);
+
+         std::size_t render(float* buffer, std::size_t frames);
+         bool valid() const { return !is_eof; }
+
+      private:
+         OggVorbis_File vf;
+         bool is_eof;
+         //std::vector<float> stage_buffer;
    };
 
    class Mixer
