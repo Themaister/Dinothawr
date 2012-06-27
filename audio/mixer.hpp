@@ -65,7 +65,6 @@ namespace Audio
       private:
          OggVorbis_File vf;
          bool is_eof;
-         //std::vector<float> stage_buffer;
    };
 
    class Mixer

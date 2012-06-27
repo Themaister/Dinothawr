@@ -78,21 +78,6 @@ namespace Audio
    {
       std::size_t rendered = 0;
 
-#if 0
-      if (!stage_buffer.empty())
-      {
-         auto to_copy = std::min(stage_buffer.size(), frames * 2);
-         std::copy(std::begin(stage_buffer), std::begin(stage_buffer) + to_copy,
-               buffer);
-
-         stage_buffer.clear();
-
-         buffer  += to_copy;
-         rendered = to_copy / Mixer::channels;
-         frames  -= rendered;
-      }
-#endif
-
       while (frames)
       {
          float **pcm;
