@@ -53,6 +53,8 @@ namespace Audio
       if (ov_fopen(path.c_str(), &vf) < 0)
          throw std::runtime_error(join("Failed to open vorbis file: ", path));
 
+      loop(true);
+
       std::cerr << "Vorbis info:" << std::endl;
       std::cerr << "\tStreams: " << ov_streams(&vf) << std::endl;
 
@@ -89,7 +91,23 @@ namespace Audio
 
          if (ret == 0) // EOF
          {
-            is_eof = true;
+            if (loop())
+            {
+               loop(false); // Avoid infinite recursion incause our audio clip is really short.
+
+               if (ov_time_seek(&vf, 0.0) == 0)
+               {
+                  auto ret = render(buffer, frames);
+                  return rendered + ret;
+               }
+               else
+                  is_eof = true;
+
+               loop(true);
+            }
+            else
+               is_eof = true;
+
             return rendered;
          }
 
