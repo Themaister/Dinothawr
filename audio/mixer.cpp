@@ -11,7 +11,7 @@ namespace Audio
 {
    Mixer::Mixer() : master_vol(1.0f) {}
 
-   void Mixer::add_stream(std::unique_ptr<Stream> str)
+   void Mixer::add_stream(std::shared_ptr<Stream> str)
    {
       streams.push_back(std::move(str));
    }
@@ -19,7 +19,7 @@ namespace Audio
    void Mixer::purge_dead_streams()
    {
       streams.erase(std::remove_if(std::begin(streams), std::end(streams),
-               [](const std::unique_ptr<Stream> &str) {
+               [](const std::shared_ptr<Stream> &str) {
                   return !str->valid();
                }), std::end(streams));
    }

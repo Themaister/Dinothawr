@@ -80,7 +80,7 @@ namespace Audio
          Mixer& operator=(Mixer&&) = default;
          Mixer(Mixer&&) = default;
 
-         void add_stream(std::unique_ptr<Stream> str);
+         void add_stream(std::shared_ptr<Stream> str);
 
          void render(float *buffer, std::size_t frames);
          void render(std::int16_t *buffer, std::size_t frames);
@@ -90,7 +90,7 @@ namespace Audio
       private:
          std::vector<float> buffer;
          std::vector<float> conv_buffer;
-         std::vector<std::unique_ptr<Stream>> streams;
+         std::vector<std::shared_ptr<Stream>> streams;
 
          float master_vol;
          void purge_dead_streams();
