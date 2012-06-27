@@ -7,12 +7,27 @@
 #include <cmath>
 
 #include "game.hpp"
+#include "utils.hpp"
+#include "audio/mixer.hpp"
 
 static Icy::GameManager game;
 static std::string game_path;
 
+static Audio::Mixer mixer;
+
+#define AUDIO_FRAMES (44100 / 60)
+static std::int16_t audio_buffer[2 * AUDIO_FRAMES];
+
 void retro_init(void)
-{}
+{
+   mixer = Audio::Mixer();
+   mixer.add_stream(Blit::Utils::make_unique<Audio::SineStream>(440.0, 44100.0));
+   mixer.add_stream(Blit::Utils::make_unique<Audio::SineStream>(440.0 * std::pow(2.0, 4.0 / 12.0), 44100.0));
+   mixer.add_stream(Blit::Utils::make_unique<Audio::SineStream>(440.0 * std::pow(2.0, 7.0 / 12.0), 44100.0));
+   mixer.add_stream(Blit::Utils::make_unique<Audio::SineStream>(440.0 * std::pow(2.0, -12.0 / 12.0), 44100.0));
+   mixer.add_stream(Blit::Utils::make_unique<Audio::SineStream>(440.0 * std::pow(2.0, -24.0 / 12.0), 44100.0));
+   mixer.master_volume(0.01f);
+}
 
 void retro_deinit(void)
 {}
@@ -36,7 +51,7 @@ void retro_get_system_info(struct retro_system_info *info)
 
 void retro_get_system_av_info(struct retro_system_av_info *info)
 {
-   info->timing = { 60.0, 32000.0 };
+   info->timing = { 60.0, 44100.0 };
    
    unsigned width = Icy::Game::fb_width, height = Icy::Game::fb_height;
    info->geometry = { width, height, width, height };
@@ -83,6 +98,14 @@ void retro_run(void)
 {
    input_poll_cb();
    game.iterate();
+
+   mixer.render(audio_buffer, AUDIO_FRAMES);
+
+   for (unsigned i = 0; i < AUDIO_FRAMES; )
+   {
+      unsigned written = audio_batch_cb(audio_buffer + 2 * i, AUDIO_FRAMES - i);
+      i += written;
+   }
 
    if (game.done())
       environ_cb(RETRO_ENVIRONMENT_SHUTDOWN, nullptr);
