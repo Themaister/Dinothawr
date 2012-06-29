@@ -10,6 +10,8 @@
 #include "utils.hpp"
 #include "audio/mixer.hpp"
 
+using namespace Blit::Utils;
+
 static Icy::GameManager game;
 static std::string game_path;
 
@@ -19,10 +21,7 @@ static Audio::Mixer mixer;
 static std::int16_t audio_buffer[2 * AUDIO_FRAMES];
 
 void retro_init(void)
-{
-   mixer = Audio::Mixer();
-   //mixer.add_stream(std::make_shared<Audio::VorbisFile>("/tmp/test.ogg"));
-}
+{}
 
 void retro_deinit(void)
 {}
@@ -145,6 +144,10 @@ bool retro_load_game(const struct retro_game_info* info)
    {
       game_path = info->path;
       load_game(game_path);
+
+      mixer = Audio::Mixer();
+      mixer.add_stream(std::make_shared<Audio::VorbisFile>(join(basedir(info->path), "/assets/bg.ogg")));
+
       return true;
    }
    catch(const std::exception& e)

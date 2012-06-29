@@ -94,6 +94,7 @@ namespace Audio
             if (loop())
             {
                loop(false); // Avoid infinite recursion incause our audio clip is really short.
+               ScopeExit holder([this] { loop(true); });
 
                if (ov_time_seek(&vf, 0.0) == 0)
                {
@@ -102,8 +103,6 @@ namespace Audio
                }
                else
                   is_eof = true;
-
-               loop(true);
             }
             else
                is_eof = true;

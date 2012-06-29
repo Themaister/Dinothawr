@@ -134,6 +134,19 @@ namespace Blit
       {
          return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
       }
+
+      class ScopeExit
+      {
+         public:
+            ScopeExit(std::function<void ()> fn) : fn(fn) {}
+            ~ScopeExit() { fn(); }
+
+            ScopeExit& operator=(const ScopeExit&) = delete;
+            ScopeExit(const ScopeExit&) = delete;
+
+         private:
+            std::function<void ()> fn;
+      };
    }
 }
 
