@@ -71,7 +71,7 @@ namespace Audio
          throw std::logic_error("Couldn't find info for vorbis file.");
    }
 
-   VorbisFile::~VorbisFile() noexcept(true)
+   VorbisFile::~VorbisFile()
    {
       ov_clear(&vf);
    }

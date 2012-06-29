@@ -18,7 +18,7 @@ namespace Audio
 
          virtual std::size_t render(float* buffer, std::size_t frames) = 0;
          virtual bool valid() const = 0;
-         virtual ~Stream() = default;
+         virtual ~Stream() {};
 
          float volume() const { return m_volume; }
          void volume(float vol) { m_volume = vol; }
@@ -61,7 +61,7 @@ namespace Audio
          VorbisFile& operator=(const VorbisFile&) = delete;
          VorbisFile(const VorbisFile&) = delete;
 
-         ~VorbisFile() noexcept(true);
+         ~VorbisFile();
 
          std::size_t render(float* buffer, std::size_t frames);
          bool valid() const { return !is_eof; }
