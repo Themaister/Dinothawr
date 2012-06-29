@@ -106,6 +106,7 @@ namespace Icy
          {
             Title,
             Menu,
+            MenuSlide,
             Game
          };
 
@@ -164,8 +165,7 @@ namespace Icy
          Blit::RenderTarget target;
 
          Blit::RenderTarget font_bg;
-         Blit::FontCluster font_sel;
-         Blit::FontCluster font_unsel;
+         Blit::FontCluster font;
 
          std::function<bool (Input)> m_input_cb;
          std::function<void (const void*, unsigned, unsigned, std::size_t)> m_video_cb;
@@ -176,11 +176,25 @@ namespace Icy
          void step_title();
          void step_game();
 
+         // Menu stuff.
          void enter_menu();
          void step_menu();
+         void step_menu_slide();
+         void start_slide(Blit::Pos dir);
          int level_select;
-         bool old_pressed_menu_up;
-         bool old_pressed_menu_down;
+         bool old_pressed_menu_left;
+         bool old_pressed_menu_right;
+         Blit::Pos menu_slide_dir;
+         unsigned slide_cnt;
+         unsigned slide_end;
+
+         enum {
+            preview_base_x      = 80,
+            preview_base_y      = 80,
+            font_preview_base_x = 40,
+            font_preview_base_y = 40,
+            preview_delta_x     = 8 * 24
+         };
    };
 }
 

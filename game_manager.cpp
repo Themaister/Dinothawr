@@ -33,13 +33,18 @@ namespace Icy
          ++itr;
       }
 
-      for (auto& str : levels)
-         std::cerr << "Found level: " << str.path() << std::endl;
+      int i = 0;
+      for (auto& level : levels)
+      {
+         std::cerr << "Found level: " << level.path() << std::endl;
+         level.pos({preview_base_x + i * preview_delta_x, preview_base_y});
+
+         i++;
+      }
 
       auto font_path = Utils::join(dir, "/", doc.child("game").child("font").attribute("source").value());
-      font_sel.add_font(font_path,   {-1, 1}, Pixel::ARGB(0xff, 0x3f, 0x3f, 0x00));
-      font_sel.add_font(font_path,   { 0, 0}, Pixel::ARGB(0xff, 0xff, 0xff, 0x00));
-      font_unsel.add_font(font_path, { 0, 0}, Pixel::ARGB(0xff, 0x00, 0xff, 0xff));
+      font.add_font(font_path, {-1, 1}, Pixel::ARGB(0xff, 0x3f, 0x3f, 0x00));
+      font.add_font(font_path, { 0, 0}, Pixel::ARGB(0xff, 0xff, 0xff, 0x00));
 
       font_bg = RenderTarget(Game::fb_width, Game::fb_height);
 
@@ -54,7 +59,8 @@ namespace Icy
 
       target = RenderTarget(Game::fb_width, Game::fb_height);
       target.blit(surf, {});
-      font_sel.render_msg(target, "Press Start", 100, 150);
+
+      font.render_msg(target, "Press Start", 100, 150);
    }
 
    void GameManager::reset_level()
@@ -91,41 +97,63 @@ namespace Icy
       level_select = m_current_level;
    }
 
+   void GameManager::step_menu_slide()
+   {
+      font_bg.camera_move(menu_slide_dir);
+      slide_cnt++;
+      if (slide_cnt >= slide_end)
+         m_game_state = State::Menu;
+
+      font_bg.clear(Pixel::ARGB(0xff, 0x10, 0x10, 0x10));
+      for (auto& preview : levels)
+         preview.render(font_bg);
+
+      font.render_msg(font_bg, Utils::join("\"", levels[level_select].name(), "\""), font_preview_base_x, font_preview_base_y);
+
+      m_video_cb(font_bg.buffer(), font_bg.width(), font_bg.height(), font_bg.width() * sizeof(Pixel));
+   }
+
+   void GameManager::start_slide(Pos dir)
+   {
+      m_game_state = State::MenuSlide;
+
+      slide_cnt = 0;
+      slide_end = preview_delta_x / std::abs(dir.x);
+      menu_slide_dir = dir;
+   }
+
    void GameManager::step_menu()
    {
       font_bg.clear(Pixel::ARGB(0xff, 0x10, 0x10, 0x10));
-      levels.at(level_select).render(font_bg);
 
-      bool pressed_menu_up     = m_input_cb(Input::Up);
-      bool pressed_menu_down   = m_input_cb(Input::Down);
+      for (auto& preview : levels)
+         preview.render(font_bg);
+
+      bool pressed_menu_left   = m_input_cb(Input::Left);
+      bool pressed_menu_right  = m_input_cb(Input::Right);
       bool pressed_menu_ok     = m_input_cb(Input::Push);
       bool pressed_menu_cancel = m_input_cb(Input::Cancel);
 
-      int start_level = std::max(level_select - 5, 0);
-      int end_level   = std::min(start_level + 10, static_cast<int>(levels.size()));
+      font.render_msg(font_bg, Utils::join("\"", levels[level_select].name(), "\""), font_preview_base_x, font_preview_base_y);
 
-      int x = 20;
-      int y = 20;
-      for (int i = start_level; i < end_level; i++,
-            y += font_sel.glyph_size().y + 2)
+      if (pressed_menu_left && !old_pressed_menu_right && level_select > 0)
       {
-         const FontCluster& font =
-            i == level_select ? font_sel : font_unsel;
-         font.render_msg(font_bg, levels[i].name(), x, y);
+         level_select--;
+         start_slide({-8, 0});
       }
-
-      if (pressed_menu_up && !old_pressed_menu_up)
-         level_select = std::max(level_select - 1, 0);
-      else if (pressed_menu_down && !old_pressed_menu_down)
-         level_select = std::min(level_select + 1, static_cast<int>(levels.size() - 1));
+      else if (pressed_menu_right && !old_pressed_menu_right && level_select < static_cast<int>(levels.size()) - 1)
+      {
+         level_select++;
+         start_slide({8, 0});
+      }
 
       if (pressed_menu_ok)
          init_level(level_select);
       else if (pressed_menu_cancel && game)
          m_game_state = State::Game;
 
-      old_pressed_menu_up   = pressed_menu_up;
-      old_pressed_menu_down = pressed_menu_down;
+      old_pressed_menu_left  = pressed_menu_left;
+      old_pressed_menu_right = pressed_menu_right;
 
       m_video_cb(font_bg.buffer(), font_bg.width(), font_bg.height(), font_bg.width() * sizeof(Pixel));
    }
@@ -136,9 +164,6 @@ namespace Icy
          return;
 
       game->iterate();
-
-      if (m_input_cb(Input::Select) && m_input_cb(Input::Start))
-         reset_level();
 
       if (m_input_cb(Input::Menu))
          enter_menu();
@@ -159,6 +184,7 @@ namespace Icy
       {
          case State::Title: return step_title();
          case State::Menu: return step_menu();
+         case State::MenuSlide: return step_menu_slide();
          case State::Game: return step_game();
          default: throw std::logic_error("Game state is invalid.");
       }
@@ -203,7 +229,6 @@ namespace Icy
       game.iterate();
 
       preview = Surface(std::make_shared<const Surface::Data>(std::move(data), preview_width, preview_height));
-      preview.ignore_camera();
       pos(Pos{Game::fb_width, Game::fb_height} / scale_factor - Pos{5, 5});
    }
 

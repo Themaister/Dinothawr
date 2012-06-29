@@ -42,7 +42,7 @@ namespace Blit
             surf_map[start_ascii] = surf.sub({{x * glyphwidth, y * glyphheight},
                   glyphwidth, glyphheight});
 
-            surf_map[start_ascii].ignore_camera();
+            surf_map[start_ascii].ignore_camera(true);
          }
       }
    }
