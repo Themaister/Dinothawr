@@ -46,14 +46,16 @@ namespace Audio
       audio_convert_float_to_s16(out_buffer, conv_buffer.data(), frames * channels);
    }
 
+   void Mixer::clear()
+   {
+      streams.clear();
+   }
 
    VorbisFile::VorbisFile(const std::string& path)
       : is_eof(false)
    {
       if (ov_fopen(path.c_str(), &vf) < 0)
          throw std::runtime_error(join("Failed to open vorbis file: ", path));
-
-      loop(true);
 
       std::cerr << "Vorbis info:" << std::endl;
       std::cerr << "\tStreams: " << ov_streams(&vf) << std::endl;

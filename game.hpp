@@ -4,6 +4,7 @@
 #include "surface.hpp"
 #include "tilemap.hpp"
 #include "font.hpp"
+#include "audio/mixer.hpp"
 
 #include <string>
 #include <functional>
@@ -12,6 +13,9 @@
 
 namespace Icy
 {
+   Audio::Mixer& get_mixer();
+   const std::string& get_basedir();
+
    enum class Input : unsigned
    {
       Up,

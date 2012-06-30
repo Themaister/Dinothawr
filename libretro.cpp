@@ -14,8 +14,22 @@ using namespace Blit::Utils;
 
 static Icy::GameManager game;
 static std::string game_path;
+static std::string game_path_dir;
 
 static Audio::Mixer mixer;
+
+namespace Icy
+{
+   Audio::Mixer& get_mixer()
+   {
+      return mixer;
+   }
+
+   const std::string& get_basedir()
+   {
+      return game_path_dir;
+   }
+}
 
 #define AUDIO_FRAMES (44100 / 60)
 static std::int16_t audio_buffer[2 * AUDIO_FRAMES];
@@ -143,10 +157,14 @@ bool retro_load_game(const struct retro_game_info* info)
    try
    {
       game_path = info->path;
+      game_path_dir = basedir(game_path);
+
       load_game(game_path);
 
       mixer = Audio::Mixer();
-      mixer.add_stream(std::make_shared<Audio::VorbisFile>(join(basedir(info->path), "/assets/bg.ogg")));
+      auto stream = std::make_shared<Audio::VorbisFile>(join(Icy::get_basedir(), "/assets/bg.ogg")); // Kinda hardcoded atm.
+      stream->loop(true);
+      mixer.add_stream(std::move(stream));
 
       return true;
    }
