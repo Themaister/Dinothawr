@@ -95,6 +95,7 @@ namespace Icy
    {
       m_game_state = State::Menu;
       level_select = m_current_level;
+      font_bg.camera_set({preview_delta_x * level_select, 0});
    }
 
    void GameManager::step_menu_slide()
