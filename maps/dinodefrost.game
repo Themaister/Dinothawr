@@ -8,4 +8,5 @@
    <map source="icy4.tmx" name="Level 4"/>
    <map source="icy5.tmx" name="Level 5"/>
    <map source="icy6.tmx" name="Level 6"/>
+   <map source="icy7.tmx" name="Level 7"/>
 </game>
