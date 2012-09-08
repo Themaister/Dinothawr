@@ -18,7 +18,7 @@ namespace Icy
 
    enum class Input : unsigned
    {
-      Up,
+      Up = 0,
       Down,
       Left,
       Right,
@@ -40,6 +40,15 @@ namespace Icy
          Blit::RenderTarget* target;
          const Blit::Rect* rect;
          Blit::Pos map_size;
+   };
+
+   class EdgeDetector
+   {
+      public:
+         EdgeDetector(bool init);
+         bool set(bool state);
+      private:
+         bool pos;
    };
 
    class Game
@@ -87,6 +96,7 @@ namespace Icy
          void update_animation();
          void prepare_won_animation();
          void update_input();
+         void update_triggers();
          void move_if_no_collision(Input input);
          void push_block();
          bool is_offset_collision(Blit::Surface& surf, Blit::Pos offset);
@@ -100,6 +110,8 @@ namespace Icy
 
          std::vector<std::reference_wrapper<Blit::SurfaceCluster::Elem>> get_tiles_with_attr(const std::string& layer,
                const std::string& attr, const std::string& val = "");
+
+         EdgeDetector push;
    };
 
    class GameManager

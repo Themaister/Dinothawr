@@ -7,10 +7,20 @@ using namespace Blit;
 
 namespace Icy
 {
+   EdgeDetector::EdgeDetector(bool init) : pos(init)
+   {}
+
+   bool EdgeDetector::set(bool state)
+   {
+      bool ret = state && !pos;
+      pos = state;
+      return ret;
+   }
+
    Game::Game(const std::string& level)
       : map(level), target(fb_width, fb_height),
          camera(target, player.rect(), {map.pix_width(), map.pix_height()}),
-         won_frame_cnt(0), is_sliding(false)
+         won_frame_cnt(0), is_sliding(false), push(true)
    {
       set_initial_pos(level);
    }
@@ -148,6 +158,8 @@ namespace Icy
 
       if (!stepper)
          update_input();
+      else
+         update_triggers();
 
       // Reset animation.
       if (!had_stepper && stepper)
@@ -179,9 +191,16 @@ namespace Icy
       player.active_alt_index(anim_index);
    }
 
+   void Game::update_triggers()
+   {
+      push.set(m_input_cb(Input::Push));
+   }
+
    void Game::update_input()
    {
-      if (m_input_cb(Input::Push))
+      bool push_trigger = push.set(m_input_cb(Input::Push));
+
+      if (push_trigger)
          push_block();
       else if (m_input_cb(Input::Up))
          move_if_no_collision(Input::Up);
