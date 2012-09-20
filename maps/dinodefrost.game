@@ -17,4 +17,10 @@
    <map source="icy13.tmx" name="Level 13"/>
    <map source="icy14.tmx" name="Level 14"/>
    <map source="icy15.tmx" name="Level 15"/>
+   <map source="icy16.tmx" name="Level 16"/>
+   <map source="icy17.tmx" name="Level 17"/>
+   <map source="icy18.tmx" name="Level 18"/>
+   <map source="icy19.tmx" name="Level 19"/>
+   <map source="icy20.tmx" name="Level 20"/>
+   <map source="icy21.tmx" name="Level 21"/>
 </game>
