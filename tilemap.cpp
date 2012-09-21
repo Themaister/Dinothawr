@@ -161,7 +161,7 @@ namespace Blit
       Renderable::pos(position);
    }
 
-   void Tilemap::render(RenderTarget& target)
+   void Tilemap::render(RenderTarget& target) const
    {
       for (auto& layer : m_layers)
          layer.cluster.render(target);

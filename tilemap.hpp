@@ -29,7 +29,7 @@ namespace Blit
          const std::vector<Layer>& layers() const { return m_layers; }
 
          void pos(Pos position);
-         void render(RenderTarget& target);
+         void render(RenderTarget& target) const;
 
          int tile_width() const { return tilewidth; }
          int tile_height() const { return tileheight; }

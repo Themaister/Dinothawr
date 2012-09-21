@@ -17,7 +17,7 @@ namespace Blit
       this->func = func;
    }
 
-   void SurfaceCluster::render(RenderTarget& target)
+   void SurfaceCluster::render(RenderTarget& target) const
    {
       for (auto& surf : elems)
          target.blit_offset(surf.surf, {},

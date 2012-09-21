@@ -142,7 +142,7 @@ namespace Icy
          bool done() const;
 
          void reset_level();
-         void change_level(unsigned level);
+         void change_level(unsigned chapter, unsigned level);
          unsigned current_level() const { return m_current_level; }
          State game_state() const { return m_game_state; }
 
@@ -163,7 +163,7 @@ namespace Icy
                void set_name(const std::string& name) { m_name = name; }
                const std::string& name() const { return m_name; }
 
-               void render(Blit::RenderTarget& target);
+               void render(Blit::RenderTarget& target) const;
 
             private:
                std::string m_path;
@@ -171,9 +171,33 @@ namespace Icy
                Blit::Surface preview;
          };
 
-         std::vector<Level> levels;
+         class Chapter
+         {
+            public:
+               Chapter() = default;
+               Chapter& operator=(const Chapter&) = default;
+               Chapter(const Chapter&) = default;
+               Chapter& operator=(Chapter&&) = default;
+               Chapter(Chapter&&) = default;
+
+               Chapter(std::vector<Level> levels, const std::string& name) :
+                  m_levels(std::move(levels)), m_name(name) {}
+
+               const std::string& name() const { return m_name; }
+               const Level& level(unsigned i) const { return m_levels.at(i); }
+               const std::vector<Level>& levels() const { return m_levels; }
+               unsigned num_levels() const { return m_levels.size(); }
+
+            private:
+               std::vector<Level> m_levels;
+               std::string m_name;
+         };
+
+         std::vector<Chapter> chapters;
          std::unique_ptr<Game> game;
          std::string dir;
+
+         unsigned m_current_chap;
          unsigned m_current_level;
          State m_game_state;
 
@@ -187,7 +211,10 @@ namespace Icy
          std::function<void (const void*, unsigned, unsigned, std::size_t)> m_video_cb;
 
          void init_menu(const std::string& title);
-         void init_level(unsigned level);
+         void init_level(unsigned chapter, unsigned level);
+
+         Chapter load_chapter(pugi::xml_node chap_node, int chapter);
+         const Level& get_selected_level() const;
 
          void step_title();
          void step_game();
@@ -196,11 +223,18 @@ namespace Icy
          void enter_menu();
          void step_menu();
          void step_menu_slide();
-         void start_slide(Blit::Pos dir);
+         void start_slide(Blit::Pos dir, unsigned cnt);
+
+         int chap_select;
          int level_select;
+
          bool old_pressed_menu_left;
          bool old_pressed_menu_right;
+         bool old_pressed_menu_up;
+         bool old_pressed_menu_down;
+
          Blit::Pos menu_slide_dir;
+
          unsigned slide_cnt;
          unsigned slide_end;
 
@@ -209,7 +243,9 @@ namespace Icy
             preview_base_y      = 80,
             font_preview_base_x = 40,
             font_preview_base_y = 40,
-            preview_delta_x     = 8 * 24
+            preview_delta_x     = 8 * 24,
+            preview_delta_y     = 8 * 24,
+            preview_slide_cnt   = 24
          };
    };
 }

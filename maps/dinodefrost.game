@@ -2,25 +2,33 @@
 <game>
    <title source="assets/titlescreen.png"/>
    <font source="dino.font"/>
-   <map source="icy.tmx"   name="Level 1"/>
-   <map source="icy2.tmx"  name="Level 2"/>
-   <map source="icy3.tmx"  name="Level 3"/>
-   <map source="icy4.tmx"  name="Level 4"/>
-   <map source="icy5.tmx"  name="Level 5"/>
-   <map source="icy6.tmx"  name="Level 6"/>
-   <map source="icy7.tmx"  name="Level 7"/>
-   <map source="icy8.tmx"  name="Level 8"/>
-   <map source="icy9.tmx"  name="Level 9"/>
-   <map source="icy10.tmx" name="Level 10"/>
-   <map source="icy11.tmx" name="Level 11"/>
-   <map source="icy12.tmx" name="Level 12"/>
-   <map source="icy13.tmx" name="Level 13"/>
-   <map source="icy14.tmx" name="Level 14"/>
-   <map source="icy15.tmx" name="Level 15"/>
-   <map source="icy16.tmx" name="Level 16"/>
-   <map source="icy17.tmx" name="Level 17"/>
-   <map source="icy18.tmx" name="Level 18"/>
-   <map source="icy19.tmx" name="Level 19"/>
-   <map source="icy20.tmx" name="Level 20"/>
-   <map source="icy21.tmx" name="Level 21"/>
+   <chapter name="Beginner">
+      <map source="icy.tmx"   name="Level 1"/>
+      <map source="icy2.tmx"  name="Level 2"/>
+      <map source="icy3.tmx"  name="Level 3"/>
+      <map source="icy4.tmx"  name="Level 4"/>
+      <map source="icy5.tmx"  name="Level 5"/>
+      <map source="icy6.tmx"  name="Level 6"/>
+   </chapter>
+   <chapter name="Medium">
+      <map source="icy7.tmx"  name="Level 7"/>
+      <map source="icy8.tmx"  name="Level 8"/>
+      <map source="icy9.tmx"  name="Level 9"/>
+      <map source="icy10.tmx" name="Level 10"/>
+      <map source="icy11.tmx" name="Level 11"/>
+      <map source="icy12.tmx" name="Level 12"/>
+   </chapter>
+   <chapter name="Hard">
+      <map source="icy13.tmx" name="Level 13"/>
+      <map source="icy14.tmx" name="Level 14"/>
+      <map source="icy15.tmx" name="Level 15"/>
+      <map source="icy16.tmx" name="Level 16"/>
+      <map source="icy17.tmx" name="Level 17"/>
+   </chapter>
+   <chapter name="Hardcore as fuck">
+      <map source="icy18.tmx" name="Level 18"/>
+      <map source="icy19.tmx" name="Level 19"/>
+      <map source="icy20.tmx" name="Level 20"/>
+      <map source="icy21.tmx" name="Level 21"/>
+   </chapter>
 </game>

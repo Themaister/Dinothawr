@@ -74,7 +74,7 @@ namespace Blit
    class Renderable
    {
       public:
-         virtual void render(RenderTarget& target) = 0;
+         virtual void render(RenderTarget& target) const = 0;
          virtual Pos pos() const { return position; }
          virtual void pos(Pos position) { this->position = position; }
 
@@ -102,7 +102,7 @@ namespace Blit
          const std::vector<Elem>& vec() const;
 
          void set_transform(std::function<Pos (Pos)> func);
-         void render(RenderTarget& target);
+         void render(RenderTarget& target) const;
 
       private:
          std::vector<Elem> elems;
