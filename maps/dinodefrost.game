@@ -24,11 +24,18 @@
       <map source="icy15.tmx" name="Level 15"/>
       <map source="icy16.tmx" name="Level 16"/>
       <map source="icy17.tmx" name="Level 17"/>
-   </chapter>
-   <chapter name="Hardcore as fuck">
       <map source="icy18.tmx" name="Level 18"/>
+   </chapter>
+   <chapter name="Hardcore">
       <map source="icy19.tmx" name="Level 19"/>
       <map source="icy20.tmx" name="Level 20"/>
       <map source="icy21.tmx" name="Level 21"/>
+      <map source="icy22.tmx" name="Level 22"/>
+      <map source="icy23.tmx" name="Level 23"/>
+      <map source="icy24.tmx" name="Level 24"/>
+   </chapter>
+   <chapter name="Hardcore as fuck">
+      <map source="icy25.tmx" name="Level 25"/>
+      <map source="icy26.tmx" name="Level 26"/>
    </chapter>
 </game>
