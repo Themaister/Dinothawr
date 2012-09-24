@@ -18,6 +18,7 @@
    <chapter name="Chapter 3">
       <map source="icy10.tmx" name="Level 10"/>
       <map source="icy11.tmx" name="Level 11"/>
+      <map source="icy16.tmx" name="Level 16"/>
       <map source="icy26.tmx" name="Level 26"/>
 		<map source="icy2.tmx"  name="Level 2"/>
       <!-- <map source="icy3.tmx"  name="Level 3"/> -->
@@ -27,7 +28,6 @@
    <chapter name="Chapter 4">
       <map source="icy6.tmx"  name="Level 6"/>
       <map source="icy7.tmx"  name="Level 7"/>
-      <map source="icy16.tmx" name="Level 16"/>
       <map source="icy15.tmx" name="Level 15"/>
    </chapter>
    <chapter name="Unrated">
