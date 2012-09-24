@@ -98,6 +98,7 @@ namespace Icy
       if (m_input_cb(Input::Start))
          enter_menu();
 
+      target.finalize();
       m_video_cb(target.buffer(), target.width(), target.height(), target.width() * sizeof(Pixel));
    }
 
@@ -124,6 +125,8 @@ namespace Icy
       font.render_msg(font_bg,
             Utils::join("\"", chapters.at(chap_select).name(), ": ", get_selected_level().name(), "\""),
             font_preview_base_x, font_preview_base_y);
+
+      font_bg.finalize();
 
       m_video_cb(font_bg.buffer(), font_bg.width(), font_bg.height(), font_bg.width() * sizeof(Pixel));
    }
@@ -194,6 +197,8 @@ namespace Icy
       old_pressed_menu_right = pressed_menu_right;
       old_pressed_menu_up    = pressed_menu_up;
       old_pressed_menu_down  = pressed_menu_down;
+
+      font_bg.finalize();
 
       m_video_cb(font_bg.buffer(), font_bg.width(), font_bg.height(), font_bg.width() * sizeof(Pixel));
    }
