@@ -32,6 +32,7 @@
    </chapter>
    <chapter name="Unrated">
       <map source="icy27.tmx" name="Level 27"/>
+      <map source="icy28.tmx" name="Level 28"/>
       <map source="icy12.tmx" name="Level 12"/>
       <!-- <map source="icy13.tmx" name="Level 13"/> -->
       <map source="icy14.tmx" name="Level 14"/>
