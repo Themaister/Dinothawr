@@ -33,6 +33,7 @@
       <map source="icy7.tmx"  name="Level 7"/>
       <map source="icy27.tmx" name="Level 27"/>
       <map source="icy15.tmx" name="Level 15"/>
+      <map source="icy28.tmx" name="Level 28"/>
       <!-- <map source="icy13.tmx" name="Level 13"/> -->
 		<!-- <map source="icy17.tmx" name="Level 17"/> -->
       <!-- <map source="icy21.tmx" name="Level 21"/> -->
