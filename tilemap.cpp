@@ -167,6 +167,18 @@ namespace Blit
          layer.cluster.render(target);
    }
 
+   void Tilemap::render_until_layer(unsigned index, RenderTarget& target) const
+   {
+      for (unsigned i = 0; i <= index; i++)
+         m_layers.at(i).cluster.render(target);
+   }
+
+   void Tilemap::render_after_layer(unsigned index, RenderTarget& target) const
+   {
+      for (unsigned i = index + 1; i < m_layers.size(); i++)
+         m_layers.at(i).cluster.render(target);
+   }
+
    bool Tilemap::collision(Pos tile) const
    {
       return collisions.count(tile) ||
@@ -237,6 +249,18 @@ namespace Blit
          return &*layer;
       else
          return nullptr;
+   }
+
+   int Tilemap::find_layer_index(const std::string& name) const
+   {
+      auto layer = std::find_if(std::begin(m_layers), std::end(m_layers), [&name](const Layer& layer) {
+               return Utils::tolower(layer.name) == name;
+            });
+
+      if (layer != std::end(m_layers))
+         return layer - std::begin(m_layers);
+      else
+         return -1;
    }
 
    Tilemap::Layer* Tilemap::find_layer(const std::string& name)

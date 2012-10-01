@@ -37,11 +37,13 @@ namespace Icy
       else
          player = cache.from_sprite(Utils::join(Utils::basedir(level), "/", sprite_path));
 
-      int x = Utils::stoi(Utils::find_or_default(layer->attr, "start_x", "1"));
-      int y = Utils::stoi(Utils::find_or_default(layer->attr, "start_y", "1"));
+      int x     = Utils::stoi(Utils::find_or_default(layer->attr, "start_x", "1"));
+      int y     = Utils::stoi(Utils::find_or_default(layer->attr, "start_y", "1"));
+      int off_x = Utils::stoi(Utils::find_or_default(layer->attr, "player_offset_x", "0"));
+      int off_y = Utils::stoi(Utils::find_or_default(layer->attr, "player_offset_y", "0"));
       auto face = Utils::find_or_default(layer->attr, "start_facing", "right");
 
-      player.rect().pos = {x * map.tile_width(), y * map.tile_height()};
+      player.rect().pos = {x * map.tile_width() + off_x, y * map.tile_height() + off_y};
       facing = string_to_input(face);
       player.active_alt(face);
    }
@@ -52,8 +54,12 @@ namespace Icy
 
       target.clear(Pixel::ARGB(0x00, 0x00, 0x00, 0x00));
       camera.update();
-      map.render(target);
+
+      unsigned index = map.find_layer_index("floor");
+
+      map.render_until_layer(index, target);
       target.blit(player, {});
+      map.render_after_layer(index, target);
 
       target.finalize();
 

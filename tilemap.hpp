@@ -30,6 +30,8 @@ namespace Blit
 
          void pos(Pos position);
          void render(RenderTarget& target) const;
+         void render_until_layer(unsigned index, RenderTarget& target) const;
+         void render_after_layer(unsigned index, RenderTarget& target) const;
 
          int tile_width() const { return tilewidth; }
          int tile_height() const { return tileheight; }
@@ -43,6 +45,7 @@ namespace Blit
          Surface* find_tile(unsigned layer, Pos pos);
          Surface* find_tile(const std::string& name, Pos pos);
          const Layer* find_layer(const std::string& name) const;
+         int find_layer_index(const std::string& name) const;
          Layer* find_layer(const std::string& name);
 
          bool collision(Pos tile) const;
