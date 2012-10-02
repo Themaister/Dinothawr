@@ -53,7 +53,7 @@ namespace Icy
       int i = 0;
       for (auto& level : levels)
       {
-         std::cerr << "Found level: " << level.path() << std::endl;
+         //std::cerr << "Found level: " << level.path() << std::endl;
          level.pos({preview_base_x + i * preview_delta_x, preview_base_y + preview_delta_y * chapter});
 
          i++;

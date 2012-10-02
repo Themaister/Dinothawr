@@ -72,6 +72,7 @@ namespace Icy
          Blit::Tilemap map;
          Blit::RenderTarget target;
          Blit::Surface player;
+         Blit::Pos player_off;
          Blit::SurfaceCache cache;
          Input facing;
 

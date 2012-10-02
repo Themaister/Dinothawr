@@ -43,7 +43,8 @@ namespace Icy
       int off_y = Utils::stoi(Utils::find_or_default(layer->attr, "player_offset_y", "0"));
       auto face = Utils::find_or_default(layer->attr, "start_facing", "right");
 
-      player.rect().pos = {x * map.tile_width() + off_x, y * map.tile_height() + off_y};
+      player.rect().pos = {x * map.tile_width(), y * map.tile_height()};
+      player_off = {off_x, off_y};
       facing = string_to_input(face);
       player.active_alt(face);
    }
@@ -55,11 +56,8 @@ namespace Icy
       target.clear(Pixel::ARGB(0x00, 0x00, 0x00, 0x00));
       camera.update();
 
-      unsigned index = map.find_layer_index("floor");
-
-      map.render_until_layer(index, target);
-      target.blit(player, {});
-      map.render_after_layer(index, target);
+      map.render(target);
+      target.blit_offset(player, {}, player_off);
 
       target.finalize();
 
@@ -254,6 +252,12 @@ namespace Icy
    bool Game::is_offset_collision(Surface& surf, Pos offset)
    {
       auto new_rect = surf.rect() + offset;
+
+      // Always assume that the rect in question is inside a single tile.
+      // This is needed as the dino sprite can be slightly larger than 16x16, but it's
+      // *assumed* from a collition detection POV that a surface is tile sized to simplify things.
+      new_rect.w = map.tile_width();
+      new_rect.h = map.tile_height();
 
       bool outside_grid = surf.rect().pos.x % map.tile_width() || surf.rect().pos.y % map.tile_height();
       if (outside_grid)
