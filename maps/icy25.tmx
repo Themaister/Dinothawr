@@ -64,6 +64,8 @@
  </layer>
  <layer name="Floor" width="5" height="5">
   <properties>
+   <property name="player_offset_x" value="0"/>
+   <property name="player_offset_y" value="-1"/>
    <property name="player_sprite" value="assets/dino.sprite"/>
    <property name="start_x" value="1"/>
    <property name="start_y" value="2"/>
