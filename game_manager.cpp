@@ -13,7 +13,8 @@ namespace Icy
    GameManager::GameManager(const std::string& path_game,
          std::function<bool (Input)> input_cb,
          std::function<void (const void*, unsigned, unsigned, std::size_t)> video_cb)
-      : dir(Utils::basedir(path_game)), m_current_chap(0), m_current_level(0), m_game_state(State::Title),
+      : save(&chapters), dir(Utils::basedir(path_game)),
+         m_current_chap(0), m_current_level(0), m_game_state(State::Title),
          m_input_cb(input_cb), m_video_cb(video_cb)
    {
       xml_document doc;
@@ -32,7 +33,7 @@ namespace Icy
       init_menu(doc.child("game").child("title").attribute("source").value());
    }
 
-   GameManager::GameManager() : m_current_chap(0), m_current_level(0), m_game_state(State::Game) {}
+   GameManager::GameManager() : save(&chapters), m_current_chap(0), m_current_level(0), m_game_state(State::Game) {}
 
    GameManager::Chapter GameManager::load_chapter(xml_node chap, int chapter)
    {
@@ -283,6 +284,30 @@ namespace Icy
    {
       //preview.rect().pos = position;
       target.blit_offset(preview, {}, position); 
+   }
+
+   GameManager::SaveManager::SaveManager(std::vector<GameManager::Chapter> *chaps)
+      : chaps(chaps)
+   {}
+
+   void* GameManager::SaveManager::data()
+   {
+      return save_data.data();
+   }
+
+   bool GameManager::SaveManager::serialize()
+   {
+      return false;
+   }
+
+   bool GameManager::SaveManager::unserialize()
+   {
+      return false;
+   }
+
+   std::size_t GameManager::SaveManager::size() const
+   {
+      return save_data.size();
    }
 }
 

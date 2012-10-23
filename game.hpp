@@ -147,6 +147,9 @@ namespace Icy
          unsigned current_level() const { return m_current_level; }
          State game_state() const { return m_game_state; }
 
+         std::size_t save_size() const { return save.size(); }
+         void* save_data() { return save.data(); }
+
       private:
 
          class Level : public Blit::Renderable
@@ -166,10 +169,14 @@ namespace Icy
 
                void render(Blit::RenderTarget& target) const;
 
+               void set_completion(bool state) { completion = state; }
+               bool get_completion() const { return completion; }
+
             private:
                std::string m_path;
                std::string m_name;
                Blit::Surface preview;
+               bool completion;
          };
 
          class Chapter
@@ -184,6 +191,8 @@ namespace Icy
                Chapter(std::vector<Level> levels, const std::string& name) :
                   m_levels(std::move(levels)), m_name(name) {}
 
+               void set_completion(unsigned level, bool state) { m_levels.at(level).set_completion(state); }
+               bool get_completion(unsigned level) const { return m_levels.at(level).get_completion(); }
                const std::string& name() const { return m_name; }
                const Level& level(unsigned i) const { return m_levels.at(i); }
                const std::vector<Level>& levels() const { return m_levels; }
@@ -193,6 +202,23 @@ namespace Icy
                std::vector<Level> m_levels;
                std::string m_name;
          };
+
+         class SaveManager
+         {
+            public:
+               SaveManager(std::vector<Chapter> *chaps);
+
+               void *data();
+               bool serialize();
+               bool unserialize();
+               std::size_t size() const;
+
+            private:
+               std::vector<Chapter> *chaps;
+               std::vector<char> save_data;
+         };
+
+         SaveManager save;
 
          std::vector<Chapter> chapters;
          std::unique_ptr<Game> game;
