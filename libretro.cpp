@@ -166,6 +166,9 @@ bool retro_load_game(const struct retro_game_info* info)
       stream->loop(true);
       mixer.add_stream(std::move(stream));
 
+      retro_pixel_format fmt = RETRO_PIXEL_FORMAT_XRGB8888;
+      environ_cb(RETRO_ENVIRONMENT_SET_PIXEL_FORMAT, &fmt);
+
       return true;
    }
    catch(const std::exception& e)

@@ -26,15 +26,15 @@ namespace Blit
          blue_bits,  blue_shift> self_type;
 
       typedef T type;
-      static const T alpha_mask = ((1 << alpha_bits) - 1) << alpha_shift;
+      static const T alpha_mask = ((1u << alpha_bits) - 1) << alpha_shift;
       static const T rgb_mask =
-         ((1 << red_bits)   - 1) << red_shift   |
-         ((1 << green_bits) - 1) << green_shift |
-         ((1 << blue_bits)  - 1) << blue_shift;
+         ((1u << red_bits)   - 1) << red_shift   |
+         ((1u << green_bits) - 1) << green_shift |
+         ((1u << blue_bits)  - 1) << blue_shift;
 
       static_assert((alpha_bits + red_bits + green_bits + blue_bits) <= CHAR_BIT * sizeof(T),
             "ARGB bitmasks do not match with pixel format.");
-      static_assert(alpha_bits && red_bits && green_bits && blue_bits,
+      static_assert(alpha_bits + red_bits && green_bits && blue_bits,
             "All colors must have at least 1 bit.");
 
       PixelBase(T pixel) : pixel(pixel) {}
@@ -88,49 +88,16 @@ namespace Blit
          return a | r | g | b;
       }
 
-#if defined(__SSE2__) && defined(USE_SIMD)
-      static void set_line_if_alpha(self_type* dst, const self_type* src, unsigned pix)
-      {
-         __m128i mask = _mm_set1_epi16(static_cast<T>(alpha_mask));
-
-         unsigned x;
-         for (x = 0; x + 8 < pix; x += 8)
-         {
-            __m128i src_vec  = _mm_loadu_si128(reinterpret_cast<const __m128i*>(src + x));
-            __m128i dst_vec  = _mm_loadu_si128(reinterpret_cast<const __m128i*>(dst + x));
-            __m128i noalpha  = _mm_cmpeq_epi16(_mm_and_si128(src_vec, mask), _mm_setzero_si128());
-            __m128i res      = _mm_or_si128(_mm_and_si128(noalpha, dst_vec), _mm_andnot_si128(noalpha, src_vec));
-
-            _mm_storeu_si128(reinterpret_cast<__m128i*>(dst + x), res);
-         }
-
-         for (; x < pix; x++)
-            dst[x].set_if_alpha(src[x]);
-      }
-#else
       static void set_line_if_alpha(self_type* dst, const self_type* src, unsigned pix)
       {
          for (unsigned x = 0; x < pix; x++)
             dst[x].set_if_alpha(src[x]);
       }
-#endif
 
-#if defined(__SSE2__) && defined(USE_SIMD)
-      static void mask_rgb(self_type *dst, std::size_t size)
-      {
-         __m128i mask = _mm_set1_epi16(static_cast<T>(rgb_mask));
-         unsigned x;
-         for (x = 0; x + 8 < size; x += 8)
-            _mm_storeu_si128(reinterpret_cast<__m128i*>(dst + x), _mm_and_si128(_mm_loadu_si128(reinterpret_cast<__m128i*>(dst + x)), mask));
-
-         std::transform(dst + x, dst + size, dst + x, [](self_type pix) -> self_type { return pix & static_cast<self_type>(rgb_mask); });
-      }
-#else
       static void mask_rgb(self_type *dst, std::size_t size)
       {
          std::transform(dst, dst + size, dst, [](self_type pix) -> self_type { return pix & static_cast<self_type>(rgb_mask); });
       }
-#endif
 
       template <T shift, T bits>
       T extract_color() const
@@ -157,11 +124,11 @@ namespace Blit
       T pixel;
    };
 
-   typedef PixelBase<std::uint16_t,
-           1, 15, // A
-           5, 10, // R
-           5,  5, // G
-           5,  0> // B
+   typedef PixelBase<std::uint32_t,
+           8, 24, // A
+           8, 16, // R
+           8,  8, // G
+           8,  0> // B
       Pixel;
 
    static_assert(sizeof(Pixel) == sizeof(typename Pixel::type), "PixelBase has padding.");

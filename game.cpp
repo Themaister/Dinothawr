@@ -59,8 +59,6 @@ namespace Icy
       map.render(target);
       target.blit_offset(player, {}, player_off);
 
-      target.finalize();
-
       if (m_video_cb)
          m_video_cb(target.buffer(), target.width(), target.height(), target.width() * sizeof(Pixel));
    }

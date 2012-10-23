@@ -22,7 +22,7 @@
 
 #define AUDIO_ALIGNED __attribute__((aligned(16)))
 
-#if __SSE2__ && defined(USE_SIMD)
+#if __SSE2__
 #define audio_convert_s16_to_float audio_convert_s16_to_float_SSE2
 #define audio_convert_float_to_s16 audio_convert_float_to_s16_SSE2
 #define audio_mix_volume           audio_mix_volume_SSE2
@@ -36,7 +36,7 @@ void audio_convert_float_to_s16_SSE2(int16_t *out,
 void audio_mix_volume_SSE2(float *out,
       const float *in, float vol, size_t samples);
 
-#elif __ALTIVEC__ && defined(USE_SIMD)
+#elif __ALTIVEC__
 #define audio_convert_s16_to_float audio_convert_s16_to_float_altivec
 #define audio_convert_float_to_s16 audio_convert_float_to_s16_altivec
 

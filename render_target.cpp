@@ -105,10 +105,5 @@ namespace Blit
    {
       return pixel_raw_no_offset(pos - rect.pos);
    }
-
-   void RenderTarget::finalize()
-   {
-      Pixel::mask_rgb(m_buffer.data(), m_buffer.size());
-   }
 }
 
