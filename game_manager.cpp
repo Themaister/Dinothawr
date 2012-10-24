@@ -265,7 +265,7 @@ namespace Icy
    }
 
    GameManager::Level::Level(const std::string& path)
-      : m_path(path)
+      : m_path(path), completion(false)
    {
       Game game{path};
 

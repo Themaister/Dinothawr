@@ -155,7 +155,7 @@ namespace Icy
          class Level : public Blit::Renderable
          {
             public:
-               Level() = default;
+               Level() : completion(false) {}
                Level& operator=(const Level&) = default;
                Level(const Level&) = default;
                Level& operator=(Level&&) = default;
@@ -176,20 +176,20 @@ namespace Icy
                std::string m_path;
                std::string m_name;
                Blit::Surface preview;
-               bool completion = false;
+               bool completion;
          };
 
          class Chapter
          {
             public:
-               Chapter() = default;
+               Chapter() : minimum_clear(0) {}
                Chapter& operator=(const Chapter&) = default;
                Chapter(const Chapter&) = default;
                Chapter& operator=(Chapter&&) = default;
                Chapter(Chapter&&) = default;
 
                Chapter(std::vector<Level> levels, const std::string& name) :
-                  m_levels(std::move(levels)), m_name(name) {}
+                  m_levels(std::move(levels)), m_name(name), minimum_clear(0) {}
 
                void set_minimum_clear(unsigned minimum) { minimum_clear = minimum; }
                bool cleared() const
@@ -211,7 +211,7 @@ namespace Icy
             private:
                std::vector<Level> m_levels;
                std::string m_name;
-               unsigned minimum_clear = 0;
+               unsigned minimum_clear;
          };
 
          class SaveManager
