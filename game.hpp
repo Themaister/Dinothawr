@@ -176,7 +176,7 @@ namespace Icy
                std::string m_path;
                std::string m_name;
                Blit::Surface preview;
-               bool completion;
+               bool completion = false;
          };
 
          class Chapter
@@ -191,6 +191,16 @@ namespace Icy
                Chapter(std::vector<Level> levels, const std::string& name) :
                   m_levels(std::move(levels)), m_name(name) {}
 
+               void set_minimum_clear(unsigned minimum) { minimum_clear = minimum; }
+               bool cleared() const
+               {
+                  unsigned clear_cnt = 0;
+                  for (auto& level : m_levels)
+                     clear_cnt += level.get_completion();
+
+                  return clear_cnt >= minimum_clear;
+               }
+
                void set_completion(unsigned level, bool state) { m_levels.at(level).set_completion(state); }
                bool get_completion(unsigned level) const { return m_levels.at(level).get_completion(); }
                const std::string& name() const { return m_name; }
@@ -201,6 +211,7 @@ namespace Icy
             private:
                std::vector<Level> m_levels;
                std::string m_name;
+               unsigned minimum_clear = 0;
          };
 
          class SaveManager
@@ -234,11 +245,15 @@ namespace Icy
          Blit::RenderTarget font_bg;
          Blit::FontCluster font;
 
+         Blit::Surface arrow_top;
+         Blit::Surface arrow_bottom;
+
          std::function<bool (Input)> m_input_cb;
          std::function<void (const void*, unsigned, unsigned, std::size_t)> m_video_cb;
 
          void init_menu(const std::string& title);
          void init_level(unsigned chapter, unsigned level);
+         void init_arrow(pugi::xml_node doc);
 
          Chapter load_chapter(pugi::xml_node chap_node, int chapter);
          const Level& get_selected_level() const;

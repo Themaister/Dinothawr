@@ -31,9 +31,22 @@ namespace Icy
       font_bg = RenderTarget(Game::fb_width, Game::fb_height);
 
       init_menu(doc.child("game").child("title").attribute("source").value());
+      init_arrow(doc);
    }
 
    GameManager::GameManager() : save(&chapters), m_current_chap(0), m_current_level(0), m_game_state(State::Game) {}
+
+   void GameManager::init_arrow(xml_node doc)
+   {
+      auto arrow = cache.from_sprite(Utils::join(dir, "/", doc.child("game").child("arrow").attribute("source").value()));
+      arrow_top = arrow;
+      arrow_top.active_alt("up");
+      arrow_bottom = arrow;
+      
+      int arrow_x = (Game::fb_width - arrow.rect().w) / 2;
+      arrow_top.rect().pos = { arrow_x, 60 };
+      arrow_bottom.rect().pos = { arrow_x, 160 };
+   }
 
    GameManager::Chapter GameManager::load_chapter(xml_node chap, int chapter)
    {
@@ -60,7 +73,9 @@ namespace Icy
          i++;
       }
 
-      return { std::move(levels), chap.attribute("name").value() };
+      Chapter loaded_chap = { std::move(levels), chap.attribute("name").value() };
+      loaded_chap.set_minimum_clear(chap.attribute("minimum_clear").as_int());
+      return std::move(loaded_chap);
    }
 
    void GameManager::init_menu(const std::string& level)
@@ -152,6 +167,15 @@ namespace Icy
          for (auto& preview : chap.levels())
             preview.render(font_bg);
 
+      if (chap_select > 0)
+         font_bg.blit_offset(arrow_top, {}, font_bg.camera_pos());
+
+      if (static_cast<unsigned>(chap_select) < chapters.size() - 1)
+      {
+         arrow_bottom.active_alt(chapters[chap_select].cleared() ? "down" : "lock");
+         font_bg.blit_offset(arrow_bottom, {}, font_bg.camera_pos());
+      }
+
       bool pressed_menu_left   = m_input_cb(Input::Left);
       bool pressed_menu_right  = m_input_cb(Input::Right);
       bool pressed_menu_up     = m_input_cb(Input::Up);
@@ -179,7 +203,7 @@ namespace Icy
          start_slide({(new_level - static_cast<int>(level_select)) * 8, -8}, preview_slide_cnt);
          level_select = new_level;
       }
-      else if (pressed_menu_down && !old_pressed_menu_down && chap_select < static_cast<int>(chapters.size()) - 1)
+      else if (pressed_menu_down && !old_pressed_menu_down && chap_select < static_cast<int>(chapters.size()) - 1 && chapters[chap_select].cleared())
       {
          int new_level = std::min(chapters[chap_select + 1].num_levels() - 1, static_cast<unsigned>(level_select));
          chap_select++;
@@ -211,18 +235,15 @@ namespace Icy
 
       if (game->won())
       {
-         m_current_level++;
-         if (m_current_level >= chapters.at(m_current_chap).num_levels())
-         {
-            m_current_level = 0;
-            m_current_chap++;
-            if (m_current_chap >= chapters.size())
-               m_current_chap = 0;
+         chapters[m_current_chap].set_completion(m_current_level, true);
 
-            enter_menu();
+         if (m_current_level < chapters.at(m_current_chap).num_levels() - 1)
+         {
+            m_current_level++;
+            change_level(m_current_chap, m_current_level);
          }
          else
-            change_level(m_current_chap, m_current_level);
+            enter_menu();
       }
    }
 
