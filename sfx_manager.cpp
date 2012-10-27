@@ -9,15 +9,15 @@ namespace Icy
       effects[ident] = std::make_shared<Audio::VorbisFile>(path);
    }
 
-   void SFXManager::play_sfx(const std::string &ident, float volume)
+   void SFXManager::play_sfx(const std::string &ident, float volume) const
    {
-      auto sfx = effects[ident];
-      if (!sfx)
+      auto sfx = effects.find(ident);
+      if (sfx == std::end(effects))
          throw std::runtime_error("Invalid SFX!");
 
-      sfx->volume(volume);
-      sfx->rewind();
-      get_mixer().add_stream(sfx);
+      auto duped = sfx->second->dup();
+      duped->volume(volume);
+      get_mixer().add_stream(duped);
    }
 }
 

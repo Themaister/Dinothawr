@@ -52,7 +52,7 @@ namespace Audio
    }
 
    VorbisFile::VorbisFile(const std::string& path)
-      : is_eof(false)
+      : path(path), is_eof(false), is_mono(false)
    {
       if (ov_fopen(path.c_str(), &vf) < 0)
          throw std::runtime_error(join("Failed to open vorbis file: ", path));

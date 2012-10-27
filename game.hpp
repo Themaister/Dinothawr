@@ -34,7 +34,7 @@ namespace Icy
    {
       public:
          void add_stream(const std::string &ident, const std::string &path);
-         void play_sfx(const std::string &ident, float volume = 1.0f);
+         void play_sfx(const std::string &ident, float volume = 1.0f) const;
 
       private:
          std::map<std::string, std::shared_ptr<Audio::VorbisFile>> effects;

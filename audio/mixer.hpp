@@ -6,6 +6,7 @@
 #include <memory>
 #include <utility>
 #include <cmath>
+#include <string>
 
 #include <vorbis/vorbisfile.h>
 
@@ -68,8 +69,10 @@ namespace Audio
          std::size_t render(float* buffer, std::size_t frames);
          bool valid() const { return !is_eof; }
          void rewind();
+         std::shared_ptr<VorbisFile> dup() const { return std::make_shared<VorbisFile>(path); }
 
       private:
+         std::string path;
          OggVorbis_File vf;
          bool is_eof;
          bool is_mono;
