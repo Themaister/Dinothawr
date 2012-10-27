@@ -57,6 +57,20 @@ namespace Audio
          double index;
    };
 
+   class PCMStream : public Stream
+   {
+      public:
+         PCMStream(std::shared_ptr<std::vector<float>> data);
+
+         bool valid() const { return ptr < data->size(); }
+         void rewind() { ptr = 0; }
+         std::size_t render(float* buffer, std::size_t frames);
+
+      private:
+         std::shared_ptr<std::vector<float>> data;
+         std::size_t ptr;
+   };
+
    class VorbisFile : public Stream
    {
       public:
@@ -70,6 +84,7 @@ namespace Audio
          bool valid() const { return !is_eof; }
          void rewind();
          std::shared_ptr<VorbisFile> dup() const { return std::make_shared<VorbisFile>(path); }
+         std::vector<float> decode();
 
       private:
          std::string path;

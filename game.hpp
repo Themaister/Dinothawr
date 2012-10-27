@@ -37,7 +37,7 @@ namespace Icy
          void play_sfx(const std::string &ident, float volume = 1.0f) const;
 
       private:
-         std::map<std::string, std::shared_ptr<Audio::VorbisFile>> effects;
+         std::map<std::string, std::shared_ptr<std::vector<float>>> effects;
    };
 
    SFXManager& get_sfx();

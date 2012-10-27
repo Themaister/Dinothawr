@@ -6,7 +6,8 @@ namespace Icy
 {
    void SFXManager::add_stream(const std::string &ident, const std::string &path)
    {
-      effects[ident] = std::make_shared<Audio::VorbisFile>(path);
+      Audio::VorbisFile vf{path};
+      effects[ident] = std::make_shared<std::vector<float>>(vf.decode());
    }
 
    void SFXManager::play_sfx(const std::string &ident, float volume) const
@@ -15,7 +16,7 @@ namespace Icy
       if (sfx == std::end(effects))
          throw std::runtime_error("Invalid SFX!");
 
-      auto duped = sfx->second->dup();
+      auto duped = std::make_shared<Audio::PCMStream>(sfx->second);
       duped->volume(volume);
       get_mixer().add_stream(duped);
    }

@@ -51,6 +51,47 @@ namespace Audio
       streams.clear();
    }
 
+   PCMStream::PCMStream(std::shared_ptr<std::vector<float>> data)
+      : data(data), ptr(0)
+   {}
+
+   std::size_t PCMStream::render(float* buffer, std::size_t frames)
+   {
+      std::size_t to_write = std::min(frames * Mixer::channels, data->size() - ptr);
+
+      std::copy(std::begin(*data) + ptr,
+            std::begin(*data) + ptr + to_write,
+            buffer);
+
+      if (to_write < frames && loop())
+      {
+         rewind();
+         std::size_t to_write_loop = std::min(frames * Mixer::channels - to_write, data->size() - (ptr + to_write));
+         std::copy(std::begin(*data) + ptr + to_write,
+               std::begin(*data) + ptr + to_write + to_write_loop,
+               buffer + to_write);
+
+         to_write += to_write_loop;
+      }
+
+      ptr += to_write;
+      return to_write / Mixer::channels;
+   }
+
+   std::vector<float> VorbisFile::decode()
+   {
+      std::vector<float> data;
+      rewind();
+      loop(false);
+
+      float buffer[4096 * Mixer::channels];
+      std::size_t rendered = 0;
+      while ((rendered = render(buffer, 4096)))
+         data.insert(std::end(data), buffer, buffer + rendered * Mixer::channels);
+
+      return data;
+   }
+
    VorbisFile::VorbisFile(const std::string& path)
       : path(path), is_eof(false), is_mono(false)
    {
