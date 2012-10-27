@@ -5,6 +5,7 @@
    <arrow source="assets/nav.sprite"/>
    <sfx>
       <sound source="assets/sfx/level_next.ogg" name="level_next"/>
+      <sound source="assets/sfx/chapter_locked.ogg" name="chapter_locked"/>
    </sfx>
    <chapter name="Chapter 1" minimum_clear="1">
       <map source="icy25.tmx" name="Level 25"/>

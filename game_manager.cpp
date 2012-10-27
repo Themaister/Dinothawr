@@ -227,12 +227,17 @@ namespace Icy
          start_slide({(new_level - static_cast<int>(level_select)) * 8, -8}, preview_slide_cnt);
          level_select = new_level;
       }
-      else if (pressed_menu_down && !old_pressed_menu_down && chap_select < static_cast<int>(chapters.size()) - 1 && chapters[chap_select].cleared())
+      else if (pressed_menu_down && !old_pressed_menu_down && chap_select < static_cast<int>(chapters.size()) - 1)
       {
-         int new_level = std::min(chapters[chap_select + 1].num_levels() - 1, static_cast<unsigned>(level_select));
-         chap_select++;
-         start_slide({(new_level - static_cast<int>(level_select)) * 8, 8}, preview_slide_cnt);
-         level_select = new_level;
+         if (chapters[chap_select].cleared())
+         {
+            int new_level = std::min(chapters[chap_select + 1].num_levels() - 1, static_cast<unsigned>(level_select));
+            chap_select++;
+            start_slide({(new_level - static_cast<int>(level_select)) * 8, 8}, preview_slide_cnt);
+            level_select = new_level;
+         }
+         else
+            get_sfx().play_sfx("chapter_locked");
       }
       else if (pressed_menu_ok)
          init_level(chap_select, level_select);
