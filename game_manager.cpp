@@ -32,6 +32,7 @@ namespace Icy
 
       init_menu(doc.child("game").child("title").attribute("source").value());
       init_arrow(doc);
+      init_sfx(doc);
    }
 
    GameManager::GameManager() : save(&chapters), m_current_chap(0), m_current_level(0), m_game_state(State::Game) {}
@@ -46,6 +47,27 @@ namespace Icy
       int arrow_x = (Game::fb_width - arrow.rect().w) / 2;
       arrow_top.rect().pos = { arrow_x, 60 };
       arrow_bottom.rect().pos = { arrow_x, 160 };
+   }
+
+   void GameManager::init_sfx(xml_node doc)
+   {
+      auto sfx = doc.child("game").child("sfx");
+      Utils::xml_node_walker walk{sfx, "sound", "name"};
+      Utils::xml_node_walker walk_source{sfx, "sound", "source"};
+
+      std::vector<std::pair<std::string, std::string>> sfxs;
+      for (auto& val : walk)
+         sfxs.push_back({val, ""});
+
+      auto itr = std::begin(sfxs);
+      for (auto& val : walk_source)
+      {
+         itr->second = val;
+         ++itr;
+      }
+
+      for (auto& sfx : sfxs)
+         get_sfx().add_stream(sfx.first, Utils::join(dir, "/", sfx.second));
    }
 
    GameManager::Chapter GameManager::load_chapter(xml_node chap, int chapter)
@@ -157,6 +179,8 @@ namespace Icy
       slide_end = cnt;
 
       menu_slide_dir = dir;
+
+      get_sfx().play_sfx("level_next");
    }
 
    void GameManager::step_menu()

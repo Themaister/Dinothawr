@@ -17,18 +17,13 @@ static std::string game_path;
 static std::string game_path_dir;
 
 static Audio::Mixer mixer;
+static Icy::SFXManager sfx;
 
 namespace Icy
 {
-   Audio::Mixer& get_mixer()
-   {
-      return mixer;
-   }
-
-   const std::string& get_basedir()
-   {
-      return game_path_dir;
-   }
+   Audio::Mixer& get_mixer() { return mixer; }
+   const std::string& get_basedir() { return game_path_dir; }
+   SFXManager& get_sfx() { return sfx; }
 }
 
 #define AUDIO_FRAMES (44100 / 60)
@@ -51,7 +46,7 @@ void retro_set_controller_port_device(unsigned, unsigned)
 void retro_get_system_info(struct retro_system_info *info)
 {
    memset(info, 0, sizeof(*info));
-   info->library_name     = "Dino Defrost";
+   info->library_name     = "Dinothawr";
    info->library_version  = "v0";
    info->need_fullpath    = true;
    info->valid_extensions = "game";

@@ -30,6 +30,18 @@ namespace Icy
       None
    };
 
+   class SFXManager
+   {
+      public:
+         void add_stream(const std::string &ident, const std::string &path);
+         void play_sfx(const std::string &ident, float volume = 1.0f);
+
+      private:
+         std::map<std::string, std::shared_ptr<Audio::VorbisFile>> effects;
+   };
+
+   SFXManager& get_sfx();
+
    class CameraManager
    {
       public:
@@ -254,6 +266,7 @@ namespace Icy
          void init_menu(const std::string& title);
          void init_level(unsigned chapter, unsigned level);
          void init_arrow(pugi::xml_node doc);
+         void init_sfx(pugi::xml_node doc);
 
          Chapter load_chapter(pugi::xml_node chap_node, int chapter);
          const Level& get_selected_level() const;

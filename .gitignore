@@ -3,3 +3,5 @@
 *.dll
 *.dylib
 *.bsv
+*.wav
+*.zip

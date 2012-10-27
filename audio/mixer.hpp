@@ -26,6 +26,8 @@ namespace Audio
          bool loop() const { return m_loop; }
          void loop(bool l) { m_loop = l; }
 
+         virtual void rewind() {};
+
       private:
          float m_volume;
          bool m_loop;
@@ -65,10 +67,12 @@ namespace Audio
 
          std::size_t render(float* buffer, std::size_t frames);
          bool valid() const { return !is_eof; }
+         void rewind();
 
       private:
          OggVorbis_File vf;
          bool is_eof;
+         bool is_mono;
    };
 
    class Mixer

@@ -63,8 +63,21 @@ namespace Audio
       auto info = ov_info(&vf, 0);
       if (info)
       {
-         if (info->channels != static_cast<int>(Mixer::channels))
-            throw std::logic_error(join("Vorbis file has ", info->channels, " channels."));
+         switch (info->channels)
+         {
+            case 1:
+               std::cerr << "Mono!" << std::endl;
+               is_mono = true;
+               break;
+
+            case 2:
+               std::cerr << "Stereo!" << std::endl;
+               is_mono = false;
+               break;
+
+            default:
+               throw std::logic_error(join("Vorbis file has ", info->channels, " channels."));
+         }
 
          if (info->rate != 44100)
             throw std::logic_error(join("Sampling rate of file is: ", info->rate));
@@ -76,6 +89,14 @@ namespace Audio
    VorbisFile::~VorbisFile()
    {
       ov_clear(&vf);
+   }
+
+   void VorbisFile::rewind()
+   {
+      if (ov_time_seek(&vf, 0.0) != 0)
+         throw std::runtime_error("Couldn't rewind vorbis audio!\n");
+
+      is_eof = false;
    }
 
    std::size_t VorbisFile::render(float* buffer, std::size_t frames)
@@ -112,9 +133,18 @@ namespace Audio
             return rendered;
          }
 
-         for (unsigned c = 0; c < Mixer::channels; c++)
-            for (long i = 0; i < ret; i++)
-               buffer[2 * i + c] = pcm[c][i];
+         if (!is_mono)
+         {
+            for (unsigned c = 0; c < Mixer::channels; c++)
+               for (long i = 0; i < ret; i++)
+                  buffer[2 * i + c] = pcm[c][i];
+         }
+         else
+         {
+            for (unsigned c = 0; c < Mixer::channels; c++)
+               for (long i = 0; i < ret; i++)
+                  buffer[2 * i + c] = pcm[0][i];
+         }
 
          buffer += ret * Mixer::channels;
          frames -= ret;
