@@ -115,6 +115,7 @@ namespace Icy
       player_walking = false;
 
       stepper = std::bind(&Game::win_animation_stepper, this);
+      get_sfx().play_sfx("frozen_dino_melt");
    }
 
    bool Game::won() const
