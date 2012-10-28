@@ -322,6 +322,10 @@ namespace Icy
       if (is_offset_collision(surf, step_dir))
       {
          is_sliding = false;
+
+         if (&surf != &player)
+            get_sfx().play_sfx("ice_bump", 0.5);
+
          return false;
       }
 
