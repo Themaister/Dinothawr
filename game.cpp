@@ -100,7 +100,7 @@ namespace Icy
          player.active_alt(state);
 
          if (jump && !last_jump)
-            get_sfx().play_sfx("dino_jump");
+            get_sfx().play_sfx("dino_jump", 0.8);
       }
       else if (won_frame_cnt >= 2 * frame_per_iter)
          state = "defrost2";
@@ -119,7 +119,7 @@ namespace Icy
       player_walking = false;
 
       stepper = std::bind(&Game::win_animation_stepper, this);
-      get_sfx().play_sfx("frozen_dino_melt");
+      get_sfx().play_sfx("frozen_dino_melt", 0.5);
    }
 
    bool Game::won() const
@@ -301,6 +301,7 @@ namespace Icy
          stepper = std::bind(&Game::tile_stepper, this, std::ref(*tile), offset);
          player_walking = false;
          player.active_alt_index(0);
+         get_sfx().play_sfx("dino_push", 2.0);
       }
    }
 
