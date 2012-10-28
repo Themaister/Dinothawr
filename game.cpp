@@ -94,9 +94,13 @@ namespace Icy
       auto state = "frozen";
       if (won_frame_cnt >= 3 * frame_per_iter)
       {
-         unsigned index = (won_frame_cnt / frame_per_iter - 3) & 2;
-         state = index ? "cheer" : "down";
+         bool jump = ((won_frame_cnt / frame_per_iter - 3) >> 1) & 1;
+         unsigned last_jump = (((won_frame_cnt - 1) / frame_per_iter - 3) >> 1) & 1;
+         state = jump ? "cheer" : "down";
          player.active_alt(state);
+
+         if (jump && !last_jump)
+            get_sfx().play_sfx("dino_jump");
       }
       else if (won_frame_cnt >= 2 * frame_per_iter)
          state = "defrost2";
