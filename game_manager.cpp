@@ -13,7 +13,7 @@ namespace Icy
    GameManager::GameManager(const std::string& path_game,
          std::function<bool (Input)> input_cb,
          std::function<void (const void*, unsigned, unsigned, std::size_t)> video_cb)
-      : save(&chapters), dir(Utils::basedir(path_game)),
+      : save(chapters), dir(Utils::basedir(path_game)),
          m_current_chap(0), m_current_level(0), m_game_state(State::Title),
          m_input_cb(input_cb), m_video_cb(video_cb)
    {
@@ -35,7 +35,7 @@ namespace Icy
       init_sfx(doc);
    }
 
-   GameManager::GameManager() : save(&chapters), m_current_chap(0), m_current_level(0), m_game_state(State::Game) {}
+   GameManager::GameManager() : save(chapters), m_current_chap(0), m_current_level(0), m_game_state(State::Game) {}
 
    void GameManager::init_arrow(xml_node doc)
    {
@@ -141,6 +141,8 @@ namespace Icy
 
    void GameManager::enter_menu()
    {
+      save.unserialize();
+
       m_game_state = State::Menu;
       level_select = m_current_level;
       chap_select  = m_current_chap;
@@ -265,6 +267,7 @@ namespace Icy
       if (game->won())
       {
          chapters[m_current_chap].set_completion(m_current_level, true);
+         save.serialize();
 
          if (m_current_level < chapters.at(m_current_chap).num_levels() - 1)
          {
@@ -336,23 +339,70 @@ namespace Icy
       target.blit_offset(preview, {}, position); 
    }
 
-   GameManager::SaveManager::SaveManager(std::vector<GameManager::Chapter> *chaps)
+   GameManager::SaveManager::SaveManager(std::vector<GameManager::Chapter> &chaps)
       : chaps(chaps)
-   {}
+   {
+      save_data.resize(save_game_size);
+   }
 
    void* GameManager::SaveManager::data()
    {
       return save_data.data();
    }
 
-   bool GameManager::SaveManager::serialize()
+   void GameManager::SaveManager::serialize()
    {
-      return false;
+      std::string full_completed;
+      for (auto& chap : chaps)
+      {
+         std::string completed;
+         for (auto& level : chap.levels())
+            completed += level.get_completion() ? "1," : "0,";
+         full_completed += completed + '\n';
+      }
+
+      std::fill(std::begin(save_data), std::end(save_data), '\0');
+      std::copy(std::begin(full_completed), std::end(full_completed), std::begin(save_data));
    }
 
-   bool GameManager::SaveManager::unserialize()
+   void GameManager::SaveManager::unserialize()
    {
-      return false;
+      std::string save{std::begin(save_data), std::end(save_data)};
+
+      // Strip trailing zeroes
+      auto last = save.find_last_not_of('\0');
+      if (last == std::string::npos) // Nothing to unserialize ...
+         return;
+
+      last++;
+      save = save.substr(0, last);
+
+      auto chapters = Utils::split(save, '\n');
+      auto chap_itr = std::begin(chaps);
+      for (auto& chap : chapters)
+      {
+         if (chap_itr == std::end(chaps))
+            throw std::logic_error("Save file has more chapters than available.");
+
+         auto levels = Utils::split(chap, ',');
+         auto level_itr = std::begin(chap_itr->levels());
+         for (auto& level : levels)
+         {
+            if (level_itr == std::end(chap_itr->levels()))
+               throw std::logic_error("Chapter has more chapters than available.");
+
+            if (level == "1")
+               level_itr->set_completion(true);
+            else if (level == "0")
+               level_itr->set_completion(false);
+            else
+               throw std::logic_error("Completion state is invalid.");
+
+            ++level_itr;
+         }
+
+         ++chap_itr;
+      }
    }
 
    std::size_t GameManager::SaveManager::size() const

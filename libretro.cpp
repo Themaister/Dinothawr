@@ -12,7 +12,7 @@
 
 using namespace Blit::Utils;
 
-static Icy::GameManager game;
+static std::unique_ptr<Icy::GameManager> game;
 static std::string game_path;
 static std::string game_path_dir;
 
@@ -100,7 +100,7 @@ void retro_set_video_refresh(retro_video_refresh_t cb)
 void retro_run(void)
 {
    input_poll_cb();
-   game.iterate();
+   game->iterate();
 
    mixer.render(audio_buffer, AUDIO_FRAMES);
 
@@ -110,7 +110,7 @@ void retro_run(void)
       i += written;
    }
 
-   if (game.done())
+   if (game->done())
       environ_cb(RETRO_ENVIRONMENT_SHUTDOWN, nullptr);
 }
 
@@ -135,7 +135,7 @@ static void load_game(const std::string& path)
       return input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, btn);
    };
 
-   game = Icy::GameManager(path, input_cb,
+   game = make_unique<Icy::GameManager>(path, input_cb,
          [&](const void* data, unsigned width, unsigned height, std::size_t pitch) {
             video_cb(data, width, height, pitch);
          }
@@ -144,7 +144,7 @@ static void load_game(const std::string& path)
 
 void retro_reset(void)
 {
-   game.reset_level();
+   game->reset_level();
 }
 
 bool retro_load_game(const struct retro_game_info* info)
@@ -181,7 +181,7 @@ bool retro_load_game_special(unsigned, const struct retro_game_info*, size_t)
 
 void retro_unload_game(void)
 {
-   game = Icy::GameManager();
+   game.reset();
 }
 
 unsigned retro_get_region(void)
@@ -204,14 +204,20 @@ bool retro_unserialize(const void*, size_t)
    return false;
 }
 
-void* retro_get_memory_data(unsigned)
+void* retro_get_memory_data(unsigned id)
 {
-   return nullptr;
+   if (id != RETRO_MEMORY_SAVE_RAM)
+      return nullptr;
+
+   return game->save_data();
 }
 
-size_t retro_get_memory_size(unsigned)
+size_t retro_get_memory_size(unsigned id)
 {
-   return 0;
+   if (id != RETRO_MEMORY_SAVE_RAM)
+      return 0;
+
+   return game->save_size();
 }
 
 void retro_cheat_reset(void)

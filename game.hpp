@@ -218,6 +218,7 @@ namespace Icy
                const std::string& name() const { return m_name; }
                const Level& level(unsigned i) const { return m_levels.at(i); }
                const std::vector<Level>& levels() const { return m_levels; }
+               std::vector<Level>& levels() { return m_levels; }
                unsigned num_levels() const { return m_levels.size(); }
 
             private:
@@ -229,16 +230,17 @@ namespace Icy
          class SaveManager
          {
             public:
-               SaveManager(std::vector<Chapter> *chaps);
+               SaveManager(std::vector<Chapter> &chaps);
 
                void *data();
-               bool serialize();
-               bool unserialize();
+               void serialize();
+               void unserialize();
                std::size_t size() const;
 
             private:
-               std::vector<Chapter> *chaps;
+               std::vector<Chapter> &chaps;
                std::vector<char> save_data;
+               static const std::size_t save_game_size = 512;
          };
 
          SaveManager save;

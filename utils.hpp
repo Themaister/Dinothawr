@@ -34,6 +34,18 @@ namespace Blit
          return stream.str();
       }
 
+      inline std::vector<std::string> split(const std::string& str, char delim)
+      {
+         std::vector<std::string> ret;
+         std::istringstream stream{str};
+         std::string line;
+
+         while (std::getline(stream, line, delim) && !line.empty())
+            ret.push_back(std::move(line));
+
+         return ret;
+      }
+
       inline std::string basedir(const std::string& path)
       {
          auto last = path.find_last_of("/\\");
