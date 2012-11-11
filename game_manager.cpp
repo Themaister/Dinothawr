@@ -47,6 +47,12 @@ namespace Icy
       int arrow_x = (Game::fb_width - arrow.rect().w) / 2;
       arrow_top.rect().pos = { arrow_x, 60 };
       arrow_bottom.rect().pos = { arrow_x, 160 };
+
+      level_complete = cache.from_image(Utils::join(dir, "/", doc.child("game").child("level_complete").attribute("source").value()));
+
+      int complete_x = preview_base_x + (160 - level_complete.rect().w) / 2;
+      int complete_y = preview_base_y + (100 - level_complete.rect().h) / 2;
+      level_complete.rect().pos = { complete_x, complete_y };
    }
 
    void GameManager::init_sfx(xml_node doc)
@@ -201,6 +207,9 @@ namespace Icy
          arrow_bottom.active_alt(chapters[chap_select].cleared() ? "down" : "lock");
          font_bg.blit_offset(arrow_bottom, {}, font_bg.camera_pos());
       }
+
+      if (chapters[chap_select].get_completion(level_select))
+         font_bg.blit_offset(level_complete, {}, font_bg.camera_pos());
 
       bool pressed_menu_left   = m_input_cb(Input::Left);
       bool pressed_menu_right  = m_input_cb(Input::Right);

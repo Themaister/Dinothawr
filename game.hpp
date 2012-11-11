@@ -261,6 +261,7 @@ namespace Icy
 
          Blit::Surface arrow_top;
          Blit::Surface arrow_bottom;
+         Blit::Surface level_complete;
 
          std::function<bool (Input)> m_input_cb;
          std::function<void (const void*, unsigned, unsigned, std::size_t)> m_video_cb;

@@ -3,6 +3,7 @@
    <title source="assets/titlescreen.png"/>
    <font source="dino.font"/>
    <arrow source="assets/nav.sprite"/>
+   <level_complete source="assets/finished.png"/>
    <sfx>
       <sound source="assets/sfx/level_next.ogg" name="level_next"/>
       <sound source="assets/sfx/chapter_locked.ogg" name="chapter_locked"/>
