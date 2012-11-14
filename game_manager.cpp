@@ -30,7 +30,7 @@ namespace Icy
       font.add_font(font_path, {-1, 1}, Pixel::ARGB(0xff, 0x2f, 0x2f, 0x2f), "gray");
       font.add_font(font_path, { 0, 0}, Pixel::ARGB(0xff, 0xef, 0xef, 0xef), "gray");
 
-      font_bg = RenderTarget(Game::fb_width, Game::fb_height);
+      ui_target = RenderTarget(Game::fb_width, Game::fb_height);
 
       init_menu(doc.child("game").child("title").attribute("source").value());
       init_menu_sprite(doc);
@@ -160,7 +160,7 @@ namespace Icy
       m_game_state = State::Menu;
       level_select = m_current_level;
       chap_select  = m_current_chap;
-      font_bg.camera_set({preview_delta_x * level_select, preview_delta_y * chap_select});
+      ui_target.camera_set({preview_delta_x * level_select, preview_delta_y * chap_select});
    }
 
    void GameManager::menu_render_ui()
@@ -169,44 +169,44 @@ namespace Icy
       {
          // Render up/down arrows.
          if (chap_select > 0)
-            font_bg.blit(arrow_top, {});
+            ui_target.blit(arrow_top, {});
 
          if (static_cast<unsigned>(chap_select) < chapters.size() - 1)
          {
             arrow_bottom.active_alt(chapters[chap_select].cleared() ? "down" : "lock");
-            font_bg.blit(arrow_bottom, {});
+            ui_target.blit(arrow_bottom, {});
          }
 
          // Render tick if level is complete.
          if (menu_slide_dir == Pos{} && chapters[chap_select].get_completion(level_select))
-            font_bg.blit(level_complete, {});
+            ui_target.blit(level_complete, {});
       }
 
       if (menu_slide_dir.y == 0)
       {
          font.set_id("yellow");
-         font.render_msg(font_bg, "Chapter", 80, 35);
+         font.render_msg(ui_target, "Chapter", 80, 35);
 
-         font.render_msg(font_bg, Utils::join(chap_select + 1,
+         font.render_msg(ui_target, Utils::join(chap_select + 1,
                   "/", chapters.size()), 80, 155);
 
          font.set_id("gray");
-         font.render_msg(font_bg, "Level", 200, 35);
-         font.render_msg(font_bg, Utils::join(level_select + 1,
+         font.render_msg(ui_target, "Level", 200, 35);
+         font.render_msg(ui_target, Utils::join(level_select + 1,
                   "/", chapters[chap_select].num_levels()), 215, 155);
       }
 
       font.set_id("gray");
-      font.render_msg(font_bg, Utils::join(total_cleared_levels(),
+      font.render_msg(ui_target, Utils::join(total_cleared_levels(),
                "/", total_levels()), 10, 185);
 
-      font.render_msg(font_bg, Utils::join(100 * total_cleared_levels() / total_levels(),
+      font.render_msg(ui_target, Utils::join(100 * total_cleared_levels() / total_levels(),
                "%"), 295, 185);
    }
 
    void GameManager::step_menu_slide()
    {
-      font_bg.camera_move(menu_slide_dir);
+      ui_target.camera_move(menu_slide_dir);
       slide_cnt++;
       if (slide_cnt >= slide_end)
       {
@@ -214,15 +214,15 @@ namespace Icy
          menu_slide_dir = {};
       }
 
-      font_bg.blit(level_select_bg, {});
+      ui_target.blit(level_select_bg, {});
 
       for (auto& chap : chapters)
          for (auto& preview : chap.levels())
-            preview.render(font_bg);
+            preview.render(ui_target);
 
       menu_render_ui();
 
-      m_video_cb(font_bg.buffer(), font_bg.width(), font_bg.height(), font_bg.width() * sizeof(Pixel));
+      m_video_cb(ui_target.buffer(), ui_target.width(), ui_target.height(), ui_target.width() * sizeof(Pixel));
    }
 
    const GameManager::Level& GameManager::get_selected_level() const
@@ -244,11 +244,11 @@ namespace Icy
 
    void GameManager::step_menu()
    {
-      font_bg.blit(level_select_bg, {});
+      ui_target.blit(level_select_bg, {});
 
       for (auto& chap : chapters)
          for (auto& preview : chap.levels())
-            preview.render(font_bg);
+            preview.render(ui_target);
 
       menu_render_ui();
 
@@ -299,7 +299,7 @@ namespace Icy
       old_pressed_menu_up    = pressed_menu_up;
       old_pressed_menu_down  = pressed_menu_down;
 
-      m_video_cb(font_bg.buffer(), font_bg.width(), font_bg.height(), font_bg.width() * sizeof(Pixel));
+      m_video_cb(ui_target.buffer(), ui_target.width(), ui_target.height(), ui_target.width() * sizeof(Pixel));
    }
 
    void GameManager::step_game()

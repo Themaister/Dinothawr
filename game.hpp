@@ -261,7 +261,7 @@ namespace Icy
          Blit::SurfaceCache cache;
          Blit::RenderTarget target;
 
-         Blit::RenderTarget font_bg;
+         Blit::RenderTarget ui_target;
          Blit::FontCluster font;
 
          Blit::Surface arrow_top;
