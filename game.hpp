@@ -288,6 +288,7 @@ namespace Icy
          void step_menu();
          void step_menu_slide();
          void start_slide(Blit::Pos dir, unsigned cnt);
+         void menu_render_ui();
 
          int chap_select;
          int level_select;

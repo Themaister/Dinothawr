@@ -163,19 +163,38 @@ namespace Icy
       font_bg.camera_set({preview_delta_x * level_select, preview_delta_y * chap_select});
    }
 
-   void GameManager::step_menu_slide()
+   void GameManager::menu_render_ui()
    {
-      font_bg.camera_move(menu_slide_dir);
-      slide_cnt++;
-      if (slide_cnt >= slide_end)
-         m_game_state = State::Menu;
+      if (menu_slide_dir.y == 0)
+      {
+         // Render up/down arrows.
+         if (chap_select > 0)
+            font_bg.blit(arrow_top, {});
 
-      font_bg.blit(level_select_bg, {});
+         if (static_cast<unsigned>(chap_select) < chapters.size() - 1)
+         {
+            arrow_bottom.active_alt(chapters[chap_select].cleared() ? "down" : "lock");
+            font_bg.blit(arrow_bottom, {});
+         }
 
-      for (auto& chap : chapters)
-         for (auto& preview : chap.levels())
-            preview.render(font_bg);
+         // Render tick if level is complete.
+         if (menu_slide_dir == Pos{} && chapters[chap_select].get_completion(level_select))
+            font_bg.blit(level_complete, {});
+      }
 
+      if (menu_slide_dir.y == 0)
+      {
+         font.set_id("yellow");
+         font.render_msg(font_bg, "Chapter", 80, 35);
+
+         font.render_msg(font_bg, Utils::join(chap_select + 1,
+                  "/", chapters.size()), 80, 155);
+
+         font.set_id("gray");
+         font.render_msg(font_bg, "Level", 200, 35);
+         font.render_msg(font_bg, Utils::join(level_select + 1,
+                  "/", chapters[chap_select].num_levels()), 215, 155);
+      }
 
       font.set_id("gray");
       font.render_msg(font_bg, Utils::join(total_cleared_levels(),
@@ -183,6 +202,25 @@ namespace Icy
 
       font.render_msg(font_bg, Utils::join(100 * total_cleared_levels() / total_levels(),
                "%"), 295, 185);
+   }
+
+   void GameManager::step_menu_slide()
+   {
+      font_bg.camera_move(menu_slide_dir);
+      slide_cnt++;
+      if (slide_cnt >= slide_end)
+      {
+         m_game_state = State::Menu;
+         menu_slide_dir = {};
+      }
+
+      font_bg.blit(level_select_bg, {});
+
+      for (auto& chap : chapters)
+         for (auto& preview : chap.levels())
+            preview.render(font_bg);
+
+      menu_render_ui();
 
       m_video_cb(font_bg.buffer(), font_bg.width(), font_bg.height(), font_bg.width() * sizeof(Pixel));
    }
@@ -212,39 +250,7 @@ namespace Icy
          for (auto& preview : chap.levels())
             preview.render(font_bg);
 
-      // Render up/down arrows.
-      if (chap_select > 0)
-         font_bg.blit(arrow_top, {});
-
-      if (static_cast<unsigned>(chap_select) < chapters.size() - 1)
-      {
-         arrow_bottom.active_alt(chapters[chap_select].cleared() ? "down" : "lock");
-         font_bg.blit(arrow_bottom, {});
-      }
-
-      // Render tick if level is complete.
-      if (chapters[chap_select].get_completion(level_select))
-         font_bg.blit(level_complete, {});
-
-      // Render helping text.
-      //font.render_msg(font_bg, Utils::join("\"", chapters.at(chap_select).name(), ": ", get_selected_level().name(), "\""),
-      //font_preview_base_x, font_preview_base_y);
-      font.set_id("yellow");
-      font.render_msg(font_bg, "Chapter", 80, 35);
-
-      font.render_msg(font_bg, Utils::join(chap_select + 1,
-               "/", chapters.size()), 80, 155);
-
-      font.set_id("gray");
-      font.render_msg(font_bg, "Level", 200, 35);
-      font.render_msg(font_bg, Utils::join(level_select + 1,
-               "/", chapters[chap_select].num_levels()), 215, 155);
-
-      font.render_msg(font_bg, Utils::join(total_cleared_levels(),
-               "/", total_levels()), 10, 185);
-
-      font.render_msg(font_bg, Utils::join(100 * total_cleared_levels() / total_levels(),
-               "%"), 295, 185);
+      menu_render_ui();
 
       // Check input. Start menu slide if selecting different level.
       bool pressed_menu_left   = m_input_cb(Input::Left);
