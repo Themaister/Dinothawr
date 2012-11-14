@@ -267,13 +267,14 @@ namespace Icy
          Blit::Surface arrow_top;
          Blit::Surface arrow_bottom;
          Blit::Surface level_complete;
+         Blit::Surface level_select_bg;
 
          std::function<bool (Input)> m_input_cb;
          std::function<void (const void*, unsigned, unsigned, std::size_t)> m_video_cb;
 
          void init_menu(const std::string& title);
+         void init_menu_sprite(pugi::xml_node doc);
          void init_level(unsigned chapter, unsigned level);
-         void init_arrow(pugi::xml_node doc);
          void init_sfx(pugi::xml_node doc);
 
          Chapter load_chapter(pugi::xml_node chap_node, int chapter);

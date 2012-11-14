@@ -25,19 +25,21 @@ namespace Icy
          chapters.push_back(load_chapter(node, chapters.size()));
 
       auto font_path = Utils::join(dir, "/", doc.child("game").child("font").attribute("source").value());
-      font.add_font(font_path, {-1, 1}, Pixel::ARGB(0xff, 0x3f, 0x3f, 0x00));
-      font.add_font(font_path, { 0, 0}, Pixel::ARGB(0xff, 0xff, 0xff, 0x00));
+      font.add_font(font_path, {-1, 1}, Pixel::ARGB(0xff, 0x3f, 0x3f, 0x00), "yellow");
+      font.add_font(font_path, { 0, 0}, Pixel::ARGB(0xff, 0xff, 0xff, 0x00), "yellow");
+      font.add_font(font_path, {-1, 1}, Pixel::ARGB(0xff, 0x2f, 0x2f, 0x2f), "gray");
+      font.add_font(font_path, { 0, 0}, Pixel::ARGB(0xff, 0xef, 0xef, 0xef), "gray");
 
       font_bg = RenderTarget(Game::fb_width, Game::fb_height);
 
       init_menu(doc.child("game").child("title").attribute("source").value());
-      init_arrow(doc);
+      init_menu_sprite(doc);
       init_sfx(doc);
    }
 
    GameManager::GameManager() : save(chapters), m_current_chap(0), m_current_level(0), m_game_state(State::Game) {}
 
-   void GameManager::init_arrow(xml_node doc)
+   void GameManager::init_menu_sprite(xml_node doc)
    {
       auto arrow = cache.from_sprite(Utils::join(dir, "/", doc.child("game").child("arrow").attribute("source").value()));
       arrow.ignore_camera(true);
@@ -55,6 +57,9 @@ namespace Icy
       int complete_y = preview_base_y + Game::fb_height / 2 - level_complete.rect().h - 2;
       level_complete.rect().pos = { complete_x, complete_y };
       level_complete.ignore_camera(true);
+
+      level_select_bg = cache.from_image(Utils::join(dir, "/", doc.child("game").child("menu_bg").attribute("source").value()));
+      level_select_bg.ignore_camera(true);
    }
 
    void GameManager::init_sfx(xml_node doc)
@@ -115,6 +120,7 @@ namespace Icy
       target = RenderTarget(Game::fb_width, Game::fb_height);
       target.blit(surf, {});
 
+      font.set_id("yellow");
       font.render_msg(target, "Press Start", 100, 150);
    }
 
@@ -164,8 +170,7 @@ namespace Icy
       if (slide_cnt >= slide_end)
          m_game_state = State::Menu;
 
-      font_bg.clear(Pixel::ARGB(0xff, 0x10, 0x10, 0x10));
-      // Render BG here ...
+      font_bg.blit(level_select_bg, {});
 
       for (auto& chap : chapters)
          for (auto& preview : chap.levels())
@@ -193,8 +198,7 @@ namespace Icy
 
    void GameManager::step_menu()
    {
-      font_bg.clear(Pixel::ARGB(0xff, 0x10, 0x10, 0x10));
-      // Render BG here.
+      font_bg.blit(level_select_bg, {});
 
       for (auto& chap : chapters)
          for (auto& preview : chap.levels())
@@ -217,14 +221,16 @@ namespace Icy
       // Render helping text.
       //font.render_msg(font_bg, Utils::join("\"", chapters.at(chap_select).name(), ": ", get_selected_level().name(), "\""),
       //font_preview_base_x, font_preview_base_y);
+      font.set_id("yellow");
       font.render_msg(font_bg, "Chapter", 80, 35);
-      font.render_msg(font_bg, "Level", 200, 35);
 
       font.render_msg(font_bg, Utils::join(chap_select + 1,
-               "/", chapters.size()), 80, 160);
+               "/", chapters.size()), 80, 155);
 
+      font.set_id("gray");
+      font.render_msg(font_bg, "Level", 200, 35);
       font.render_msg(font_bg, Utils::join(level_select + 1,
-               "/", chapters[chap_select].num_levels()), 220, 160);
+               "/", chapters[chap_select].num_levels()), 215, 155);
 
       font.render_msg(font_bg, Utils::join(total_cleared_levels(),
                "/", total_levels()), 10, 185);

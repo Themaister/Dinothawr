@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <game>
    <title source="assets/titlescreen.png"/>
+   <menu_bg source="assets/level_select_bg.png"/>
    <font source="dino.font"/>
    <arrow source="assets/nav.sprite"/>
    <level_complete source="assets/finished.png"/>

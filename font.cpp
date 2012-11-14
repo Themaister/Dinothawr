@@ -82,8 +82,10 @@ namespace Blit
       }
    }
 
-   void FontCluster::add_font(const std::string& font, Pos offset, Pixel color)
+   void FontCluster::add_font(const std::string& font, Pos offset, Pixel color, std::string id)
    {
+      auto& fonts = fonts_map[std::move(id)];
+
       OffsetFont tmp{font};
       tmp.set_color(color);
       tmp.offset = offset;
@@ -91,8 +93,19 @@ namespace Blit
       fonts.push_back(std::move(tmp));
    }
 
+   void FontCluster::set_id(std::string id)
+   {
+      current_id = std::move(id);
+   }
+
    Pos FontCluster::glyph_size() const
    {
+      auto itr = fonts_map.find(current_id);
+      if (itr == std::end(fonts_map))
+         throw std::runtime_error(Utils::join("Font ID: ", current_id, " not found in map!"));
+
+      auto& fonts = itr->second;
+
       auto func_x = [](const OffsetFont& a, const OffsetFont& b) {
          return a.glyph_size().x < b.glyph_size().x;
       };
@@ -109,7 +122,11 @@ namespace Blit
    void FontCluster::render_msg(RenderTarget& target, const std::string& msg,
          int x, int y, int newline_offset) const
    {
-      for (auto& font : fonts)
+      auto itr = fonts_map.find(current_id);
+      if (itr == std::end(fonts_map))
+         throw std::runtime_error(Utils::join("Font ID: ", current_id, " not found in map!"));
+
+      for (auto& font : itr->second)
          font.render_msg(target, msg, x, y, newline_offset);
    }
 

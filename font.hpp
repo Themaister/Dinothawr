@@ -38,7 +38,8 @@ namespace Blit
 
          Pos glyph_size() const;
 
-         void add_font(const std::string& font, Pos offset, Pixel color);
+         void add_font(const std::string& font, Pos offset, Pixel color, std::string id = "");
+         void set_id(std::string id);
          void render_msg(RenderTarget& target, const std::string& msg, int x, int y, int newline_offset = 0) const;
 
       private:
@@ -55,7 +56,8 @@ namespace Blit
             Pos offset;
          };
 
-         std::vector<OffsetFont> fonts;
+         std::map<std::string, std::vector<OffsetFont>> fonts_map;
+         std::string current_id;
    };
 }
 
