@@ -40,19 +40,21 @@ namespace Icy
    void GameManager::init_arrow(xml_node doc)
    {
       auto arrow = cache.from_sprite(Utils::join(dir, "/", doc.child("game").child("arrow").attribute("source").value()));
+      arrow.ignore_camera(true);
       arrow_top = arrow;
       arrow_top.active_alt("up");
       arrow_bottom = arrow;
       
       int arrow_x = (Game::fb_width - arrow.rect().w) / 2;
-      arrow_top.rect().pos = { arrow_x, 60 };
-      arrow_bottom.rect().pos = { arrow_x, 160 };
+      arrow_top.rect().pos = { arrow_x, 15 };
+      arrow_bottom.rect().pos = { arrow_x, 155 };
 
       level_complete = cache.from_image(Utils::join(dir, "/", doc.child("game").child("level_complete").attribute("source").value()));
 
-      int complete_x = preview_base_x + (160 - level_complete.rect().w) / 2;
-      int complete_y = preview_base_y + (100 - level_complete.rect().h) / 2;
+      int complete_x = preview_base_x + Game::fb_width / 2 - level_complete.rect().w - 2;
+      int complete_y = preview_base_y + Game::fb_height / 2 - level_complete.rect().h - 2;
       level_complete.rect().pos = { complete_x, complete_y };
+      level_complete.ignore_camera(true);
    }
 
    void GameManager::init_sfx(xml_node doc)
@@ -163,13 +165,11 @@ namespace Icy
          m_game_state = State::Menu;
 
       font_bg.clear(Pixel::ARGB(0xff, 0x10, 0x10, 0x10));
+      // Render BG here ...
+
       for (auto& chap : chapters)
          for (auto& preview : chap.levels())
             preview.render(font_bg);
-
-      font.render_msg(font_bg,
-            Utils::join("\"", chapters.at(chap_select).name(), ": ", get_selected_level().name(), "\""),
-            font_preview_base_x, font_preview_base_y);
 
       m_video_cb(font_bg.buffer(), font_bg.width(), font_bg.height(), font_bg.width() * sizeof(Pixel));
    }
@@ -194,32 +194,51 @@ namespace Icy
    void GameManager::step_menu()
    {
       font_bg.clear(Pixel::ARGB(0xff, 0x10, 0x10, 0x10));
+      // Render BG here.
 
       for (auto& chap : chapters)
          for (auto& preview : chap.levels())
             preview.render(font_bg);
 
+      // Render up/down arrows.
       if (chap_select > 0)
-         font_bg.blit_offset(arrow_top, {}, font_bg.camera_pos());
+         font_bg.blit(arrow_top, {});
 
       if (static_cast<unsigned>(chap_select) < chapters.size() - 1)
       {
          arrow_bottom.active_alt(chapters[chap_select].cleared() ? "down" : "lock");
-         font_bg.blit_offset(arrow_bottom, {}, font_bg.camera_pos());
+         font_bg.blit(arrow_bottom, {});
       }
 
+      // Render tick if level is complete.
       if (chapters[chap_select].get_completion(level_select))
-         font_bg.blit_offset(level_complete, {}, font_bg.camera_pos());
+         font_bg.blit(level_complete, {});
 
+      // Render helping text.
+      //font.render_msg(font_bg, Utils::join("\"", chapters.at(chap_select).name(), ": ", get_selected_level().name(), "\""),
+      //font_preview_base_x, font_preview_base_y);
+      font.render_msg(font_bg, "Chapter", 80, 35);
+      font.render_msg(font_bg, "Level", 200, 35);
+
+      font.render_msg(font_bg, Utils::join(chap_select + 1,
+               "/", chapters.size()), 80, 160);
+
+      font.render_msg(font_bg, Utils::join(level_select + 1,
+               "/", chapters[chap_select].num_levels()), 220, 160);
+
+      font.render_msg(font_bg, Utils::join(total_cleared_levels(),
+               "/", total_levels()), 10, 185);
+
+      font.render_msg(font_bg, Utils::join(100 * total_cleared_levels() / total_levels(),
+               "%"), 295, 185);
+
+      // Check input. Start menu slide if selecting different level.
       bool pressed_menu_left   = m_input_cb(Input::Left);
       bool pressed_menu_right  = m_input_cb(Input::Right);
       bool pressed_menu_up     = m_input_cb(Input::Up);
       bool pressed_menu_down   = m_input_cb(Input::Down);
       bool pressed_menu_ok     = m_input_cb(Input::Push);
       bool pressed_menu_cancel = m_input_cb(Input::Cancel);
-
-      font.render_msg(font_bg, Utils::join("\"", chapters.at(chap_select).name(), ": ", get_selected_level().name(), "\""),
-            font_preview_base_x, font_preview_base_y);
 
       if (pressed_menu_left && !old_pressed_menu_left && level_select > 0)
       {
@@ -303,6 +322,24 @@ namespace Icy
    bool GameManager::done() const
    {
       return !game && m_game_state == State::Game;
+   }
+
+   unsigned GameManager::total_levels() const
+   {
+      unsigned levels = 0;
+      for (auto& chap : chapters)
+         levels += chap.num_levels();
+
+      return levels;
+   }
+
+   unsigned GameManager::total_cleared_levels() const
+   {
+      unsigned levels = 0;
+      for (auto& chap : chapters)
+         levels += chap.cleared_count();
+
+      return levels;
    }
 
    GameManager::Level::Level(const std::string& path)

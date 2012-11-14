@@ -206,11 +206,16 @@ namespace Icy
                void set_minimum_clear(unsigned minimum) { minimum_clear = minimum; }
                bool cleared() const
                {
+                  return cleared_count() >= minimum_clear;
+               }
+
+               unsigned cleared_count() const
+               {
                   unsigned clear_cnt = 0;
                   for (auto& level : m_levels)
                      clear_cnt += level.get_completion();
 
-                  return clear_cnt >= minimum_clear;
+                  return clear_cnt;
                }
 
                void set_completion(unsigned level, bool state) { m_levels.at(level).set_completion(state); }
@@ -285,6 +290,8 @@ namespace Icy
 
          int chap_select;
          int level_select;
+         unsigned total_levels() const;
+         unsigned total_cleared_levels() const;
 
          bool old_pressed_menu_left;
          bool old_pressed_menu_right;
@@ -298,7 +305,7 @@ namespace Icy
 
          enum {
             preview_base_x      = 80,
-            preview_base_y      = 80,
+            preview_base_y      = 50,
             font_preview_base_x = 40,
             font_preview_base_y = 40,
             preview_delta_x     = 8 * 24,
