@@ -176,6 +176,14 @@ namespace Icy
          for (auto& preview : chap.levels())
             preview.render(font_bg);
 
+
+      font.set_id("gray");
+      font.render_msg(font_bg, Utils::join(total_cleared_levels(),
+               "/", total_levels()), 10, 185);
+
+      font.render_msg(font_bg, Utils::join(100 * total_cleared_levels() / total_levels(),
+               "%"), 295, 185);
+
       m_video_cb(font_bg.buffer(), font_bg.width(), font_bg.height(), font_bg.width() * sizeof(Pixel));
    }
 
