@@ -52,6 +52,7 @@
    </chapter>
 	<chapter name="Test">
       <map source="icy30.tmx" name="Level 30"/>
+      <map source="icy31.tmx" name="Level 31"/>
       <!-- <map source="icy13.tmx" name="Level 13"/> -->
 		<!-- <map source="icy17.tmx" name="Level 17"/> -->
    </chapter>
