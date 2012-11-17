@@ -185,15 +185,15 @@ namespace Icy
       if (menu_slide_dir.y == 0)
       {
          font.set_id("yellow");
-         font.render_msg(ui_target, "Chapter", 80, 35);
+         font.render_msg(ui_target, "Chapter", 85, 35);
 
          font.render_msg(ui_target, Utils::join(chap_select + 1,
-                  "/", chapters.size()), 80, 155);
+                  "/", chapters.size()), 85, 155);
 
          font.set_id("gray");
-         font.render_msg(ui_target, "Level", 200, 35);
+         font.render_msg(ui_target, "Level", 240, 35, Font::RenderAlignment::Right);
          font.render_msg(ui_target, Utils::join(level_select + 1,
-                  "/", chapters[chap_select].num_levels()), 215, 155);
+                  "/", chapters[chap_select].num_levels()), 240, 155, Font::RenderAlignment::Right);
       }
 
       font.set_id("gray");
@@ -201,7 +201,7 @@ namespace Icy
                "/", total_levels()), 10, 185);
 
       font.render_msg(ui_target, Utils::join(100 * total_cleared_levels() / total_levels(),
-               "%"), 295, 185);
+               "%"), 315, 185, Font::RenderAlignment::Right);
    }
 
    void GameManager::step_menu_slide()

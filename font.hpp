@@ -19,7 +19,15 @@ namespace Blit
          const Surface& surface(char c) const; 
          Pos glyph_size() const { return { glyphwidth, glyphheight }; }
 
-         void render_msg(RenderTarget& target, const std::string& msg, int x, int y, int newline_offset = 0) const;
+         enum class RenderAlignment : unsigned
+         {
+            Left = 0,
+            Right
+         };
+
+         void render_msg(RenderTarget& target, const std::string& msg, int x, int y,
+               RenderAlignment dir, int newline_offset) const;
+
          void set_color(Pixel pix);
 
       private:
@@ -40,7 +48,8 @@ namespace Blit
 
          void add_font(const std::string& font, Pos offset, Pixel color, std::string id = "");
          void set_id(std::string id);
-         void render_msg(RenderTarget& target, const std::string& msg, int x, int y, int newline_offset = 0) const;
+         void render_msg(RenderTarget& target, const std::string& msg, int x, int y,
+               Font::RenderAlignment dir = Font::RenderAlignment::Left, int newline_offset = 0) const;
 
       private:
          struct OffsetFont : public Font
@@ -52,7 +61,8 @@ namespace Blit
             OffsetFont(OffsetFont&&) = default;
             OffsetFont& operator=(OffsetFont&&) = default;
 
-            void render_msg(RenderTarget& target, const std::string& msg, int x, int y, int newline_offset = 0) const;
+            void render_msg(RenderTarget& target, const std::string& msg, int x, int y,
+                  Font::RenderAlignment dir, int newline_offset) const;
             Pos offset;
          };
 

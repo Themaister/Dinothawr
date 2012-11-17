@@ -62,9 +62,15 @@ namespace Blit
          itr.second.refill_color(pix);
    }
 
-   void Font::render_msg(RenderTarget& target, const std::string& map, int x, int y, int newline_offset) const
+   void Font::render_msg(RenderTarget& target, const std::string& map, int x, int y,
+         Font::RenderAlignment dir,
+         int newline_offset) const
    {
       int orig_x = x;
+
+      // Won't work right with newlines.
+      if (dir == RenderAlignment::Right)
+         x -= glyphwidth * map.size();
 
       for (auto c : map)
       {
@@ -78,6 +84,9 @@ namespace Blit
          {
             y += glyphheight + newline_offset;
             x = orig_x;
+
+            if (dir == RenderAlignment::Right)
+               x -= glyphwidth * map.size();
          }
       }
    }
@@ -120,23 +129,27 @@ namespace Blit
    }
 
    void FontCluster::render_msg(RenderTarget& target, const std::string& msg,
-         int x, int y, int newline_offset) const
+         int x, int y,
+         Font::RenderAlignment dir,
+         int newline_offset) const
    {
       auto itr = fonts_map.find(current_id);
       if (itr == std::end(fonts_map))
          throw std::runtime_error(Utils::join("Font ID: ", current_id, " not found in map!"));
 
       for (auto& font : itr->second)
-         font.render_msg(target, msg, x, y, newline_offset);
+         font.render_msg(target, msg, x, y, dir, newline_offset);
    }
 
    FontCluster::OffsetFont::OffsetFont(const std::string& font) : Font(font)
    {}
 
    void FontCluster::OffsetFont::render_msg(RenderTarget& target, const std::string& msg,
-         int x, int y, int newline_offset) const
+         int x, int y,
+         Font::RenderAlignment dir,
+         int newline_offset) const
    {
-      Font::render_msg(target, msg, x + offset.x, y + offset.y, newline_offset);
+      Font::render_msg(target, msg, x + offset.x, y + offset.y, dir, newline_offset);
    }
 }
 
