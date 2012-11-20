@@ -25,10 +25,12 @@ namespace Icy
          chapters.push_back(load_chapter(node, chapters.size()));
 
       auto font_path = Utils::join(dir, "/", doc.child("game").child("font").attribute("source").value());
-      font.add_font(font_path, {-1, 1}, Pixel::ARGB(0xff, 0x3f, 0x3f, 0x00), "yellow");
-      font.add_font(font_path, { 0, 0}, Pixel::ARGB(0xff, 0xff, 0xff, 0x00), "yellow");
-      font.add_font(font_path, {-1, 1}, Pixel::ARGB(0xff, 0x2f, 0x2f, 0x2f), "gray");
-      font.add_font(font_path, { 0, 0}, Pixel::ARGB(0xff, 0xef, 0xef, 0xef), "gray");
+      font.add_font(font_path, {-1, 1}, Pixel::ARGB(0xff, 0xc0, 0x98, 0x00), "yellow");
+      font.add_font(font_path, { 0, 0}, Pixel::ARGB(0xff, 0xff, 0xde, 0x00), "yellow");
+      font.add_font(font_path, {-1, 1}, Pixel::ARGB(0xff, 0x73, 0x73, 0x8b), "white");
+      font.add_font(font_path, { 0, 0}, Pixel::ARGB(0xff, 0xff, 0xff, 0xff), "white");
+      font.add_font(font_path, {-1, 1}, Pixel::ARGB(0xff, 0x39, 0x5a, 0x94), "lime");
+      font.add_font(font_path, { 0, 0}, Pixel::ARGB(0xff, 0xb8, 0xe8, 0xb0), "lime");
 
       ui_target = RenderTarget(Game::fb_width, Game::fb_height);
 
@@ -48,8 +50,8 @@ namespace Icy
       arrow_bottom = arrow;
       
       int arrow_x = (Game::fb_width - arrow.rect().w) / 2;
-      arrow_top.rect().pos = { arrow_x, 15 };
-      arrow_bottom.rect().pos = { arrow_x, 155 };
+      arrow_top.rect().pos = { arrow_x, 8 };
+      arrow_bottom.rect().pos = { arrow_x, 160 };
 
       level_complete = cache.from_image(Utils::join(dir, "/", doc.child("game").child("level_complete").attribute("source").value()));
 
@@ -121,7 +123,7 @@ namespace Icy
       target.blit(surf, {});
 
       font.set_id("yellow");
-      font.render_msg(target, "Press Start", 100, 150);
+      font.render_msg(target, "Press Start", 136, 170);
    }
 
    void GameManager::reset_level()
@@ -190,13 +192,13 @@ namespace Icy
          font.render_msg(ui_target, Utils::join(chap_select + 1,
                   "/", chapters.size()), 85, 155);
 
-         font.set_id("gray");
+         font.set_id("white");
          font.render_msg(ui_target, "Level", 240, 35, Font::RenderAlignment::Right);
          font.render_msg(ui_target, Utils::join(level_select + 1,
                   "/", chapters[chap_select].num_levels()), 240, 155, Font::RenderAlignment::Right);
       }
 
-      font.set_id("gray");
+      font.set_id("lime");
       font.render_msg(ui_target, Utils::join(total_cleared_levels(),
                "/", total_levels()), 10, 185);
 
@@ -410,6 +412,7 @@ namespace Icy
    {
       save_data.resize(save_game_size);
    }
+
 
    void* GameManager::SaveManager::data()
    {
