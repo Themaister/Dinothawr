@@ -458,7 +458,7 @@ namespace Icy
          for (auto& level : levels)
          {
             if (level_itr == std::end(chap_itr->levels()))
-               throw std::logic_error("Chapter has more chapters than available.");
+               break;
 
             if (level == "1")
                level_itr->set_completion(true);
