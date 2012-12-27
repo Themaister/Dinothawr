@@ -66,7 +66,7 @@ namespace Blit
                image[4 * i + 2]);
       }
 
-      return std::make_shared<const Surface::Data>(std::move(pix), width, height);
+      return std::make_shared<Surface::Data>(std::move(pix), width, height);
    }
 }
 

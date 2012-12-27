@@ -397,7 +397,7 @@ namespace Icy
 
       game.iterate();
 
-      preview = Surface(std::make_shared<const Surface::Data>(std::move(data), preview_width, preview_height));
+      preview = Surface(std::make_shared<Surface::Data>(std::move(data), preview_width, preview_height));
       pos(Pos{Game::fb_width, Game::fb_height} / scale_factor - Pos{5, 5});
    }
 

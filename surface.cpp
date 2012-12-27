@@ -6,7 +6,7 @@
 namespace Blit
 {
    Surface::Surface(Pixel pix, int width, int height)
-      : data(std::make_shared<const Data>(pix, width, height)),
+      : data(std::make_shared<Data>(pix, width, height)),
       m_active_alt_index(0), m_rect({0, 0}, width, height), m_ignore_camera(false)
    {}
 

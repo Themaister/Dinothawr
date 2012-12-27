@@ -11,6 +11,7 @@
 #include <iterator>
 #include <limits>
 #include <memory>
+#include <errno.h>
 
 #include "pugixml/pugixml.hpp"
 

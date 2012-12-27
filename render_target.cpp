@@ -23,7 +23,7 @@ namespace Blit
       int width = rect.w, height = rect.h;
       rect = {};
 
-      return {std::make_shared<const Surface::Data>(std::move(m_buffer), width, height)};
+      return {std::make_shared<Surface::Data>(std::move(m_buffer), width, height)};
    }
 
    int RenderTarget::width() const
