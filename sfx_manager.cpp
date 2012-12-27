@@ -6,8 +6,7 @@ namespace Icy
 {
    void SFXManager::add_stream(const std::string &ident, const std::string &path)
    {
-      Audio::VorbisFile vf{path};
-      effects[ident] = std::make_shared<std::vector<float>>(vf.decode());
+      effects[ident] = std::make_shared<std::vector<float>>(Audio::WAVFile::load_wave(path));
    }
 
    void SFXManager::play_sfx(const std::string &ident, float volume) const

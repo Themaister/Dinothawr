@@ -157,10 +157,13 @@ bool retro_load_game(const struct retro_game_info* info)
       load_game(game_path);
 
       mixer = Audio::Mixer();
+
+#if 0
       Audio::VorbisFile bg{join(Icy::get_basedir(), "/assets/bg.ogg")};
       auto stream = std::make_shared<Audio::PCMStream>(std::make_shared<std::vector<float>>(bg.decode())); // Kinda hardcoded atm.
       stream->loop(true);
       mixer.add_stream(stream);
+#endif
 
       retro_pixel_format fmt = RETRO_PIXEL_FORMAT_XRGB8888;
       environ_cb(RETRO_ENVIRONMENT_SET_PIXEL_FORMAT, &fmt);

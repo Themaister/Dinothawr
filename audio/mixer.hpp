@@ -8,7 +8,9 @@
 #include <cmath>
 #include <string>
 
+#ifdef HAVE_VORBIS
 #include <vorbis/vorbisfile.h>
+#endif
 
 namespace Audio
 {
@@ -71,6 +73,13 @@ namespace Audio
          std::size_t ptr;
    };
 
+   class WAVFile : public Stream
+   {
+      public:
+         static std::vector<float> load_wave(const std::string& path);
+   };
+
+#ifdef HAVE_VORBIS
    class VorbisFile : public Stream
    {
       public:
@@ -92,6 +101,7 @@ namespace Audio
          bool is_eof;
          bool is_mono;
    };
+#endif
 
    class Mixer
    {

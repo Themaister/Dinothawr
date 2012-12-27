@@ -19,6 +19,20 @@ namespace Blit
    namespace Utils
    {
       template <typename T>
+      std::uint32_t read_le32(const T* data)
+      {
+         const std::uint8_t *ptr = reinterpret_cast<const std::uint8_t*>(data);
+         return (ptr[0] << 0) + (ptr[1] << 8) + (ptr[2] << 16) + (ptr[3] << 24);
+      }
+
+      template <typename T>
+      std::uint16_t read_le16(const T* data)
+      {
+         const std::uint8_t *ptr = reinterpret_cast<const std::uint8_t*>(data);
+         return (ptr[0] << 0) + (ptr[1] << 8);
+      }
+
+      template <typename T>
       inline std::string join(T&& t)
       {
          std::ostringstream stream;

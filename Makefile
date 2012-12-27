@@ -40,8 +40,8 @@ HEADERS := $(wildcard *.hpp) $(wildcard */*.hpp)
 
 SOURCES := $(wildcard *.cpp) $(wildcard */*.cpp)
 OBJECTS := $(SOURCES:.cpp=.o)
-CXXFLAGS += -std=gnu++0x -Wall -pedantic $(fpic) $(shell $(PKG_CONFIG) libpng vorbisfile --cflags)
-LIBS := $(shell $(PKG_CONFIG) libpng vorbisfile --libs)
+CXXFLAGS += -std=gnu++0x -Wall -pedantic $(fpic) $(shell $(PKG_CONFIG) libpng --cflags)
+LIBS := $(shell $(PKG_CONFIG) libpng --libs)
 
 all: $(TARGET)
 

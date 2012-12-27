@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <stdexcept>
 #include <iostream>
+#include <fstream>
 
 using namespace Blit::Utils;
 
@@ -78,6 +79,87 @@ namespace Audio
       return to_write / Mixer::channels;
    }
 
+   std::vector<float> WAVFile::load_wave(const std::string& path)
+   {
+      using namespace Blit::Utils;
+      std::ifstream file;
+
+      file.exceptions(std::ifstream::badbit | std::ifstream::failbit | std::ifstream::eofbit);
+      try
+      {
+         file.open(path, std::ifstream::in | std::ifstream::binary);
+
+         char header[44];
+         file.read(header, sizeof(header));
+
+         if (!std::equal(header + 0, header + 4, "RIFF"))
+            throw std::logic_error("Invalid WAV file.");
+
+         if (!std::equal(header + 8, header + 12, "WAVE"))
+            throw std::logic_error("Invalid WAV file.");
+
+         if (!std::equal(header + 12, header + 16, "fmt "))
+            throw std::logic_error("Invalid WAV file.");
+
+         if (read_le16(header + 20) != 1)
+            throw std::logic_error("WAV file not uncompressed.");
+
+         unsigned channels    = read_le16(header + 22);
+         unsigned sample_rate = read_le32(header + 24);
+         unsigned bits        = read_le16(header + 34);
+
+         if (channels < 1 || channels > 2)
+            throw std::logic_error("Invalid number of channels.");
+
+         if (sample_rate != 44100)
+            throw std::logic_error("Invalid sample rate.");
+
+         if (bits != 16)
+            throw std::logic_error("Invalid bit depth.");
+
+         std::vector<std::int16_t> wave;
+
+         unsigned wave_size = read_le32(header + 4);
+         wave_size += 8;
+         wave_size -= sizeof(header);
+         wave.resize(wave_size / sizeof(std::int16_t));
+
+         file.read(reinterpret_cast<char*>(wave.data()), wave_size);
+
+         std::vector<float> pcm_data;
+         if (channels == 1)
+         {
+            pcm_data.resize(2 * wave_size / sizeof(std::int16_t));
+            auto ptr = std::begin(pcm_data);
+            for (auto val : wave)
+            {
+               float fval = static_cast<float>(val) / 0x8000;
+               *ptr++ = fval;
+               *ptr++ = fval;
+            }
+
+         }
+         else
+         {
+            pcm_data.resize(wave_size / sizeof(std::int16_t));
+            auto ptr = std::begin(pcm_data);
+            for (auto val : wave)
+            {
+               float fval = static_cast<float>(val) / 0x8000;
+               *ptr++ = fval;
+            }
+         }
+
+         return pcm_data;
+      }
+      catch (const std::ifstream::failure e)
+      {
+         std::cerr << "iostream error: " << e.what() << std::endl;
+         throw std::runtime_error("Failed to open wave.");
+      }
+   }
+
+#ifdef HAVE_VORBIS
    std::vector<float> VorbisFile::decode()
    {
       std::vector<float> data;
@@ -194,5 +276,7 @@ namespace Audio
 
       return rendered;
    }
+#endif
+
 }
 

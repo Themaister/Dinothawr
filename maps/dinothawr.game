@@ -6,12 +6,12 @@
    <arrow source="assets/nav.sprite"/>
    <level_complete source="assets/finished.png"/>
    <sfx>
-      <sound source="assets/sfx/level_next.ogg" name="level_next"/>
-      <sound source="assets/sfx/chapter_locked.ogg" name="chapter_locked"/>
-      <sound source="assets/sfx/ice_bump.ogg" name="ice_bump"/>
-      <sound source="assets/sfx/frozen_dino_melt.ogg" name="frozen_dino_melt"/>
-      <sound source="assets/sfx/dino_jump.ogg" name="dino_jump"/>
-      <sound source="assets/sfx/dino_push.ogg" name="dino_push"/>
+      <sound source="assets/sfx/level_next.wav" name="level_next"/>
+      <sound source="assets/sfx/chapter_locked.wav" name="chapter_locked"/>
+      <sound source="assets/sfx/ice_bump.wav" name="ice_bump"/>
+      <sound source="assets/sfx/frozen_dino_melt.wav" name="frozen_dino_melt"/>
+      <sound source="assets/sfx/dino_jump.wav" name="dino_jump"/>
+      <sound source="assets/sfx/dino_push.wav" name="dino_push"/>
    </sfx>
    <chapter name="Chapter 1" minimum_clear="1">
       <map source="icy25.tmx" name="Level 25"/>
