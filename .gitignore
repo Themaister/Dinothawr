@@ -7,3 +7,7 @@
 *.srm
 *.d
 *.a
+/android/eclipse/bin
+/android/eclipse/assets
+/android/eclipse/.classpath
+/android/eclipse/.project
