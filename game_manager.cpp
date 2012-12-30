@@ -160,6 +160,7 @@ namespace Icy
    void GameManager::enter_menu()
    {
       save.unserialize();
+      old_pressed_menu_ok = true; // We don't want to trigger level select right away.
 
       m_game_state = State::Menu;
       level_select = m_current_level;
@@ -293,7 +294,7 @@ namespace Icy
          else
             get_sfx().play_sfx("chapter_locked");
       }
-      else if (pressed_menu_ok)
+      else if (pressed_menu_ok && !old_pressed_menu_ok)
          init_level(chap_select, level_select);
       else if (pressed_menu_cancel && game)
          m_game_state = State::Game;
@@ -302,6 +303,7 @@ namespace Icy
       old_pressed_menu_right = pressed_menu_right;
       old_pressed_menu_up    = pressed_menu_up;
       old_pressed_menu_down  = pressed_menu_down;
+      old_pressed_menu_ok    = pressed_menu_ok;
 
       m_video_cb(ui_target.buffer(), ui_target.width(), ui_target.height(), ui_target.width() * sizeof(Pixel));
    }
