@@ -11,3 +11,5 @@
 /android/eclipse/assets
 /android/eclipse/.classpath
 /android/eclipse/.project
+*.swp
+*.swo

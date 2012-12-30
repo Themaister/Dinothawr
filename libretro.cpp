@@ -125,10 +125,7 @@ static void load_game(const std::string& path)
          case Icy::Input::Left:   btn = RETRO_DEVICE_ID_JOYPAD_LEFT; break;
          case Icy::Input::Right:  btn = RETRO_DEVICE_ID_JOYPAD_RIGHT; break;
          case Icy::Input::Push:   btn = RETRO_DEVICE_ID_JOYPAD_A; break;
-         case Icy::Input::Cancel: btn = RETRO_DEVICE_ID_JOYPAD_B; break;
-         case Icy::Input::Select: btn = RETRO_DEVICE_ID_JOYPAD_SELECT; break;
-         case Icy::Input::Start:  btn = RETRO_DEVICE_ID_JOYPAD_START; break;
-         case Icy::Input::Menu:   btn = RETRO_DEVICE_ID_JOYPAD_X; break;
+         case Icy::Input::Menu: btn = RETRO_DEVICE_ID_JOYPAD_B; break;
          default: return false;
       }
 

@@ -150,8 +150,7 @@ namespace Icy
    void GameManager::step_title()
    {
       if (m_input_cb(Input::Push) ||
-            m_input_cb(Input::Menu) ||
-            m_input_cb(Input::Cancel))
+            m_input_cb(Input::Menu))
          enter_menu();
 
       m_video_cb(target.buffer(), target.width(), target.height(), target.width() * sizeof(Pixel));
@@ -263,7 +262,7 @@ namespace Icy
       bool pressed_menu_up     = m_input_cb(Input::Up);
       bool pressed_menu_down   = m_input_cb(Input::Down);
       bool pressed_menu_ok     = m_input_cb(Input::Push);
-      bool pressed_menu_cancel = m_input_cb(Input::Cancel);
+      bool pressed_menu_cancel = m_input_cb(Input::Menu);
 
       if (pressed_menu_left && !old_pressed_menu_left && level_select > 0)
       {
