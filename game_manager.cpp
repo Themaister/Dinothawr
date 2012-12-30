@@ -123,7 +123,7 @@ namespace Icy
       target.blit(surf, {});
 
       font.set_id("yellow");
-      font.render_msg(target, "Press Start", 136, 170);
+      font.render_msg(target, "Press any button", 136, 170);
    }
 
    void GameManager::reset_level()
@@ -149,7 +149,9 @@ namespace Icy
 
    void GameManager::step_title()
    {
-      if (m_input_cb(Input::Start))
+      if (m_input_cb(Input::Push) ||
+            m_input_cb(Input::Menu) ||
+            m_input_cb(Input::Cancel))
          enter_menu();
 
       m_video_cb(target.buffer(), target.width(), target.height(), target.width() * sizeof(Pixel));
