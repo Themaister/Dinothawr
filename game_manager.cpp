@@ -297,10 +297,7 @@ namespace Icy
       else if (pressed_menu_ok && !old_pressed_menu_ok)
          init_level(chap_select, level_select);
       else if (pressed_menu && !old_pressed_menu && game)
-      {
-         old_pressed_menu = true;
          m_game_state = State::Game;
-      }
 
       old_pressed_menu_left   = pressed_menu_left;
       old_pressed_menu_right  = pressed_menu_right;
