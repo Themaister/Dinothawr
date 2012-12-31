@@ -23,9 +23,6 @@ namespace Icy
       Left,
       Right,
       Push,
-      Cancel,
-      Start,
-      Select,
       Menu,
       None
    };
@@ -300,7 +297,7 @@ namespace Icy
          bool old_pressed_menu_up;
          bool old_pressed_menu_down;
          bool old_pressed_menu_ok;
-			bool old_pressed_menu;
+         bool old_pressed_menu;
 
          Blit::Pos menu_slide_dir;
 

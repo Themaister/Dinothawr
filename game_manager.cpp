@@ -14,8 +14,8 @@ namespace Icy
          std::function<bool (Input)> input_cb,
          std::function<void (const void*, unsigned, unsigned, std::size_t)> video_cb)
       : save(chapters), dir(Utils::basedir(path_game)),
-         m_current_chap(0), m_current_level(0), m_game_state(State::Title),
-         m_input_cb(input_cb), m_video_cb(video_cb)
+      m_current_chap(0), m_current_level(0), m_game_state(State::Title),
+      m_input_cb(input_cb), m_video_cb(video_cb)
    {
       xml_document doc;
       if (!doc.load_file(path_game.c_str()))
@@ -48,7 +48,7 @@ namespace Icy
       arrow_top = arrow;
       arrow_top.active_alt("up");
       arrow_bottom = arrow;
-      
+
       int arrow_x = (Game::fb_width - arrow.rect().w) / 2;
       arrow_top.rect().pos = { arrow_x, 8 };
       arrow_bottom.rect().pos = { arrow_x, 160 };
@@ -160,7 +160,7 @@ namespace Icy
    {
       save.unserialize();
       old_pressed_menu_ok = true; // We don't want to trigger level select right away.
-		old_pressed_menu = true;
+      old_pressed_menu = true;
 
       m_game_state = State::Menu;
       level_select = m_current_level;
@@ -297,17 +297,17 @@ namespace Icy
       else if (pressed_menu_ok && !old_pressed_menu_ok)
          init_level(chap_select, level_select);
       else if (pressed_menu && !old_pressed_menu && game)
-		{
-			old_pressed_menu = true;
+      {
+         old_pressed_menu = true;
          m_game_state = State::Game;
-		}
+      }
 
       old_pressed_menu_left   = pressed_menu_left;
       old_pressed_menu_right  = pressed_menu_right;
       old_pressed_menu_up     = pressed_menu_up;
       old_pressed_menu_down   = pressed_menu_down;
       old_pressed_menu_ok     = pressed_menu_ok;
-		old_pressed_menu 			= pressed_menu;
+      old_pressed_menu        = pressed_menu;
 
       m_video_cb(ui_target.buffer(), ui_target.width(), ui_target.height(), ui_target.width() * sizeof(Pixel));
    }
@@ -320,11 +320,11 @@ namespace Icy
       game->iterate();
 
       bool pressed_menu = m_input_cb(Input::Menu);
-      
-		if (pressed_menu && !old_pressed_menu)
+
+      if (pressed_menu && !old_pressed_menu)
          enter_menu();
 
-		old_pressed_menu = pressed_menu;
+      old_pressed_menu = pressed_menu;
 
       if (game->won())
       {
@@ -389,22 +389,22 @@ namespace Icy
 
       game.input_cb([](Input) { return false; });
       game.video_cb([&data, preview_width](const void* pix_data, unsigned width, unsigned height, size_t pitch) {
-               const Pixel* pix = reinterpret_cast<const Pixel*>(pix_data);
-               pitch /= sizeof(Pixel);
+            const Pixel* pix = reinterpret_cast<const Pixel*>(pix_data);
+            pitch /= sizeof(Pixel);
 
-               for (unsigned y = 0; y < height; y += scale_factor)
-               {
-                  for (unsigned x = 0; x < width; x += scale_factor)
-                  {
-                     auto a0 = pix[pitch * (y + 0) + (x + 0)];
-                     auto a1 = pix[pitch * (y + 0) + (x + 1)];
-                     auto b0 = pix[pitch * (y + 1) + (x + 0)];
-                     auto b1 = pix[pitch * (y + 1) + (x + 1)];
-                     auto res = Pixel::blend(Pixel::blend(a0, a1), Pixel::blend(b0, b1));
-                     
-                     data[preview_width * (y / scale_factor) + (x / scale_factor)] = res | static_cast<Pixel>(Pixel::alpha_mask);
-                  }
-               }
+            for (unsigned y = 0; y < height; y += scale_factor)
+            {
+            for (unsigned x = 0; x < width; x += scale_factor)
+            {
+            auto a0 = pix[pitch * (y + 0) + (x + 0)];
+            auto a1 = pix[pitch * (y + 0) + (x + 1)];
+            auto b0 = pix[pitch * (y + 1) + (x + 0)];
+            auto b1 = pix[pitch * (y + 1) + (x + 1)];
+            auto res = Pixel::blend(Pixel::blend(a0, a1), Pixel::blend(b0, b1));
+
+            data[preview_width * (y / scale_factor) + (x / scale_factor)] = res | static_cast<Pixel>(Pixel::alpha_mask);
+            }
+            }
             });
 
       game.iterate();
