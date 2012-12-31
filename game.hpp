@@ -300,6 +300,7 @@ namespace Icy
          bool old_pressed_menu_up;
          bool old_pressed_menu_down;
          bool old_pressed_menu_ok;
+			bool old_pressed_menu_cancel;
 
          Blit::Pos menu_slide_dir;
 

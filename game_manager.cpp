@@ -160,6 +160,7 @@ namespace Icy
    {
       save.unserialize();
       old_pressed_menu_ok = true; // We don't want to trigger level select right away.
+		old_pressed_menu_cancel = true;
 
       m_game_state = State::Menu;
       level_select = m_current_level;
@@ -295,14 +296,15 @@ namespace Icy
       }
       else if (pressed_menu_ok && !old_pressed_menu_ok)
          init_level(chap_select, level_select);
-      else if (pressed_menu_cancel && game)
+      else if (pressed_menu_cancel && !old_pressed_menu_cancel && game)
          m_game_state = State::Game;
 
-      old_pressed_menu_left  = pressed_menu_left;
-      old_pressed_menu_right = pressed_menu_right;
-      old_pressed_menu_up    = pressed_menu_up;
-      old_pressed_menu_down  = pressed_menu_down;
-      old_pressed_menu_ok    = pressed_menu_ok;
+      old_pressed_menu_left   = pressed_menu_left;
+      old_pressed_menu_right  = pressed_menu_right;
+      old_pressed_menu_up     = pressed_menu_up;
+      old_pressed_menu_down   = pressed_menu_down;
+      old_pressed_menu_ok     = pressed_menu_ok;
+		old_pressed_menu_cancel = pressed_menu_cancel;
 
       m_video_cb(ui_target.buffer(), ui_target.width(), ui_target.height(), ui_target.width() * sizeof(Pixel));
    }
