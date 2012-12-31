@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import android.os.Bundle;
+import android.provider.Settings;
 import android.app.Activity;
 import android.app.NativeActivity;
 import android.content.Context;
@@ -102,6 +103,10 @@ public class MainActivity extends Activity {
 			intent.putExtra("CONFIGFILE", conf_path);
 		else
 			intent.putExtra("CONFIGFILE", "");
+		
+		String current_ime = Settings.Secure.getString(getContentResolver(),
+				Settings.Secure.DEFAULT_INPUT_METHOD);
+		intent.putExtra("IME", current_ime);
 
 		startActivity(intent);
 		finish();
