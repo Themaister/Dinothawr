@@ -325,6 +325,7 @@ namespace Icy
 
       if (game->won())
       {
+         game.reset();
          chapters[m_current_chap].set_completion(m_current_level, true);
          save.serialize();
 
