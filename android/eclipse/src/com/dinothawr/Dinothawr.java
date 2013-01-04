@@ -16,7 +16,7 @@ import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 
-public class MainActivity extends Activity {
+public class Dinothawr extends Activity {
 	static private final String TAG = "Dinothawr";
 
 	private byte[] loadAsset(String asset) {
