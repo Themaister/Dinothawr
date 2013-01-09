@@ -14,6 +14,9 @@ else ifneq ($(findstring win,$(shell uname -a)),)
 endif
 endif
 
+LIBDIR = /usr/lib/libretro
+ASSETDIR = /usr/share/dinothawr
+
 ifeq ($(platform), unix)
    TARGET := libretro.so
    fpic := -fPIC
@@ -34,8 +37,6 @@ else
    CXXFLAGS += -O3
 endif
 
-PKG_CONFIG = pkg-config
-
 HEADERS := $(wildcard *.hpp) $(wildcard */*.hpp)
 
 SOURCES := $(wildcard *.cpp) $(wildcard */*.cpp)
@@ -53,5 +54,11 @@ $(TARGET): $(OBJECTS)
 clean:
 	rm -f $(OBJECTS) $(TARGET)
 
-.PHONY: clean
+install: all
+	mkdir -p $(LIBDIR) || /bin/true
+	install -m755 $(TARGET) $(LIBDIR)/libretro-dinothawr.so
+	install -d -m755 $(ASSETDIR)
+	cp -r maps/* $(ASSETDIR)
+
+.PHONY: clean install
 
