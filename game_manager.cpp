@@ -22,7 +22,11 @@ namespace Icy
          throw std::runtime_error(Utils::join("Failed to load game: ", path_game, "."));
 
       for (xml_node node = doc.child("game").child("chapter"); node; node = node.next_sibling("chapter"))
-         chapters.push_back(load_chapter(node, chapters.size()));
+      {
+         auto chapter = load_chapter(node, chapters.size());
+         if (chapter.num_levels() > 0)
+            chapters.push_back(std::move(chapter));
+      }
 
       auto font_path = Utils::join(dir, "/", doc.child("game").child("font").attribute("source").value());
       font.add_font(font_path, {-1, 1}, Pixel::ARGB(0xff, 0xc0, 0x98, 0x00), "yellow");
@@ -461,7 +465,7 @@ namespace Icy
       for (auto& chap : chapters)
       {
          if (chap_itr == std::end(chaps))
-            throw std::logic_error("Save file has more chapters than available.");
+            return;
 
          auto levels = Utils::split(chap, ',');
          auto level_itr = std::begin(chap_itr->levels());
