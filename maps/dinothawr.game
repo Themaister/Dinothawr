@@ -31,10 +31,10 @@
       <map source="icy10.tmx" name="Level 10"/>
       <map source="icy12.tmx" name="Level 12"/>
       <map source="icy16.tmx" name="Level 16"/>
+      <map source="icy37.tmx" name="Level 37"/>
 		<map source="icy2.tmx"  name="Level 2"/>
       <!-- <map source="icy3.tmx"  name="Level 3"/> -->
       <map source="icy4.tmx"  name="Level 4"/>
-      <map source="icy37.tmx" name="Level 37"/>
    </chapter>
    <chapter name="Chapter 4">
       <map source="icy30.tmx" name="Level 30"/>
@@ -54,8 +54,8 @@
 		<map source="icy21.tmx" name="Level 21"/>
 	</chapter>
 	<chapter name="Chapter 6">
-      <map source="icy33.tmx" name="Level 33"/>
       <map source="icy35.tmx" name="Level 35"/>
+      <map source="icy33.tmx" name="Level 33"/>
       <map source="icy34.tmx" name="Level 34"/>
       <map source="icy29.tmx" name="Level 21"/>
    </chapter>
