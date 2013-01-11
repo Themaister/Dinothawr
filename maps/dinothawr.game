@@ -58,6 +58,7 @@
       <map source="icy34.tmx" name="Level 34"/>
       <map source="icy35.tmx" name="Level 35"/>
       <map source="icy36.tmx" name="Level 36"/>
+      <map source="icy37.tmx" name="Level 37"/>
       <!-- <map source="icy13.tmx" name="Level 13"/> -->
 		<!-- <map source="icy17.tmx" name="Level 17"/> -->
    </chapter>
