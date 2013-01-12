@@ -377,9 +377,9 @@
    <tile gid="82"/>
    <tile gid="79"/>
    <tile gid="70"/>
-   <tile gid="82"/>
+   <tile gid="80"/>
    <tile gid="70"/>
-   <tile gid="82"/>
+   <tile gid="80"/>
    <tile gid="70"/>
    <tile gid="81"/>
    <tile gid="82"/>
@@ -413,9 +413,9 @@
    <tile gid="82"/>
    <tile gid="83"/>
    <tile gid="74"/>
-   <tile gid="83"/>
+   <tile gid="106"/>
    <tile gid="74"/>
-   <tile gid="83"/>
+   <tile gid="106"/>
    <tile gid="74"/>
    <tile gid="84"/>
    <tile gid="82"/>

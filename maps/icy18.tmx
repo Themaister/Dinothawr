@@ -120,6 +120,7 @@
  </layer>
  <layer name="Floor" width="9" height="9">
   <properties>
+   <property name="player_offset_y" value="-1"/>
    <property name="player_sprite" value="assets/dino.sprite"/>
   </properties>
   <data>
@@ -163,9 +164,9 @@
    <tile gid="0"/>
    <tile gid="72"/>
    <tile gid="82"/>
-   <tile gid="82"/>
+   <tile gid="95"/>
    <tile gid="65"/>
-   <tile gid="82"/>
+   <tile gid="90"/>
    <tile gid="0"/>
    <tile gid="26"/>
    <tile gid="26"/>
