@@ -118,6 +118,10 @@ namespace Icy
       won_frame_cnt = 1;
       player_walking = false;
 
+      auto goal_blocks = get_tiles_with_attr("blocks", "goal", "true");
+      for (auto& block : goal_blocks)
+         block.get().offset = player_off;
+
       stepper = std::bind(&Game::win_animation_stepper, this);
       get_sfx().play_sfx("frozen_dino_melt", 0.5);
    }
