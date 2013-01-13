@@ -443,17 +443,19 @@ namespace Icy
 
    void GameManager::SaveManager::serialize()
    {
-      std::string full_completed;
+      std::string full_pushes;
       for (auto& chap : chaps)
       {
-         std::string completed;
+         std::string pushes;
          for (auto& level : chap.levels())
-            completed += level.get_completion() ? "1," : "0,";
-         full_completed += completed + '\n';
+         {
+            pushes += Utils::join(level.get_best_pushes(), ",");
+         }
+         full_pushes += pushes + '\n';
       }
 
       std::fill(std::begin(save_data), std::end(save_data), '\0');
-      std::copy(std::begin(full_completed), std::end(full_completed), std::begin(save_data));
+      std::copy(std::begin(full_pushes), std::end(full_pushes), std::begin(save_data));
    }
 
    void GameManager::SaveManager::unserialize()
@@ -482,12 +484,9 @@ namespace Icy
             if (level_itr == std::end(chap_itr->levels()))
                break;
 
-            if (level == "1")
-               level_itr->set_completion(true);
-            else if (level == "0")
-               level_itr->set_completion(false);
-            else
-               throw std::logic_error("Completion state is invalid.");
+            unsigned pushes = Utils::stoi(level);
+            level_itr->set_best_pushes(pushes);
+            level_itr->set_completion(pushes);
 
             ++level_itr;
          }
