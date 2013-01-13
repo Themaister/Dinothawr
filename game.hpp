@@ -63,7 +63,8 @@ namespace Icy
    class Game
    {
       public:
-         Game(const std::string& level);
+         Game(const std::string& level_path, unsigned chapter, unsigned level, Blit::FontCluster& font);
+         Game(const std::string& level_path);
 
          void input_cb(std::function<bool (Input)> cb) { m_input_cb = cb; }
          void video_cb(std::function<void (const void*, unsigned, unsigned, std::size_t)> cb) { m_video_cb = cb; }
@@ -83,6 +84,7 @@ namespace Icy
          Blit::Surface player;
          Blit::Pos player_off;
          Blit::SurfaceCache cache;
+         Blit::FontCluster *font;
          Input facing;
 
          CameraManager camera;
@@ -113,6 +115,11 @@ namespace Icy
 
          bool tile_stepper(Blit::Surface& surf, Blit::Pos step_dir);
          bool win_animation_stepper();
+
+         unsigned moves;
+         unsigned pushes;
+         unsigned chapter;
+         unsigned level;
 
          static Blit::Pos input_to_offset(Input input);
          std::string input_to_string(Input input);

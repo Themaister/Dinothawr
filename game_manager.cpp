@@ -137,7 +137,11 @@ namespace Icy
 
    void GameManager::change_level(unsigned chapter, unsigned level) 
    {
-      game = Utils::make_unique<Game>(chapters.at(chapter).level(level).path());
+      game = Utils::make_unique<Game>(
+            chapters.at(chapter).level(level).path(), 
+            chapter,
+            level,
+            font);
       game->input_cb(m_input_cb);
       game->video_cb(m_video_cb);
 

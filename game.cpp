@@ -17,12 +17,21 @@ namespace Icy
       return ret;
    }
 
-   Game::Game(const std::string& level)
-      : map(level), target(fb_width, fb_height),
+   Game::Game(const std::string& level_path, unsigned chapter, unsigned level, Blit::FontCluster& font)
+      : map(level_path), target(fb_width, fb_height), font(&font),
          camera(target, player.rect(), {map.pix_width(), map.pix_height()}),
-         won_frame_cnt(0), is_sliding(false), push(true)
+         won_frame_cnt(0), is_sliding(false), moves(0), pushes(0), 
+         chapter(chapter), level(level), push(true) 
    {
-      set_initial_pos(level);
+      set_initial_pos(level_path);
+   }
+
+   Game::Game(const std::string& level_path)
+      : map(level_path), target(fb_width, fb_height), font(nullptr),
+         camera(target, player.rect(), {map.pix_width(), map.pix_height()}),
+         won_frame_cnt(0), is_sliding(false), push(true) 
+   {
+      set_initial_pos(level_path);
    }
 
    void Game::set_initial_pos(const std::string& level)
@@ -58,6 +67,13 @@ namespace Icy
 
       map.render(target);
       target.blit_offset(player, {}, player_off);
+
+      if (font)
+      {
+         font->set_id("lime");
+         font->render_msg(target, 
+               Utils::join((chapter + 1), "-", (level + 1)), 314, 184, Font::RenderAlignment::Right);
+      }
 
       if (m_video_cb)
          m_video_cb(target.buffer(), target.width(), target.height(), target.width() * sizeof(Pixel));
