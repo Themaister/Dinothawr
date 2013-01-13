@@ -73,6 +73,8 @@ namespace Icy
          font->set_id("lime");
          font->render_msg(target, 
                Utils::join((chapter + 1), "-", (level + 1)), 314, 184, Font::RenderAlignment::Right);
+         font->render_msg(target,
+               Utils::join("Moves: ", moves, " Pushes: ", pushes), 6, 184);
       }
 
       if (m_video_cb)
@@ -322,6 +324,7 @@ namespace Icy
          player_walking = false;
          player.active_alt_index(0);
          get_sfx().play_sfx("dino_push", 2.0);
+         pushes++;
       }
    }
 
@@ -335,6 +338,7 @@ namespace Icy
       {
          stepper = std::bind(&Game::tile_stepper, this, std::ref(player), offset);
          player_walking = true;
+         moves++;
       }
    }
 
