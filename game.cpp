@@ -17,10 +17,10 @@ namespace Icy
       return ret;
    }
 
-   Game::Game(const std::string& level_path, unsigned chapter, unsigned level, Blit::FontCluster& font)
+   Game::Game(const std::string& level_path, unsigned chapter, unsigned level, unsigned best_pushes, Blit::FontCluster& font)
       : map(level_path), target(fb_width, fb_height), font(&font),
          camera(target, player.rect(), {map.pix_width(), map.pix_height()}),
-         won_frame_cnt(0), is_sliding(false), moves(0), pushes(0), 
+         won_frame_cnt(0), is_sliding(false), best_pushes(best_pushes), pushes(0), 
          chapter(chapter), level(level), push(true) 
    {
       set_initial_pos(level_path);
@@ -73,8 +73,10 @@ namespace Icy
          font->set_id("lime");
          font->render_msg(target, 
                Utils::join((chapter + 1), "-", (level + 1)), 314, 184, Font::RenderAlignment::Right);
-         font->render_msg(target,
-               Utils::join("Moves: ", moves, " Pushes: ", pushes), 6, 184);
+         if (!best_pushes)
+            font->render_msg(target, Utils::join(" Pushes:", pushes), 2, 184);
+         else
+            font->render_msg(target, Utils::join(" Pushes:", pushes, " Best:", best_pushes), 2, 184);
       }
 
       if (m_video_cb)
@@ -338,7 +340,6 @@ namespace Icy
       {
          stepper = std::bind(&Game::tile_stepper, this, std::ref(player), offset);
          player_walking = true;
-         moves++;
       }
    }
 

@@ -141,6 +141,7 @@ namespace Icy
             chapters.at(chapter).level(level).path(), 
             chapter,
             level,
+            chapters.at(chapter).level(level).get_best_pushes(),
             font);
       game->input_cb(m_input_cb);
       game->video_cb(m_video_cb);
@@ -333,6 +334,9 @@ namespace Icy
 
       if (game->won())
       {
+         unsigned pushes = game->get_pushes();
+         chapters[m_current_chap].level(m_current_level).set_best_pushes(pushes);
+
          game.reset();
          chapters[m_current_chap].set_completion(m_current_level, true);
          save.serialize();

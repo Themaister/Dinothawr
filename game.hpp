@@ -63,7 +63,7 @@ namespace Icy
    class Game
    {
       public:
-         Game(const std::string& level_path, unsigned chapter, unsigned level, Blit::FontCluster& font);
+         Game(const std::string& level_path, unsigned chapter, unsigned level, unsigned best_pushes, Blit::FontCluster& font);
          Game(const std::string& level_path);
 
          void input_cb(std::function<bool (Input)> cb) { m_input_cb = cb; }
@@ -71,6 +71,8 @@ namespace Icy
 
          int width() const { return map.pix_width(); }
          int height() const { return map.pix_height(); }
+
+         unsigned get_pushes() const { return pushes; }
 
          void iterate();
          bool won() const;
@@ -116,7 +118,7 @@ namespace Icy
          bool tile_stepper(Blit::Surface& surf, Blit::Pos step_dir);
          bool win_animation_stepper();
 
-         unsigned moves;
+         unsigned best_pushes;
          unsigned pushes;
          unsigned chapter;
          unsigned level;
@@ -171,7 +173,7 @@ namespace Icy
          class Level : public Blit::Renderable
          {
             public:
-               Level() : completion(false) {}
+               Level() : completion(false), best_pushes(0) {}
                Level& operator=(const Level&) = default;
                Level(const Level&) = default;
                Level& operator=(Level&&) = default;
@@ -188,11 +190,15 @@ namespace Icy
                void set_completion(bool state) { completion = state; }
                bool get_completion() const { return completion; }
 
+               void set_best_pushes(unsigned pushes) { if (!best_pushes || pushes < best_pushes) best_pushes = pushes; }
+               unsigned get_best_pushes() const { return best_pushes; }
+
             private:
                std::string m_path;
                std::string m_name;
                Blit::Surface preview;
                bool completion;
+               unsigned best_pushes;
          };
 
          class Chapter
@@ -226,6 +232,7 @@ namespace Icy
                bool get_completion(unsigned level) const { return m_levels.at(level).get_completion(); }
                const std::string& name() const { return m_name; }
                const Level& level(unsigned i) const { return m_levels.at(i); }
+               Level& level(unsigned i) { return m_levels.at(i); }
                const std::vector<Level>& levels() const { return m_levels; }
                std::vector<Level>& levels() { return m_levels; }
                unsigned num_levels() const { return m_levels.size(); }
