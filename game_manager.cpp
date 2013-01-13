@@ -127,7 +127,7 @@ namespace Icy
       target.blit(surf, {});
 
       font.set_id("yellow");
-      font.render_msg(target, "Press any button", 136, 170);
+      font.render_msg(target, "Press any button", 160, 170, Font::RenderAlignment::Centered);
    }
 
    void GameManager::reset_level()
@@ -198,16 +198,9 @@ namespace Icy
 
       if (menu_slide_dir.y == 0)
       {
-         font.set_id("yellow");
-         font.render_msg(ui_target, "Chapter", 85, 35);
-
-         font.render_msg(ui_target, Utils::join(chap_select + 1,
-                  "/", chapters.size()), 85, 155);
-
          font.set_id("white");
-         font.render_msg(ui_target, "Level", 240, 35, Font::RenderAlignment::Right);
-         font.render_msg(ui_target, Utils::join(level_select + 1,
-                  "/", chapters[chap_select].num_levels()), 240, 155, Font::RenderAlignment::Right);
+         font.render_msg(ui_target, Utils::join(chap_select + 1,
+                  "-", level_select + 1), 240, 155, Font::RenderAlignment::Right);
       }
 
       font.set_id("lime");

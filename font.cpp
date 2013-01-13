@@ -62,17 +62,15 @@ namespace Blit
          itr.second.refill_color(pix);
    }
 
-   void Font::render_msg(RenderTarget& target, const std::string& map, int x, int y,
+   void Font::render_msg(RenderTarget& target, const std::string& str, int x, int y,
          Font::RenderAlignment dir,
          int newline_offset) const
    {
       int orig_x = x;
 
-      // Won't work right with newlines.
-      if (dir == RenderAlignment::Right)
-         x -= glyphwidth * map.size();
+      x -= Font::adjust_x(str, dir);
 
-      for (auto c : map)
+      for (auto c : str)
       {
          if (c != '\n')
          {
@@ -85,12 +83,20 @@ namespace Blit
             y += glyphheight + newline_offset;
             x = orig_x;
 
-            if (dir == RenderAlignment::Right)
-               x -= glyphwidth * map.size();
+            x -= Font::adjust_x(str, dir);
          }
       }
    }
 
+   int Font::adjust_x(const std::string& str, Font::RenderAlignment dir) const
+   {
+      if (dir == RenderAlignment::Right)
+         return glyphwidth * str.size();
+      if (dir == RenderAlignment::Centered)
+         return glyphwidth * str.size() / 2;
+      else return 0;
+   }
+   
    void FontCluster::add_font(const std::string& font, Pos offset, Pixel color, std::string id)
    {
       auto& fonts = fonts_map[std::move(id)];

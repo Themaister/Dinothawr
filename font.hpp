@@ -22,7 +22,8 @@ namespace Blit
          enum class RenderAlignment : unsigned
          {
             Left = 0,
-            Right
+            Right,
+            Centered
          };
 
          void render_msg(RenderTarget& target, const std::string& msg, int x, int y,
@@ -33,6 +34,7 @@ namespace Blit
       private:
          std::map<char, Surface> surf_map;
          int glyphwidth, glyphheight;
+         int adjust_x(const std::string& str, Font::RenderAlignment dir) const;
    };
 
    class FontCluster
