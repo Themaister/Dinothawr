@@ -128,7 +128,13 @@ namespace Icy
          state = "defrost1";
 
       for (auto& block : goal_blocks)
+      {
          block.get().surf.active_alt(state);
+
+         // Shift defrosted block same way player sprite is (16x17, etc), but only when defrost kicks in.
+         if (won_frame_cnt >= 1 * frame_per_iter)
+            block.get().offset = player_off;
+      }
 
       return true;
    }
@@ -137,10 +143,6 @@ namespace Icy
    {
       won_frame_cnt = 1;
       player_walking = false;
-
-      auto goal_blocks = get_tiles_with_attr("blocks", "goal", "true");
-      for (auto& block : goal_blocks)
-         block.get().offset = player_off;
 
       stepper = std::bind(&Game::win_animation_stepper, this);
       get_sfx().play_sfx("frozen_dino_melt", 0.5);
