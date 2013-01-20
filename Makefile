@@ -28,7 +28,7 @@ else ifeq ($(platform), osx)
 else
    CC = gcc
    TARGET := retro.dll
-   SHARED := -shared -static-libgcc -static-libstdc++ -s -Wl,--version-script=link.T -Wl,--no-undefined
+   SHARED := -shared -static-libgcc -static-libstdc++ -static -s -Wl,--version-script=link.T -Wl,--no-undefined
 endif
 
 ifeq ($(DEBUG), 1)
@@ -46,7 +46,7 @@ CXXFLAGS += -std=gnu++0x -Wall -pedantic $(fpic)
 all: $(TARGET)
 
 $(TARGET): $(OBJECTS)
-	$(CXX) $(fpic) $(SHARED) $(INCLUDES) -o $@ $(OBJECTS) $(LIBS) -lm 
+	$(CXX) $(fpic) $(SHARED) $(INCLUDES) -o $@ $(OBJECTS) $(LIBS) -lm -lz
 
 %.o: %.cpp $(HEADERS)
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
