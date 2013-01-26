@@ -58,7 +58,7 @@ install: all
 	mkdir -p $(LIBDIR) || /bin/true
 	install -m755 $(TARGET) $(LIBDIR)/libretro-dinothawr.so
 	install -d -m755 $(ASSETDIR)
-	cp -r maps/* $(ASSETDIR)
+	cp -r dinothawr/* $(ASSETDIR)
 
 .PHONY: clean install
 
