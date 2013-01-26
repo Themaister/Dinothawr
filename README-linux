@@ -1,0 +1,45 @@
+==========
+Dinothawr
+==========
+
+Dinothawr is a game that is implemented as a libretro core for RetroArch.
+It is not a plain executable, but rather a dynamic library which RetroArch will run.
+
+===================
+Install RetroArch:
+===================
+
+If your distro has a RetroArch package, you can install that.
+
+If not, the recommended way is to build from Git:
+https://github.com/Themaister/RetroArch (Repo: git://github.com/Themaister/RetroArch.git)
+See README or Wiki pages for how to build and install it.
+
+Dependencies: Make sure you have OpenGL headers, X11 headers, etc. Basic stuff.
+
+===============
+Running game:
+===============
+
+To run the game. RetroArch needs to load a library of the Dinothawr engine, and
+the dinothawr game as a "ROM".
+
+Example:
+   retroarch -L libretro-dinothawr-linux-x86_64.so dinothawr/dinothawr.game
+
+=========
+Source:
+=========
+
+Source of Dinothawr will be released when game is finished.
+
+==============
+Save data:
+==============
+
+Normally, RetroArch saves game data to same folder as where the "ROM" is loaded from.
+If this folder is read-only (e.g. /usr/lib), save data cannot be saved.
+
+If this is the case, you can override the path to save data using -s flag. E.g.:
+   retroarch -L libretro-dinothawr-linux-x86_64.so -s ~/.dinothawr-save-data /usr/share/dinothawr/dinothawr.game
+
