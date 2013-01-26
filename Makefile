@@ -14,8 +14,8 @@ else ifneq ($(findstring win,$(shell uname -a)),)
 endif
 endif
 
-LIBDIR = /usr/lib/libretro
-ASSETDIR = /usr/share/dinothawr
+LIBDIR = $(DESTDIR)/usr/lib/libretro
+ASSETDIR = $(DESTDIR)/usr/share/dinothawr
 
 ifeq ($(platform), unix)
    TARGET := libretro.so
