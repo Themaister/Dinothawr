@@ -19,6 +19,7 @@ endif
 
 LOCAL_SRC_FILES += $(wildcard ../../*.cpp) $(wildcard ../../*/*.cpp)
 LOCAL_CXXFLAGS += -O2 -Wall -std=gnu++0x -ffast-math -fexceptions
+LOCAL_LDLIBS += -lz
 
 include $(BUILD_SHARED_LIBRARY)
 
