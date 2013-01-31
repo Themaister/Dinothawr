@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" width="12" height="11" tilewidth="16" tileheight="16">
+<map version="1.0" orientation="orthogonal" width="12" height="12" tilewidth="16" tileheight="16">
  <tileset firstgid="1" name="ground" tilewidth="16" tileheight="16">
   <image source="assets/tileset-ground.png" width="48" height="16"/>
  </tileset>
@@ -33,8 +33,20 @@
   </properties>
   <image source="assets/tileset-slippery.png" width="256" height="48"/>
  </tileset>
- <layer name="Bottom" width="12" height="11">
+ <layer name="Bottom" width="12" height="12">
   <data>
+   <tile gid="3"/>
+   <tile gid="3"/>
+   <tile gid="2"/>
+   <tile gid="3"/>
+   <tile gid="3"/>
+   <tile gid="2"/>
+   <tile gid="2"/>
+   <tile gid="2"/>
+   <tile gid="3"/>
+   <tile gid="3"/>
+   <tile gid="3"/>
+   <tile gid="3"/>
    <tile gid="3"/>
    <tile gid="3"/>
    <tile gid="2"/>
@@ -169,7 +181,7 @@
    <tile gid="3"/>
   </data>
  </layer>
- <layer name="Floor" width="12" height="11">
+ <layer name="Floor" width="12" height="12">
   <properties>
    <property name="player_offset_y" value="-1"/>
    <property name="player_sprite" value="assets/dino.sprite"/>
@@ -273,12 +285,24 @@
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
+   <tile gid="72"/>
+   <tile gid="83"/>
+   <tile gid="74"/>
+   <tile gid="106"/>
+   <tile gid="74"/>
+   <tile gid="84"/>
+   <tile gid="104"/>
+   <tile gid="73"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
    <tile gid="69"/>
-   <tile gid="100"/>
-   <tile gid="65"/>
-   <tile gid="78"/>
-   <tile gid="65"/>
-   <tile gid="101"/>
+   <tile gid="70"/>
+   <tile gid="70"/>
+   <tile gid="70"/>
+   <tile gid="70"/>
+   <tile gid="70"/>
    <tile gid="70"/>
    <tile gid="71"/>
    <tile gid="0"/>
@@ -309,7 +333,7 @@
    <tile gid="0"/>
   </data>
  </layer>
- <layer name="FloorTop" width="12" height="11">
+ <layer name="FloorTop" width="12" height="12">
   <data>
    <tile gid="26"/>
    <tile gid="26"/>
@@ -351,30 +375,6 @@
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
-   <tile gid="12"/>
-   <tile gid="0"/>
-   <tile gid="0"/>
-   <tile gid="0"/>
-   <tile gid="0"/>
-   <tile gid="0"/>
-   <tile gid="0"/>
-   <tile gid="26"/>
-   <tile gid="26"/>
-   <tile gid="0"/>
-   <tile gid="0"/>
-   <tile gid="0"/>
-   <tile gid="0"/>
-   <tile gid="0"/>
-   <tile gid="0"/>
-   <tile gid="0"/>
-   <tile gid="0"/>
-   <tile gid="0"/>
-   <tile gid="0"/>
-   <tile gid="26"/>
-   <tile gid="26"/>
-   <tile gid="0"/>
-   <tile gid="0"/>
-   <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
@@ -400,9 +400,45 @@
    <tile gid="0"/>
    <tile gid="12"/>
    <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="26"/>
+   <tile gid="26"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="26"/>
+   <tile gid="26"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
    <tile gid="12"/>
    <tile gid="0"/>
    <tile gid="12"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="26"/>
+   <tile gid="26"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
@@ -445,7 +481,7 @@
    <tile gid="26"/>
   </data>
  </layer>
- <layer name="Blocks" width="12" height="11">
+ <layer name="Blocks" width="12" height="12">
   <data>
    <tile gid="0"/>
    <tile gid="0"/>
@@ -516,6 +552,18 @@
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="10"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
