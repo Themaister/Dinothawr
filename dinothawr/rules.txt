@@ -1,6 +1,10 @@
-./tiled_rules/corners_001.tmx
+./tiled_rules/ends_002.tmx
+./tiled_rules/ends_001.tmx
 ./tiled_rules/edges_002.tmx
 ./tiled_rules/edges_001.tmx
-./tiled_rules/holes_001.tmx
+./tiled_rules/corners_001.tmx
+./tiled_rules/edges_003.tmx
+./tiled_rules/edges_004.tmx
+./tiled_rules/edges_005.tmx
 ./tiled_rules/variation_001.tmx
 
