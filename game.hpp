@@ -298,6 +298,7 @@ namespace Icy
          // Menu stuff.
          void enter_menu();
          void set_initial_level();
+         bool find_next_unsolved_level(unsigned& chap, unsigned& level);
          void step_menu();
          void step_menu_slide();
          void start_slide(Blit::Pos dir, unsigned cnt);

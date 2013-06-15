@@ -156,30 +156,45 @@ namespace Icy
       m_game_state = State::Game;
    }
 
+   bool GameManager::find_next_unsolved_level(unsigned& current_chap, unsigned& current_level)
+   {
+      if (current_chap == chapters.size() - 1 && current_level == chapters.back().num_levels() - 1)
+         return false;
+
+      unsigned chap = current_chap;
+      unsigned level = current_level;
+      while (chap < chapters.size())
+      {
+         if (!chapters[chap].get_completion(level))
+         {
+            current_chap = chap;
+            current_level = level;
+            return true;
+         }
+
+         level++;
+         if (level >= chapters[chap].num_levels())
+         {
+            chap++;
+            level = 0;
+         }
+      }
+
+      return false;
+   }
+
    // Find first level that isn't completed yet, and
    // start menu there.
    void GameManager::set_initial_level()
    {
       save.unserialize();
-      unsigned chapter = 0;
-      for (auto& chap : chapters)
+      m_current_chap = 0;
+      m_current_level = 0;
+      if (!find_next_unsolved_level(m_current_chap, m_current_level))
       {
-         unsigned level = 0;
-         for (auto& l : chap.levels())
-         {
-            if (!l.get_completion())
-            {
-               m_current_chap = chapter;
-               m_current_level = level;
-               return;
-            }
-            level++;
-         }
-         chapter++;
+         chap_select = chapters.size() - 1;
+         level_select = chapters.back().num_levels() - 1;
       }
-
-      chap_select = chapters.size() - 1;
-      level_select = chapters.back().num_levels() - 1;
    }
 
    void GameManager::step_title()
@@ -366,11 +381,8 @@ namespace Icy
          chapters[m_current_chap].set_completion(m_current_level, true);
          save.serialize();
 
-         if (m_current_level < chapters.at(m_current_chap).num_levels() - 1)
-         {
-            m_current_level++;
+         if (find_next_unsolved_level(m_current_chap, m_current_level))
             change_level(m_current_chap, m_current_level);
-         }
          else
             enter_menu();
       }
