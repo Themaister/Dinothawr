@@ -74,6 +74,7 @@ namespace Icy
          int height() const { return map.pix_height(); }
 
          unsigned get_pushes() const { return pushes; }
+         void set_bg(const Blit::Surface& bg);
 
          void iterate();
          bool won() const;
@@ -88,6 +89,7 @@ namespace Icy
          Blit::Pos player_off;
          Blit::SurfaceCache cache;
          Blit::FontCluster *font;
+         const Blit::Surface *bg;
          Input facing;
 
          CameraManager camera;
@@ -180,7 +182,7 @@ namespace Icy
                Level& operator=(Level&&) = default;
                Level(Level&&) = default;
 
-               Level(const std::string& path);
+               Level(const std::string& path, const Blit::Surface& bg);
                const std::string& path() const { return m_path; }
 
                void set_name(const std::string& name) { m_name = name; }
@@ -280,6 +282,7 @@ namespace Icy
          Blit::Surface arrow_bottom;
          Blit::Surface level_complete;
          Blit::Surface level_select_bg;
+         Blit::Surface game_bg;
 
          std::function<bool (Input)> m_input_cb;
          std::function<void (const void*, unsigned, unsigned, std::size_t)> m_video_cb;

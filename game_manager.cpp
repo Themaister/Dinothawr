@@ -18,15 +18,9 @@ namespace Icy
       m_input_cb(input_cb), m_video_cb(video_cb)
    {
       xml_document doc;
+
       if (!doc.load_file(path_game.c_str()))
          throw std::runtime_error(Utils::join("Failed to load game: ", path_game, "."));
-
-      for (xml_node node = doc.child("game").child("chapter"); node; node = node.next_sibling("chapter"))
-      {
-         auto chapter = load_chapter(node, chapters.size());
-         if (chapter.num_levels() > 0)
-            chapters.push_back(std::move(chapter));
-      }
 
       auto font_path = Utils::join(dir, "/", doc.child("game").child("font").attribute("source").value());
       font.add_font(font_path, {-1, 1}, Pixel::ARGB(0xff, 0xc0, 0x98, 0x00), "yellow");
@@ -36,11 +30,19 @@ namespace Icy
       font.add_font(font_path, {-1, 1}, Pixel::ARGB(0xff, 0x39, 0x5a, 0x94), "lime");
       font.add_font(font_path, { 0, 0}, Pixel::ARGB(0xff, 0xb8, 0xe8, 0xb0), "lime");
 
-      ui_target = RenderTarget(Game::fb_width, Game::fb_height);
-
       init_menu(doc.child("game").child("title").attribute("source").value());
       init_menu_sprite(doc);
       init_sfx(doc);
+
+      for (xml_node node = doc.child("game").child("chapter"); node; node = node.next_sibling("chapter"))
+      {
+         auto chapter = load_chapter(node, chapters.size());
+         if (chapter.num_levels() > 0)
+            chapters.push_back(std::move(chapter));
+      }
+
+      ui_target = RenderTarget(Game::fb_width, Game::fb_height);
+
    }
 
    GameManager::GameManager() : save(chapters), m_current_chap(0), m_current_level(0), m_game_state(State::Game) {}
@@ -66,6 +68,9 @@ namespace Icy
 
       level_select_bg = cache.from_image(Utils::join(dir, "/", doc.child("game").child("menu_bg").attribute("source").value()));
       level_select_bg.ignore_camera(true);
+
+      game_bg = cache.from_image(Utils::join(dir, "/", doc.child("game").child("game_bg").attribute("source").value()));
+      game_bg.ignore_camera(true);
    }
 
    void GameManager::init_sfx(xml_node doc)
@@ -96,7 +101,7 @@ namespace Icy
 
       std::vector<Level> levels;
       for (auto& val : walk)
-         levels.push_back(Utils::join(dir, "/", val));
+         levels.push_back({Utils::join(dir, "/", val), game_bg});
 
       auto itr = std::begin(levels);
       for (auto& val : walk_name)
@@ -145,6 +150,7 @@ namespace Icy
             font);
       game->input_cb(m_input_cb);
       game->video_cb(m_video_cb);
+      game->set_bg(game_bg);
 
       m_current_chap  = chapter;
       m_current_level = level;
@@ -423,10 +429,11 @@ namespace Icy
       return levels;
    }
 
-   GameManager::Level::Level(const std::string& path)
+   GameManager::Level::Level(const std::string& path, const Blit::Surface& bg)
       : m_path(path), completion(false), best_pushes(0)
    {
       Game game{path};
+      game.set_bg(bg);
 
       static const unsigned scale_factor = 2;
       int preview_width  = Game::fb_width / scale_factor;
@@ -436,23 +443,23 @@ namespace Icy
 
       game.input_cb([](Input) { return false; });
       game.video_cb([&data, preview_width](const void* pix_data, unsigned width, unsigned height, size_t pitch) {
-            const Pixel* pix = reinterpret_cast<const Pixel*>(pix_data);
-            pitch /= sizeof(Pixel);
+         const Pixel* pix = reinterpret_cast<const Pixel*>(pix_data);
+         pitch /= sizeof(Pixel);
 
-            for (unsigned y = 0; y < height; y += scale_factor)
-            {
+         for (unsigned y = 0; y < height; y += scale_factor)
+         {
             for (unsigned x = 0; x < width; x += scale_factor)
             {
-            auto a0 = pix[pitch * (y + 0) + (x + 0)];
-            auto a1 = pix[pitch * (y + 0) + (x + 1)];
-            auto b0 = pix[pitch * (y + 1) + (x + 0)];
-            auto b1 = pix[pitch * (y + 1) + (x + 1)];
-            auto res = Pixel::blend(Pixel::blend(a0, a1), Pixel::blend(b0, b1));
+               auto a0 = pix[pitch * (y + 0) + (x + 0)];
+               auto a1 = pix[pitch * (y + 0) + (x + 1)];
+               auto b0 = pix[pitch * (y + 1) + (x + 0)];
+               auto b1 = pix[pitch * (y + 1) + (x + 1)];
+               auto res = Pixel::blend(Pixel::blend(a0, a1), Pixel::blend(b0, b1));
 
-            data[preview_width * (y / scale_factor) + (x / scale_factor)] = res | static_cast<Pixel>(Pixel::alpha_mask);
+               data[preview_width * (y / scale_factor) + (x / scale_factor)] = res | static_cast<Pixel>(Pixel::alpha_mask);
             }
-            }
-            });
+         }
+      });
 
       game.iterate();
 

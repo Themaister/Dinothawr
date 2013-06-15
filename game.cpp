@@ -24,6 +24,7 @@ namespace Icy
          chapter(chapter), level(level), push(true) 
    {
       set_initial_pos(level_path);
+      bg = nullptr;
    }
 
    Game::Game(const std::string& level_path)
@@ -32,6 +33,12 @@ namespace Icy
          won_frame_cnt(0), is_sliding(false), push(true) 
    {
       set_initial_pos(level_path);
+      bg = nullptr;
+   }
+
+   void Game::set_bg(const Blit::Surface& bg)
+   {
+      this->bg = &bg;
    }
 
    void Game::set_initial_pos(const std::string& level)
@@ -62,7 +69,11 @@ namespace Icy
    {
       update_player();
 
-      target.clear(Pixel::ARGB(0x00, 0x00, 0x00, 0x00));
+      if (bg)
+         target.blit(*bg, {});
+      else
+         target.clear(Pixel::ARGB(0x00, 0x00, 0x00, 0x00));
+
       camera.update();
 
       map.render(target);
