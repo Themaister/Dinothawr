@@ -127,7 +127,7 @@ namespace Icy
       target.blit(surf, {});
 
       font.set_id("yellow");
-      font.render_msg(target, "Press any button", 160, 170, Font::RenderAlignment::Centered);
+      font.render_msg(target, "Press OK/Push button", 160, 170, Font::RenderAlignment::Centered);
    }
 
    void GameManager::reset_level()
@@ -184,8 +184,7 @@ namespace Icy
 
    void GameManager::step_title()
    {
-      if (m_input_cb(Input::Push) ||
-            m_input_cb(Input::Menu))
+      if (m_input_cb(Input::Push))
       {
          set_initial_level();
          enter_menu();
