@@ -120,12 +120,13 @@ static void load_game(const std::string& path)
       unsigned btn;
       switch (input)
       {
-         case Icy::Input::Up:     btn = RETRO_DEVICE_ID_JOYPAD_UP; break;
-         case Icy::Input::Down:   btn = RETRO_DEVICE_ID_JOYPAD_DOWN; break;
-         case Icy::Input::Left:   btn = RETRO_DEVICE_ID_JOYPAD_LEFT; break;
-         case Icy::Input::Right:  btn = RETRO_DEVICE_ID_JOYPAD_RIGHT; break;
-         case Icy::Input::Push:   btn = RETRO_DEVICE_ID_JOYPAD_A; break;
-         case Icy::Input::Menu: btn = RETRO_DEVICE_ID_JOYPAD_B; break;
+         case Icy::Input::Up:    btn = RETRO_DEVICE_ID_JOYPAD_UP; break;
+         case Icy::Input::Down:  btn = RETRO_DEVICE_ID_JOYPAD_DOWN; break;
+         case Icy::Input::Left:  btn = RETRO_DEVICE_ID_JOYPAD_LEFT; break;
+         case Icy::Input::Right: btn = RETRO_DEVICE_ID_JOYPAD_RIGHT; break;
+         case Icy::Input::Push:  btn = RETRO_DEVICE_ID_JOYPAD_A; break;
+         case Icy::Input::Menu:  btn = RETRO_DEVICE_ID_JOYPAD_B; break;
+         case Icy::Input::Reset: btn = RETRO_DEVICE_ID_JOYPAD_SELECT; break;
          default: return false;
       }
 
@@ -141,7 +142,13 @@ static void load_game(const std::string& path)
 
 void retro_reset(void)
 {
-   game->reset_level();
+   size_t memory_size = retro_get_memory_size(RETRO_MEMORY_SAVE_RAM);
+   std::vector<uint8_t> data(memory_size);
+   uint8_t *game_data = reinterpret_cast<uint8_t*>(retro_get_memory_data(RETRO_MEMORY_SAVE_RAM));
+   std::copy(game_data, game_data + memory_size, data.data());
+   load_game(game_path);
+   game_data = reinterpret_cast<uint8_t*>(retro_get_memory_data(RETRO_MEMORY_SAVE_RAM));
+   std::copy(data.begin(), data.end(), game_data);
 }
 
 bool retro_load_game(const struct retro_game_info* info)

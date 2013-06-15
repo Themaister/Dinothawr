@@ -348,11 +348,15 @@ namespace Icy
       game->iterate();
 
       bool pressed_menu = m_input_cb(Input::Menu);
+      bool pressed_reset = m_input_cb(Input::Reset);
 
-      if (pressed_menu && !old_pressed_menu)
+      if (pressed_reset && !old_pressed_reset)
+         reset_level();
+      else if (pressed_menu && !old_pressed_menu)
          enter_menu();
 
       old_pressed_menu = pressed_menu;
+      old_pressed_reset = pressed_reset;
 
       if (game->won())
       {
