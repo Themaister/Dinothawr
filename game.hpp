@@ -296,6 +296,7 @@ namespace Icy
 
          // Menu stuff.
          void enter_menu();
+         void set_initial_level();
          void step_menu();
          void step_menu_slide();
          void start_slide(Blit::Pos dir, unsigned cnt);

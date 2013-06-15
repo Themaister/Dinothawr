@@ -156,11 +156,40 @@ namespace Icy
       m_game_state = State::Game;
    }
 
+   // Find first level that isn't completed yet, and
+   // start menu there.
+   void GameManager::set_initial_level()
+   {
+      save.unserialize();
+      unsigned chapter = 0;
+      for (auto& chap : chapters)
+      {
+         unsigned level = 0;
+         for (auto& l : chap.levels())
+         {
+            if (!l.get_completion())
+            {
+               m_current_chap = chapter;
+               m_current_level = level;
+               return;
+            }
+            level++;
+         }
+         chapter++;
+      }
+
+      chap_select = chapters.size() - 1;
+      level_select = chapters.back().num_levels() - 1;
+   }
+
    void GameManager::step_title()
    {
       if (m_input_cb(Input::Push) ||
             m_input_cb(Input::Menu))
+      {
+         set_initial_level();
          enter_menu();
+      }
 
       m_video_cb(target.buffer(), target.width(), target.height(), target.width() * sizeof(Pixel));
    }
