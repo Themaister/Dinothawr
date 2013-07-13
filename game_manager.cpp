@@ -33,6 +33,7 @@ namespace Icy
       init_menu(doc.child("game").child("title").attribute("source").value());
       init_menu_sprite(doc);
       init_sfx(doc);
+      init_bg(doc);
 
       for (xml_node node = doc.child("game").child("chapter"); node; node = node.next_sibling("chapter"))
       {
@@ -71,6 +72,16 @@ namespace Icy
 
       game_bg = cache.from_image(Utils::join(dir, "/", doc.child("game").child("game_bg").attribute("source").value()));
       game_bg.ignore_camera(true);
+   }
+
+   void GameManager::init_bg(xml_node doc)
+   {
+      auto sfx = doc.child("game").child("music");
+      Utils::xml_node_walker walk{sfx, "bg", "source"};
+      std::vector<std::string> paths;
+      for (auto& val : walk)
+         paths.push_back(Utils::join(dir, "/", val));
+      get_bg().init(paths);
    }
 
    void GameManager::init_sfx(xml_node doc)

@@ -159,7 +159,6 @@ namespace Audio
       }
    }
 
-#ifdef HAVE_VORBIS
    std::vector<float> VorbisFile::decode()
    {
       std::vector<float> data;
@@ -276,7 +275,49 @@ namespace Audio
 
       return rendered;
    }
-#endif
 
+   void VorbisLoader::request_vorbis(const std::string& path)
+   {
+      inflight.push_back(std::async(std::launch::async, [path]() {
+                  VorbisFile file{path};
+                  return file.decode();
+               }));
+   }
+
+   void VorbisLoader::cleanup()
+   {
+      inflight.erase(std::remove_if(std::begin(inflight),
+               std::end(inflight), [](const std::future<std::vector<float>>& fut) {
+               return !fut.valid();
+               }), std::end(inflight));
+   }
+
+   std::shared_ptr<std::vector<float>> VorbisLoader::flush()
+   {
+      try
+      {
+         for (auto& fut : inflight)
+            if (fut.wait_for(std::chrono::seconds(0)) == std::future_status::ready)
+               finished.push(fut.get()); 
+
+         cleanup();
+
+         if (finished.size())
+         {
+            auto& f = finished.front();
+            auto ret = std::make_shared<std::vector<float>>(std::move(f));
+            finished.pop();
+            return std::move(ret);
+         }
+         else
+            return {};
+      }
+      catch (const std::exception& e)
+      {
+         std::cerr << "VorbisLoader::flush() failed ... " << e.what() << std::endl;
+         cleanup();
+         return {};
+      }
+   }
 }
 

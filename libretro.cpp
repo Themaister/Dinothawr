@@ -11,19 +11,22 @@
 #include "audio/mixer.hpp"
 
 using namespace Blit::Utils;
+using namespace Icy;
 
-static std::unique_ptr<Icy::GameManager> game;
+static std::unique_ptr<GameManager> game;
 static std::string game_path;
 static std::string game_path_dir;
 
 static Audio::Mixer mixer;
-static Icy::SFXManager sfx;
+static SFXManager sfx;
+static BGManager bg_music;
 
 namespace Icy
 {
    Audio::Mixer& get_mixer() { return mixer; }
    const std::string& get_basedir() { return game_path_dir; }
    SFXManager& get_sfx() { return sfx; }
+   BGManager& get_bg() { return bg_music; }
 }
 
 #define AUDIO_FRAMES (44100 / 60)
@@ -56,7 +59,7 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
 {
    info->timing = { 60.0, 44100.0 };
    
-   unsigned width = Icy::Game::fb_width, height = Icy::Game::fb_height;
+   unsigned width = Game::fb_width, height = Game::fb_height;
    info->geometry = { width, height, width, height };
 }
 
@@ -102,6 +105,7 @@ void retro_run(void)
    input_poll_cb();
    game->iterate();
 
+   get_bg().step(mixer);
    mixer.render(audio_buffer, AUDIO_FRAMES);
 
    for (unsigned i = 0; i < AUDIO_FRAMES; )
@@ -116,24 +120,24 @@ void retro_run(void)
 
 static void load_game(const std::string& path)
 {
-   auto input_cb = [&](Icy::Input input) -> bool {
+   auto input_cb = [&](Input input) -> bool {
       unsigned btn;
       switch (input)
       {
-         case Icy::Input::Up:    btn = RETRO_DEVICE_ID_JOYPAD_UP; break;
-         case Icy::Input::Down:  btn = RETRO_DEVICE_ID_JOYPAD_DOWN; break;
-         case Icy::Input::Left:  btn = RETRO_DEVICE_ID_JOYPAD_LEFT; break;
-         case Icy::Input::Right: btn = RETRO_DEVICE_ID_JOYPAD_RIGHT; break;
-         case Icy::Input::Push:  btn = RETRO_DEVICE_ID_JOYPAD_A; break;
-         case Icy::Input::Menu:  btn = RETRO_DEVICE_ID_JOYPAD_B; break;
-         case Icy::Input::Reset: btn = RETRO_DEVICE_ID_JOYPAD_SELECT; break;
+         case Input::Up:    btn = RETRO_DEVICE_ID_JOYPAD_UP; break;
+         case Input::Down:  btn = RETRO_DEVICE_ID_JOYPAD_DOWN; break;
+         case Input::Left:  btn = RETRO_DEVICE_ID_JOYPAD_LEFT; break;
+         case Input::Right: btn = RETRO_DEVICE_ID_JOYPAD_RIGHT; break;
+         case Input::Push:  btn = RETRO_DEVICE_ID_JOYPAD_A; break;
+         case Input::Menu:  btn = RETRO_DEVICE_ID_JOYPAD_B; break;
+         case Input::Reset: btn = RETRO_DEVICE_ID_JOYPAD_SELECT; break;
          default: return false;
       }
 
       return input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, btn);
    };
 
-   game = make_unique<Icy::GameManager>(path, input_cb,
+   game = make_unique<GameManager>(path, input_cb,
          [&](const void* data, unsigned width, unsigned height, std::size_t pitch) {
             video_cb(data, width, height, pitch);
          }
@@ -163,7 +167,7 @@ bool retro_load_game(const struct retro_game_info* info)
       mixer = Audio::Mixer();
 
 #if 0
-      Audio::VorbisFile bg{join(Icy::get_basedir(), "/assets/bg.ogg")};
+      Audio::VorbisFile bg{join(get_basedir(), "/assets/bg.ogg")};
       auto stream = std::make_shared<Audio::PCMStream>(std::make_shared<std::vector<float>>(bg.decode())); // Kinda hardcoded atm.
       stream->loop(true);
       mixer.add_stream(stream);

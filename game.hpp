@@ -10,6 +10,7 @@
 #include <functional>
 #include <cstddef>
 #include <functional>
+#include <random>
 
 namespace Icy
 {
@@ -39,6 +40,20 @@ namespace Icy
    };
 
    SFXManager& get_sfx();
+
+   class BGManager
+   {
+      public:
+         void init(const std::vector<std::string>& paths);
+         void step(Audio::Mixer& mixer);
+
+      private:
+         std::shared_ptr<Audio::Stream> current;
+         Audio::VorbisLoader loader;
+         std::vector<std::string> paths;
+   };
+
+   BGManager& get_bg();
 
    class CameraManager
    {
@@ -291,6 +306,7 @@ namespace Icy
          void init_menu_sprite(pugi::xml_node doc);
          void init_level(unsigned chapter, unsigned level);
          void init_sfx(pugi::xml_node doc);
+         void init_bg(pugi::xml_node doc);
 
          Chapter load_chapter(pugi::xml_node chap_node, int chapter);
          const Level& get_selected_level() const;

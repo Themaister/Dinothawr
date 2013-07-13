@@ -7,10 +7,10 @@
 #include <utility>
 #include <cmath>
 #include <string>
-
-#ifdef HAVE_VORBIS
+#include <future>
+#include <chrono>
+#include <queue>
 #include <vorbis/vorbisfile.h>
-#endif
 
 namespace Audio
 {
@@ -73,13 +73,13 @@ namespace Audio
          std::size_t ptr;
    };
 
-   class WAVFile : public Stream
+   class WAVFile
    {
       public:
+         WAVFile() = delete;
          static std::vector<float> load_wave(const std::string& path);
    };
 
-#ifdef HAVE_VORBIS
    class VorbisFile : public Stream
    {
       public:
@@ -101,7 +101,21 @@ namespace Audio
          bool is_eof;
          bool is_mono;
    };
-#endif
+
+   class Mixer;
+   class VorbisLoader
+   {
+      public:
+         void request_vorbis(const std::string& path);
+         std::shared_ptr<std::vector<float>> flush();
+         size_t size() const { return inflight.size(); }
+
+      private:
+         std::vector<std::future<std::vector<float>>> inflight;
+         std::queue<std::vector<float>> finished;
+
+         void cleanup();
+   };
 
    class Mixer
    {
