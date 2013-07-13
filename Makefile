@@ -14,21 +14,27 @@ else ifneq ($(findstring win,$(shell uname -a)),)
 endif
 endif
 
+LIBRETRO := dinothawr
 LIBDIR = $(DESTDIR)/usr/lib/libretro
 ASSETDIR = $(DESTDIR)/usr/share/dinothawr
 
 ifeq ($(platform), unix)
-   TARGET := libretro.so
+   TARGET := $(LIBRETRO)_libretro.so
    fpic := -fPIC
    SHARED := -shared -Wl,--version-script=link.T -Wl,--no-undefined
+   CXXFLAGS += $(shell pkg-config vorbisfile --cflags)
+   LIBS += $(shell pkg-config vorbisfile --libs)
 else ifeq ($(platform), osx)
-   TARGET := libretro.dylib
+   TARGET := $(LIBRETRO)_libretro.dylib
    fpic := -fPIC
    SHARED := -dynamiclib
+   CXXFLAGS += $(shell pkg-config vorbisfile --cflags)
+   LIBS += $(shell pkg-config vorbisfile --libs)
 else
-   CC = gcc
-   TARGET := retro.dll
+   CXX = g++
+   TARGET := $(LIBRETRO)_libretro.dll
    SHARED := -shared -static-libgcc -static-libstdc++ -static -s -Wl,--version-script=link.T -Wl,--no-undefined
+   LIBS += -lvorbisfile -lvorbis -logg -lz 
 endif
 
 ifeq ($(DEBUG), 1)
@@ -38,10 +44,9 @@ else
 endif
 
 HEADERS := $(wildcard *.hpp) $(wildcard */*.hpp)
-
 SOURCES := $(wildcard *.cpp) $(wildcard */*.cpp)
 OBJECTS := $(SOURCES:.cpp=.o)
-CXXFLAGS += -std=gnu++0x -Wall -pedantic $(fpic)
+CXXFLAGS += -std=gnu++11 -Wall -pedantic $(fpic)
 
 all: $(TARGET)
 

@@ -14,6 +14,16 @@
       <sound source="assets/sfx/dino_jump.wav" name="dino_jump"/>
       <sound source="assets/sfx/dino_push.wav" name="dino_push"/>
    </sfx>
+   <music>
+      <bg source="assets/bg/bg1.ogg"/>
+      <bg source="assets/bg/bg2.ogg"/>
+      <bg source="assets/bg/bg3.ogg"/>
+      <bg source="assets/bg/bg4.ogg"/>
+      <bg source="assets/bg/bg5.ogg"/>
+      <bg source="assets/bg/bg6.ogg"/>
+      <bg source="assets/bg/bg7.ogg"/>
+      <bg source="assets/bg/bg8.ogg"/>
+   </music>
    <chapter name="Chapter 1" minimum_clear="1">
       <map source="icy25.tmx" name="Level 25"/>
       <map source="icy8.tmx"  name="Level 8"/>
