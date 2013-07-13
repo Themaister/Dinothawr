@@ -65,5 +65,6 @@
    <chapter name="Test">
       <map source="icy45.tmx" name="Level 45"/>
       <map source="icy46.tmx" name="Level 46"/>
+      <map source="icy47.tmx" name="Level 47"/>
    </chapter>
 </game>
