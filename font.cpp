@@ -4,18 +4,19 @@
 #include <stdexcept>
 
 using namespace pugi;
+using namespace std;
 
 namespace Blit
 {
    Font::Font() : glyphwidth(0), glyphheight(0) {}
 
-   Font::Font(const std::string& font)
+   Font::Font(const string& font)
    {
       auto dir = Utils::basedir(font);
 
       xml_document doc;
       if (!doc.load_file(font.c_str()))
-         throw std::runtime_error(Utils::join("Failed to load font: ", font, "."));
+         throw runtime_error(Utils::join("Failed to load font: ", font, "."));
 
       auto glyph       = doc.child("font").child("glyphs");
       char start_ascii = glyph.attribute("startascii").as_int();
@@ -27,13 +28,13 @@ namespace Blit
       auto source = glyph.attribute("source").value();
 
       if (!width || !height || !glyphwidth || !glyphheight)
-         throw std::logic_error("Invalid glpyh arguments.");
+         throw logic_error("Invalid glpyh arguments.");
 
       SurfaceCache cache;
       auto surf = cache.from_image(Utils::join(dir, "/", source));
 
       if (surf.rect().w != width * glyphwidth || surf.rect().h != height * glyphheight)
-         throw std::logic_error("Geometry of font and attributes do not match.");
+         throw logic_error("Geometry of font and attributes do not match.");
 
       for (int y = 0; y < height; y++)
       {
@@ -50,8 +51,8 @@ namespace Blit
    const Surface& Font::surface(char c) const
    {
       auto itr = surf_map.find(c);
-      if (itr == std::end(surf_map))
-         throw std::logic_error(Utils::join("Character '", c, "' not found in font."));
+      if (itr == end(surf_map))
+         throw logic_error(Utils::join("Character '", c, "' not found in font."));
 
       return itr->second;
    }
@@ -62,7 +63,7 @@ namespace Blit
          itr.second.refill_color(pix);
    }
 
-   void Font::render_msg(RenderTarget& target, const std::string& str, int x, int y,
+   void Font::render_msg(RenderTarget& target, const string& str, int x, int y,
          Font::RenderAlignment dir,
          int newline_offset) const
    {
@@ -88,7 +89,7 @@ namespace Blit
       }
    }
 
-   int Font::adjust_x(const std::string& str, Font::RenderAlignment dir) const
+   int Font::adjust_x(const string& str, Font::RenderAlignment dir) const
    {
       if (dir == RenderAlignment::Right)
          return glyphwidth * str.size();
@@ -97,27 +98,27 @@ namespace Blit
       else return 0;
    }
    
-   void FontCluster::add_font(const std::string& font, Pos offset, Pixel color, std::string id)
+   void FontCluster::add_font(const string& font, Pos offset, Pixel color, string id)
    {
-      auto& fonts = fonts_map[std::move(id)];
+      auto& fonts = fonts_map[move(id)];
 
       OffsetFont tmp{font};
       tmp.set_color(color);
       tmp.offset = offset;
 
-      fonts.push_back(std::move(tmp));
+      fonts.push_back(move(tmp));
    }
 
-   void FontCluster::set_id(std::string id)
+   void FontCluster::set_id(string id)
    {
-      current_id = std::move(id);
+      current_id = move(id);
    }
 
    Pos FontCluster::glyph_size() const
    {
       auto itr = fonts_map.find(current_id);
-      if (itr == std::end(fonts_map))
-         throw std::runtime_error(Utils::join("Font ID: ", current_id, " not found in map!"));
+      if (itr == end(fonts_map))
+         throw runtime_error(Utils::join("Font ID: ", current_id, " not found in map!"));
 
       auto& fonts = itr->second;
 
@@ -128,29 +129,29 @@ namespace Blit
          return a.glyph_size().y < b.glyph_size().y;
       };
 
-      auto max_x = std::max_element(std::begin(fonts), std::end(fonts), func_x);
-      auto max_y = std::max_element(std::begin(fonts), std::end(fonts), func_y);
+      auto max_x = max_element(begin(fonts), end(fonts), func_x);
+      auto max_y = max_element(begin(fonts), end(fonts), func_y);
 
       return {max_x->glyph_size().x, max_y->glyph_size().y};
    }
 
-   void FontCluster::render_msg(RenderTarget& target, const std::string& msg,
+   void FontCluster::render_msg(RenderTarget& target, const string& msg,
          int x, int y,
          Font::RenderAlignment dir,
          int newline_offset) const
    {
       auto itr = fonts_map.find(current_id);
-      if (itr == std::end(fonts_map))
-         throw std::runtime_error(Utils::join("Font ID: ", current_id, " not found in map!"));
+      if (itr == end(fonts_map))
+         throw runtime_error(Utils::join("Font ID: ", current_id, " not found in map!"));
 
       for (auto& font : itr->second)
          font.render_msg(target, msg, x, y, dir, newline_offset);
    }
 
-   FontCluster::OffsetFont::OffsetFont(const std::string& font) : Font(font)
+   FontCluster::OffsetFont::OffsetFont(const string& font) : Font(font)
    {}
 
-   void FontCluster::OffsetFont::render_msg(RenderTarget& target, const std::string& msg,
+   void FontCluster::OffsetFont::render_msg(RenderTarget& target, const string& msg,
          int x, int y,
          Font::RenderAlignment dir,
          int newline_offset) const

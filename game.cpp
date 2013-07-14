@@ -4,6 +4,7 @@
 #include <stdexcept>
 
 using namespace Blit;
+using namespace std;
 
 namespace Icy
 {
@@ -17,7 +18,7 @@ namespace Icy
       return ret;
    }
 
-   Game::Game(const std::string& level_path, unsigned chapter, unsigned level, unsigned best_pushes, Blit::FontCluster& font)
+   Game::Game(const string& level_path, unsigned chapter, unsigned level, unsigned best_pushes, Blit::FontCluster& font)
       : map(level_path), target(fb_width, fb_height), font(&font),
          camera(target, player.rect(), {map.pix_width(), map.pix_height()}),
          won_frame_cnt(0), is_sliding(false), best_pushes(best_pushes), pushes(0), 
@@ -27,7 +28,7 @@ namespace Icy
       bg = nullptr;
    }
 
-   Game::Game(const std::string& level_path)
+   Game::Game(const string& level_path)
       : map(level_path), target(fb_width, fb_height), font(nullptr),
          camera(target, player.rect(), {map.pix_width(), map.pix_height()}),
          won_frame_cnt(0), is_sliding(false), push(true) 
@@ -41,11 +42,11 @@ namespace Icy
       this->bg = &bg;
    }
 
-   void Game::set_initial_pos(const std::string& level)
+   void Game::set_initial_pos(const string& level)
    {
       auto layer = map.find_layer("floor");
       if (!layer)
-         throw std::runtime_error("Floor layer not found.");
+         throw runtime_error("Floor layer not found.");
 
       auto sprite_path = Utils::find_or_default(layer->attr, "player_sprite", "");
       if (sprite_path.empty())
@@ -94,19 +95,19 @@ namespace Icy
          m_video_cb(target.buffer(), target.width(), target.height(), target.width() * sizeof(Pixel));
    }
 
-   std::vector<std::reference_wrapper<SurfaceCluster::Elem>> Game::get_tiles_with_attr(const std::string& name,
-         const std::string& attr, const std::string& val)
+   vector<reference_wrapper<SurfaceCluster::Elem>> Game::get_tiles_with_attr(const string& name,
+         const string& attr, const string& val)
    {
-      std::vector<std::reference_wrapper<SurfaceCluster::Elem>> surfs;
+      vector<reference_wrapper<SurfaceCluster::Elem>> surfs;
       auto layer = map.find_layer(name);
       if (!layer)
          return surfs;
 
-      std::copy_if(std::begin(layer->cluster.vec()),
-            std::end(layer->cluster.vec()),
-            std::back_inserter(surfs), [&attr, &val](const SurfaceCluster::Elem& surf) -> bool {
+      copy_if(begin(layer->cluster.vec()),
+            end(layer->cluster.vec()),
+            back_inserter(surfs), [&attr, &val](const SurfaceCluster::Elem& surf) -> bool {
                if (val.empty())
-                  return surf.surf.attr().find(attr) != std::end(surf.surf.attr());
+                  return surf.surf.attr().find(attr) != end(surf.surf.attr());
                else
                   return Utils::find_or_default(surf.surf.attr(), attr, "") == val; 
             });
@@ -155,7 +156,7 @@ namespace Icy
       won_frame_cnt = 1;
       player_walking = false;
 
-      stepper = std::bind(&Game::win_animation_stepper, this);
+      stepper = bind(&Game::win_animation_stepper, this);
       get_sfx().play_sfx("frozen_dino_melt", 0.5);
    }
 
@@ -171,20 +172,20 @@ namespace Icy
       auto goal_blocks = get_tiles_with_attr("blocks", "goal", "true");
 
       if (goal_floor.size() != goal_blocks.size())
-         throw std::logic_error("Number of goal floors and goal blocks do not match.");
+         throw logic_error("Number of goal floors and goal blocks do not match.");
 
       if (goal_floor.empty() || goal_blocks.empty())
-         throw std::logic_error("Goal floor or blocks are empty.");
+         throw logic_error("Goal floor or blocks are empty.");
 
       auto func = [](const SurfaceCluster::Elem& a, const SurfaceCluster::Elem& b) {
          return a.surf.rect().pos < b.surf.rect().pos;
       };
 
-      std::sort(std::begin(goal_floor), std::end(goal_floor), func);
-      std::sort(std::begin(goal_blocks), std::end(goal_blocks), func);
+      sort(begin(goal_floor), end(goal_floor), func);
+      sort(begin(goal_blocks), end(goal_blocks), func);
 
-      return std::equal(std::begin(goal_floor), std::end(goal_floor),
-            std::begin(goal_blocks), [](const SurfaceCluster::Elem& a, const SurfaceCluster::Elem& b) {
+      return equal(begin(goal_floor), end(goal_floor),
+            begin(goal_blocks), [](const SurfaceCluster::Elem& a, const SurfaceCluster::Elem& b) {
                return a.surf.rect().pos == b.surf.rect().pos;
             });
    }
@@ -256,7 +257,7 @@ namespace Icy
          move_if_no_collision(Input::Right);
    }
 
-   std::string Game::input_to_string(Input input)
+   string Game::input_to_string(Input input)
    {
       switch (input)
       {
@@ -280,7 +281,7 @@ namespace Icy
       }
    }
 
-   Input Game::string_to_input(const std::string& dir)
+   Input Game::string_to_input(const string& dir)
    {
       if (dir == "up") return Input::Up;
       if (dir == "down") return Input::Down;
@@ -301,7 +302,7 @@ namespace Icy
 
       bool outside_grid = surf.rect().pos.x % map.tile_width() || surf.rect().pos.y % map.tile_height();
       if (outside_grid)
-         throw std::logic_error("Offset collision check was performed outside tile grid.");
+         throw logic_error("Offset collision check was performed outside tile grid.");
 
       int current_x = surf.rect().pos.x / map.tile_width();
       int current_y = surf.rect().pos.y / map.tile_height();
@@ -335,7 +336,7 @@ namespace Icy
 
       if (!map.collision(tile_pos + (2 * offset)))
       {
-         stepper = std::bind(&Game::tile_stepper, this, std::ref(*tile), offset);
+         stepper = bind(&Game::tile_stepper, this, ref(*tile), offset);
          player_walking = false;
          player.active_alt_index(0);
          get_sfx().play_sfx("dino_push", 2.0);
@@ -351,7 +352,7 @@ namespace Icy
       auto offset = input_to_offset(input);
       if (!is_offset_collision(player, offset))
       {
-         stepper = std::bind(&Game::tile_stepper, this, std::ref(player), offset);
+         stepper = bind(&Game::tile_stepper, this, ref(player), offset);
          player_walking = true;
       }
    }
@@ -373,7 +374,7 @@ namespace Icy
          return false;
       }
 
-      //std::cerr << "Player: " << player.rect().pos << " Surf: " << surf->rect().pos << std::endl; 
+      //cerr << "Player: " << player.rect().pos << " Surf: " << surf->rect().pos << endl; 
       auto surface  = map.find_tile("floor", surf.rect().pos);
       bool slippery = surface && Utils::find_or_default(surface->attr(),
             &surf == &player ? "slippery_player" : "slippery_block", "") == "true";

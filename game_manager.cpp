@@ -7,12 +7,13 @@
 
 using namespace Blit;
 using namespace pugi;
+using namespace std;
 
 namespace Icy
 {
-   GameManager::GameManager(const std::string& path_game,
-         std::function<bool (Input)> input_cb,
-         std::function<void (const void*, unsigned, unsigned, std::size_t)> video_cb)
+   GameManager::GameManager(const string& path_game,
+         function<bool (Input)> input_cb,
+         function<void (const void*, unsigned, unsigned, size_t)> video_cb)
       : save(chapters), dir(Utils::basedir(path_game)),
       m_current_chap(0), m_current_level(0), m_game_state(State::Title),
       m_input_cb(input_cb), m_video_cb(video_cb)
@@ -20,7 +21,7 @@ namespace Icy
       xml_document doc;
 
       if (!doc.load_file(path_game.c_str()))
-         throw std::runtime_error(Utils::join("Failed to load game: ", path_game, "."));
+         throw runtime_error(Utils::join("Failed to load game: ", path_game, "."));
 
       auto font_path = Utils::join(dir, "/", doc.child("game").child("font").attribute("source").value());
       font.add_font(font_path, {-1, 1}, Pixel::ARGB(0xff, 0xc0, 0x98, 0x00), "yellow");
@@ -39,7 +40,7 @@ namespace Icy
       {
          auto chapter = load_chapter(node, chapters.size());
          if (chapter.num_levels() > 0)
-            chapters.push_back(std::move(chapter));
+            chapters.push_back(move(chapter));
       }
 
       ui_target = RenderTarget(Game::fb_width, Game::fb_height);
@@ -78,7 +79,7 @@ namespace Icy
    {
       auto sfx = doc.child("game").child("music");
       Utils::xml_node_walker walk{sfx, "bg", "source"};
-      std::vector<std::string> paths;
+      vector<string> paths;
       for (auto& val : walk)
          paths.push_back(Utils::join(dir, "/", val));
       get_bg().init(paths);
@@ -90,11 +91,11 @@ namespace Icy
       Utils::xml_node_walker walk{sfx, "sound", "name"};
       Utils::xml_node_walker walk_source{sfx, "sound", "source"};
 
-      std::vector<std::pair<std::string, std::string>> sfxs;
+      vector<pair<string, string>> sfxs;
       for (auto& val : walk)
          sfxs.push_back({val, ""});
 
-      auto itr = std::begin(sfxs);
+      auto itr = begin(sfxs);
       for (auto& val : walk_source)
       {
          itr->second = val;
@@ -110,11 +111,11 @@ namespace Icy
       Utils::xml_node_walker walk{chap, "map", "source"};
       Utils::xml_node_walker walk_name{chap, "map", "name"};
 
-      std::vector<Level> levels;
+      vector<Level> levels;
       for (auto& val : walk)
          levels.push_back({Utils::join(dir, "/", val), game_bg});
 
-      auto itr = std::begin(levels);
+      auto itr = begin(levels);
       for (auto& val : walk_name)
       {
          itr->set_name(val);
@@ -124,18 +125,18 @@ namespace Icy
       int i = 0;
       for (auto& level : levels)
       {
-         //std::cerr << "Found level: " << level.path() << std::endl;
+         //cerr << "Found level: " << level.path() << endl;
          level.pos({preview_base_x + i * preview_delta_x, preview_base_y + preview_delta_y * chapter});
 
          i++;
       }
 
-      Chapter loaded_chap = { std::move(levels), chap.attribute("name").value() };
+      Chapter loaded_chap = { move(levels), chap.attribute("name").value() };
       loaded_chap.set_minimum_clear(chap.attribute("minimum_clear").as_int());
-      return std::move(loaded_chap);
+      return move(loaded_chap);
    }
 
-   void GameManager::init_menu(const std::string& level)
+   void GameManager::init_menu(const string& level)
    {
       Surface surf = cache.from_image(Utils::join(dir, "/", level));
 
@@ -339,7 +340,7 @@ namespace Icy
       }
       else if (pressed_menu_up && !old_pressed_menu_up && chap_select > 0)
       {
-         int new_level = std::min(chapters[chap_select - 1].num_levels() - 1, static_cast<unsigned>(level_select));
+         int new_level = min(chapters[chap_select - 1].num_levels() - 1, static_cast<unsigned>(level_select));
          chap_select--;
          start_slide({(new_level - static_cast<int>(level_select)) * 8, -8}, preview_slide_cnt);
          level_select = new_level;
@@ -348,7 +349,7 @@ namespace Icy
       {
          if (chapters[chap_select].cleared())
          {
-            int new_level = std::min(chapters[chap_select + 1].num_levels() - 1, static_cast<unsigned>(level_select));
+            int new_level = min(chapters[chap_select + 1].num_levels() - 1, static_cast<unsigned>(level_select));
             chap_select++;
             start_slide({(new_level - static_cast<int>(level_select)) * 8, 8}, preview_slide_cnt);
             level_select = new_level;
@@ -413,7 +414,7 @@ namespace Icy
          case State::Menu: return step_menu();
          case State::MenuSlide: return step_menu_slide();
          case State::Game: return step_game();
-         default: throw std::logic_error("Game state is invalid.");
+         default: throw logic_error("Game state is invalid.");
       }
    }
 
@@ -440,7 +441,7 @@ namespace Icy
       return levels;
    }
 
-   GameManager::Level::Level(const std::string& path, const Blit::Surface& bg)
+   GameManager::Level::Level(const string& path, const Blit::Surface& bg)
       : m_path(path), completion(false), best_pushes(0)
    {
       Game game{path};
@@ -450,7 +451,7 @@ namespace Icy
       int preview_width  = Game::fb_width / scale_factor;
       int preview_height = Game::fb_height / scale_factor;
 
-      std::vector<Pixel> data(preview_width * preview_height);
+      vector<Pixel> data(preview_width * preview_height);
 
       game.input_cb([](Input) { return false; });
       game.video_cb([&data, preview_width](const void* pix_data, unsigned width, unsigned height, size_t pitch) {
@@ -474,7 +475,7 @@ namespace Icy
 
       game.iterate();
 
-      preview = Surface(std::make_shared<Surface::Data>(std::move(data), preview_width, preview_height));
+      preview = Surface(make_shared<Surface::Data>(std::move(data), preview_width, preview_height));
       pos(Pos{Game::fb_width, Game::fb_height} / scale_factor - Pos{5, 5});
    }
 
@@ -484,7 +485,7 @@ namespace Icy
       target.blit_offset(preview, {}, position); 
    }
 
-   GameManager::SaveManager::SaveManager(std::vector<GameManager::Chapter> &chaps)
+   GameManager::SaveManager::SaveManager(vector<GameManager::Chapter> &chaps)
       : chaps(chaps)
    {
       save_data.resize(save_game_size);
@@ -498,10 +499,10 @@ namespace Icy
 
    void GameManager::SaveManager::serialize()
    {
-      std::string full_pushes;
+      string full_pushes;
       for (auto& chap : chaps)
       {
-         std::string pushes;
+         string pushes;
          for (auto& level : chap.levels())
          {
             pushes += Utils::join(level.get_best_pushes(), ",");
@@ -509,34 +510,34 @@ namespace Icy
          full_pushes += pushes + '\n';
       }
 
-      std::fill(std::begin(save_data), std::end(save_data), '\0');
-      std::copy(std::begin(full_pushes), std::end(full_pushes), std::begin(save_data));
+      fill(begin(save_data), end(save_data), '\0');
+      copy(begin(full_pushes), end(full_pushes), begin(save_data));
    }
 
    void GameManager::SaveManager::unserialize()
    {
-      std::string save{std::begin(save_data), std::end(save_data)};
+      string save{begin(save_data), end(save_data)};
 
       // Strip trailing zeroes
       auto last = save.find_last_not_of('\0');
-      if (last == std::string::npos) // Nothing to unserialize ...
+      if (last == string::npos) // Nothing to unserialize ...
          return;
 
       last++;
       save = save.substr(0, last);
 
       auto chapters = Utils::split(save, '\n');
-      auto chap_itr = std::begin(chaps);
+      auto chap_itr = begin(chaps);
       for (auto& chap : chapters)
       {
-         if (chap_itr == std::end(chaps))
+         if (chap_itr == end(chaps))
             return;
 
          auto levels = Utils::split(chap, ',');
-         auto level_itr = std::begin(chap_itr->levels());
+         auto level_itr = begin(chap_itr->levels());
          for (auto& level : levels)
          {
-            if (level_itr == std::end(chap_itr->levels()))
+            if (level_itr == end(chap_itr->levels()))
                break;
 
             unsigned pushes = Utils::stoi(level);
@@ -550,7 +551,7 @@ namespace Icy
       }
    }
 
-   std::size_t GameManager::SaveManager::size() const
+   size_t GameManager::SaveManager::size() const
    {
       return save_data.size();
    }

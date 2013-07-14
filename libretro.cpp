@@ -12,10 +12,11 @@
 
 using namespace Blit::Utils;
 using namespace Icy;
+using namespace std;
 
-static std::unique_ptr<GameManager> game;
-static std::string game_path;
-static std::string game_path_dir;
+static unique_ptr<GameManager> game;
+static string game_path;
+static string game_path_dir;
 
 static Audio::Mixer mixer;
 static SFXManager sfx;
@@ -31,13 +32,13 @@ static bool present_frame;
 namespace Icy
 {
    Audio::Mixer& get_mixer() { return mixer; }
-   const std::string& get_basedir() { return game_path_dir; }
+   const string& get_basedir() { return game_path_dir; }
    SFXManager& get_sfx() { return sfx; }
    BGManager& get_bg() { return bg_music; }
 }
 
 #define AUDIO_FRAMES (44100 / 60)
-static std::int16_t audio_buffer[2 * AUDIO_FRAMES];
+static int16_t audio_buffer[2 * AUDIO_FRAMES];
 
 void retro_init(void)
 {}
@@ -151,7 +152,7 @@ void retro_run(void)
       environ_cb(RETRO_ENVIRONMENT_SHUTDOWN, nullptr);
 }
 
-static void load_game(const std::string& path)
+static void load_game(const string& path)
 {
    auto input_cb = [&](Input input) -> bool {
       unsigned btn;
@@ -171,7 +172,7 @@ static void load_game(const std::string& path)
    };
 
    game = make_unique<GameManager>(path, input_cb,
-         [&](const void* data, unsigned width, unsigned height, std::size_t pitch) {
+         [&](const void* data, unsigned width, unsigned height, size_t pitch) {
             if (present_frame)
                video_cb(data, width, height, pitch);
          }
@@ -181,12 +182,12 @@ static void load_game(const std::string& path)
 void retro_reset(void)
 {
    size_t memory_size = retro_get_memory_size(RETRO_MEMORY_SAVE_RAM);
-   std::vector<uint8_t> data(memory_size);
+   vector<uint8_t> data(memory_size);
    uint8_t *game_data = reinterpret_cast<uint8_t*>(retro_get_memory_data(RETRO_MEMORY_SAVE_RAM));
-   std::copy(game_data, game_data + memory_size, data.data());
+   copy(game_data, game_data + memory_size, data.data());
    load_game(game_path);
    game_data = reinterpret_cast<uint8_t*>(retro_get_memory_data(RETRO_MEMORY_SAVE_RAM));
-   std::copy(data.begin(), data.end(), game_data);
+   copy(data.begin(), data.end(), game_data);
 }
 
 bool retro_load_game(const struct retro_game_info* info)
@@ -211,9 +212,9 @@ bool retro_load_game(const struct retro_game_info* info)
 
       return true;
    }
-   catch (const std::exception& e)
+   catch (const exception& e)
    {
-      std::cerr << e.what() << std::endl;
+      cerr << e.what() << endl;
       return false;
    }
 }

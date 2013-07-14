@@ -137,11 +137,14 @@ namespace Audio
          void master_volume(float vol) { master_vol = vol; }
          float master_volume() const { return master_vol; }
 
+         void lock() { m_lock->lock(); }
+         void unlock() { m_lock->unlock(); }
+
       private:
          std::vector<float> buffer;
          std::vector<float> conv_buffer;
          std::vector<std::shared_ptr<Stream>> streams;
-         std::unique_ptr<std::recursive_mutex> lock;
+         std::unique_ptr<std::recursive_mutex> m_lock;
 
          float master_vol;
          void purge_dead_streams();
