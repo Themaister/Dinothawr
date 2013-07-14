@@ -8,17 +8,21 @@
 
 using namespace Blit::Utils;
 
+typedef std::lock_guard<std::recursive_mutex> LockGuard;
+
 namespace Audio
 {
-   Mixer::Mixer() : master_vol(1.0f) {}
+   Mixer::Mixer() : master_vol(1.0f) { lock = make_unique<std::recursive_mutex>(); }
 
    void Mixer::add_stream(std::shared_ptr<Stream> str)
    {
+      LockGuard guard(*lock);
       streams.push_back(std::move(str));
    }
 
    void Mixer::purge_dead_streams()
    {
+      LockGuard guard(*lock);
       streams.erase(std::remove_if(std::begin(streams), std::end(streams),
                [](const std::shared_ptr<Stream> &str) {
                   return !str->valid();
@@ -27,6 +31,7 @@ namespace Audio
 
    void Mixer::render(float* out_buffer, std::size_t frames)
    {
+      LockGuard guard(*lock);
       purge_dead_streams();
 
       std::fill(out_buffer, out_buffer + frames * channels, 0.0f);
@@ -41,6 +46,7 @@ namespace Audio
 
    void Mixer::render(std::int16_t* out_buffer, std::size_t frames)
    {
+      LockGuard guard(*lock);
       conv_buffer.reserve(frames * channels);
       render(conv_buffer.data(), frames);
 
@@ -49,6 +55,7 @@ namespace Audio
 
    void Mixer::clear()
    {
+      LockGuard guard(*lock);
       streams.clear();
    }
 

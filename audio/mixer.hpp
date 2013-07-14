@@ -10,6 +10,8 @@
 #include <future>
 #include <chrono>
 #include <queue>
+#include <mutex>
+#include <atomic>
 #include <vorbis/vorbisfile.h>
 
 namespace Audio
@@ -70,7 +72,7 @@ namespace Audio
 
       private:
          std::shared_ptr<std::vector<float>> data;
-         std::size_t ptr;
+         std::atomic<std::size_t> ptr;
    };
 
    class WAVFile
@@ -139,6 +141,7 @@ namespace Audio
          std::vector<float> buffer;
          std::vector<float> conv_buffer;
          std::vector<std::shared_ptr<Stream>> streams;
+         std::unique_ptr<std::recursive_mutex> lock;
 
          float master_vol;
          void purge_dead_streams();

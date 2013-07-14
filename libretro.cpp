@@ -21,6 +21,13 @@ static Audio::Mixer mixer;
 static SFXManager sfx;
 static BGManager bg_music;
 
+static bool use_audio_cb;
+static bool use_frame_time_cb;
+
+static retro_usec_t frame_time;
+static retro_usec_t time_reference;
+static bool present_frame;
+
 namespace Icy
 {
    Audio::Mixer& get_mixer() { return mixer; }
@@ -100,19 +107,45 @@ void retro_set_video_refresh(retro_video_refresh_t cb)
    video_cb = cb;
 }
 
-void retro_run(void)
+static void audio_callback(void)
 {
-   input_poll_cb();
-   game->iterate();
-
-   get_bg().step(mixer);
    mixer.render(audio_buffer, AUDIO_FRAMES);
-
    for (unsigned i = 0; i < AUDIO_FRAMES; )
    {
       unsigned written = audio_batch_cb(audio_buffer + 2 * i, AUDIO_FRAMES - i);
       i += written;
    }
+}
+
+static void frame_time_cb(retro_usec_t usec)
+{
+   frame_time += usec;
+}
+
+void retro_run(void)
+{
+   if (!use_frame_time_cb)
+      frame_time += time_reference;
+
+   input_poll_cb();
+
+   int frames = (frame_time + (time_reference >> 1)) / time_reference;
+   if (frames <= 0)
+      video_cb(nullptr, Game::fb_width, Game::fb_height, 0);
+   else
+   {
+      present_frame = false;
+      for (int i = 0; i < frames - 1; i++)
+         game->iterate();
+      present_frame = true;
+      game->iterate();
+      frame_time -= time_reference * frames;
+   }
+
+   get_bg().step(mixer);
+
+   if (!use_audio_cb)
+      audio_callback();
 
    if (game->done())
       environ_cb(RETRO_ENVIRONMENT_SHUTDOWN, nullptr);
@@ -139,7 +172,8 @@ static void load_game(const std::string& path)
 
    game = make_unique<GameManager>(path, input_cb,
          [&](const void* data, unsigned width, unsigned height, std::size_t pitch) {
-            video_cb(data, width, height, pitch);
+            if (present_frame)
+               video_cb(data, width, height, pitch);
          }
    );
 }
@@ -159,26 +193,25 @@ bool retro_load_game(const struct retro_game_info* info)
 {
    try
    {
+      struct retro_audio_callback cb = { audio_callback };
+      use_audio_cb = environ_cb(RETRO_ENVIRONMENT_SET_AUDIO_CALLBACK, &cb);
+
+      time_reference = 1000000 / 60;
+      present_frame = false;
+      struct retro_frame_time_callback frame_cb = { frame_time_cb, time_reference };
+      use_frame_time_cb = environ_cb(RETRO_ENVIRONMENT_SET_FRAME_TIME_CALLBACK, &frame_cb);
+
       game_path = info->path;
       game_path_dir = basedir(game_path);
-
       load_game(game_path);
-
       mixer = Audio::Mixer();
-
-#if 0
-      Audio::VorbisFile bg{join(get_basedir(), "/assets/bg.ogg")};
-      auto stream = std::make_shared<Audio::PCMStream>(std::make_shared<std::vector<float>>(bg.decode())); // Kinda hardcoded atm.
-      stream->loop(true);
-      mixer.add_stream(stream);
-#endif
 
       retro_pixel_format fmt = RETRO_PIXEL_FORMAT_XRGB8888;
       environ_cb(RETRO_ENVIRONMENT_SET_PIXEL_FORMAT, &fmt);
 
       return true;
    }
-   catch(const std::exception& e)
+   catch (const std::exception& e)
    {
       std::cerr << e.what() << std::endl;
       return false;
