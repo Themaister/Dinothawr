@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/title"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="fill_parent"
+        android:layout_gravity="bottom"
+        android:layout_alignParentTop="true"
+        android:gravity="center"
+        android:layout_margin="20dp"
+        android:textSize="50sp"
+        android:layout_height="wrap_content"
+        android:text="Dinothawr" />
+    
+    <Button
+        android:id="@+id/button1"
+        android:layout_gravity="bottom"
+        android:layout_below="@id/textView1"
+        android:layout_alignParentBottom="true"
+        android:layout_width="fill_parent"
+        android:textSize="25sp"
+        android:layout_height="wrap_content"
+        android:text="Start Dinothawr" />
+
+</RelativeLayout>
