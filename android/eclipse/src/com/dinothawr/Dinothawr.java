@@ -15,7 +15,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
-
 public class Dinothawr extends Activity {
 	static private final String TAG = "Dinothawr";
 
@@ -112,23 +111,44 @@ public class Dinothawr extends Activity {
 		intent.putExtra("IME", current_ime);
 
 		startActivity(intent);
-		//finish();
 	}
 
 	private void startNative() {
 		try {
-			extractAll();
-			startRetroArch();
-		} catch (IOException e) {
-			Log.e(TAG, "Failed to start Dinothawr! :(");
+			if (extractThread != null)
+				extractThread.join();
+		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		extractThread = null;
+		startRetroArch();
 	}
+	
+	private Thread extractThread = null;
+	private boolean extracted = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.title);
+		
+		if (savedInstanceState != null)
+			extracted = savedInstanceState.getBoolean("EXTRACTED", false);
+		
+		if (!extracted) {
+			Log.i(TAG, "Starting asset extraction thread ...");
+			extractThread = new Thread(new Runnable() {
+				public void run() {
+					try {
+						extractAll();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			});
+			extractThread.start();
+			extracted = true;
+		}
 		
 		Button button = (Button)findViewById(R.id.button1);
 		button.setOnClickListener(new View.OnClickListener() {
@@ -137,5 +157,11 @@ public class Dinothawr extends Activity {
 				startNative();
 			}
 		});
+	}
+	
+	@Override
+	protected void onSaveInstanceState(Bundle bundle) {
+		super.onSaveInstanceState(bundle);
+		bundle.putBoolean("EXTRACTED", extracted);
 	}
 }
