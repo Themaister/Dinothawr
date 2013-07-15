@@ -22,31 +22,30 @@ ifeq ($(platform), unix)
    TARGET := $(LIBRETRO)_libretro.so
    fpic := -fPIC
    SHARED := -shared -Wl,--version-script=link.T -Wl,--no-undefined
-   CXXFLAGS += $(shell pkg-config vorbisfile --cflags)
-   LIBS += $(shell pkg-config vorbisfile --libs)
 else ifeq ($(platform), osx)
    TARGET := $(LIBRETRO)_libretro.dylib
    fpic := -fPIC
    SHARED := -dynamiclib
-   CXXFLAGS += $(shell pkg-config vorbisfile --cflags)
-   LIBS += $(shell pkg-config vorbisfile --libs)
 else
    CXX = g++
    TARGET := $(LIBRETRO)_libretro.dll
    SHARED := -shared -static-libgcc -static-libstdc++ -static -s -Wl,--version-script=link.T -Wl,--no-undefined
-   LIBS += -lvorbisfile -lvorbis -logg -lz 
 endif
 
 ifeq ($(DEBUG), 1)
    CXXFLAGS += -O0 -g
+   CFLAGS += -O0 -g
 else
    CXXFLAGS += -O3
+   CFLAGS += -O3
 endif
 
-HEADERS := $(wildcard *.hpp) $(wildcard */*.hpp)
+HEADERS := $(wildcard *.hpp) $(wildcard */*.hpp) $(wildcard vorbis/*.h) $(wildcard ogg/*.h)
 SOURCES := $(wildcard *.cpp) $(wildcard */*.cpp)
-OBJECTS := $(SOURCES:.cpp=.o)
-CXXFLAGS += -std=gnu++11 -Wall -pedantic $(fpic)
+CSOURCES := $(wildcard ogg/*.c) $(wildcard vorbis/*.c)
+OBJECTS := $(SOURCES:.cpp=.o) $(CSOURCES:.c=.o)
+CXXFLAGS += -std=gnu++11 -ffast-math -Wall -pedantic $(fpic) -I. -DOV_EXCLUDE_STATIC_CALLBACKS
+CFLAGS += -std=gnu99 -ffast-math $(fpic) -I. -Ivorbis
 
 all: $(TARGET)
 
@@ -56,12 +55,15 @@ $(TARGET): $(OBJECTS)
 %.o: %.cpp $(HEADERS)
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
+%.o: %.c $(HEADERS)
+	$(CC) $(CFLAGS) -c -o $@ $<
+
 clean:
 	rm -f $(OBJECTS) $(TARGET)
 
 install: all
 	mkdir -p $(LIBDIR) || /bin/true
-	install -m755 $(TARGET) $(LIBDIR)/libretro-dinothawr.so
+	install -m755 $(TARGET) $(LIBDIR)/dinothawr_libretro.so
 	install -d -m755 $(ASSETDIR)
 	cp -r dinothawr/* $(ASSETDIR)
 
