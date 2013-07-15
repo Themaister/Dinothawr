@@ -69,7 +69,7 @@ public class Dinothawr extends Activity {
 		String cache = getCacheDir().getAbsolutePath();
 		try {
 			String[] dirs = new String[] { "", "assets", "assets/sfx",
-					"assets/sfxr" };
+					"assets/sfx", "assets/bg" };
 			for (String dir : dirs) {
 				File dirfile = new File(cache + File.separator + dir);
 				if (!dirfile.exists()) {
