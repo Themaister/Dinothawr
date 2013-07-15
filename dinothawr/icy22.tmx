@@ -134,9 +134,9 @@
    <tile gid="3"/>
    <tile gid="2"/>
    <tile gid="3"/>
-   <tile gid="0"/>
-   <tile gid="0"/>
-   <tile gid="0"/>
+   <tile gid="3"/>
+   <tile gid="3"/>
+   <tile gid="3"/>
    <tile gid="3"/>
    <tile gid="2"/>
    <tile gid="3"/>
@@ -144,7 +144,7 @@
    <tile gid="3"/>
    <tile gid="2"/>
    <tile gid="2"/>
-   <tile gid="0"/>
+   <tile gid="3"/>
   </data>
  </layer>
  <layer name="Floor" width="11" height="10">
@@ -179,7 +179,7 @@
    <tile gid="0"/>
    <tile gid="85"/>
    <tile gid="65"/>
-   <tile gid="93"/>
+   <tile gid="94"/>
    <tile gid="74"/>
    <tile gid="74"/>
    <tile gid="74"/>
@@ -221,24 +221,24 @@
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
-   <tile gid="69"/>
-   <tile gid="70"/>
-   <tile gid="70"/>
+   <tile gid="72"/>
+   <tile gid="103"/>
+   <tile gid="82"/>
    <tile gid="82"/>
    <tile gid="103"/>
    <tile gid="82"/>
-   <tile gid="71"/>
-   <tile gid="0"/>
-   <tile gid="0"/>
-   <tile gid="0"/>
+   <tile gid="73"/>
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="69"/>
    <tile gid="70"/>
+   <tile gid="70"/>
+   <tile gid="70"/>
+   <tile gid="70"/>
+   <tile gid="70"/>
    <tile gid="71"/>
-   <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
@@ -356,15 +356,15 @@
    <tile gid="0"/>
    <tile gid="26"/>
    <tile gid="26"/>
-   <tile gid="20"/>
-   <tile gid="20"/>
-   <tile gid="21"/>
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
-   <tile gid="19"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
    <tile gid="26"/>
    <tile gid="26"/>
    <tile gid="26"/>
