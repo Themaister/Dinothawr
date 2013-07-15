@@ -6,7 +6,7 @@
 
     <uses-sdk
         android:minSdkVersion="9"
-        android:targetSdkVersion="16" />
+        android:targetSdkVersion="17" />
     
     <application
         android:allowBackup="true"
@@ -24,7 +24,8 @@
         
         <activity
            android:name="android.app.NativeActivity"
-           android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" >
+           android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale"
+           android:screenOrientation="landscape">
            <meta-data
                android:name="android.app.lib_name"
                android:value="retroarch-activity" />

@@ -10,11 +10,9 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.app.Activity;
 import android.app.NativeActivity;
-import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
-import android.view.Display;
-import android.view.WindowManager;
+
 
 public class Dinothawr extends Activity {
 	static private final String TAG = "Dinothawr";
@@ -66,7 +64,7 @@ public class Dinothawr extends Activity {
 		String saves_folder = getFilesDir().getAbsolutePath();
 		Log.i(TAG, "Saves folder: " + saves_folder);
 
-		String cache = getCacheDir().getAbsolutePath();
+		String cache = getApplicationInfo().dataDir;
 		try {
 			String[] dirs = new String[] { "", "assets", "assets/sfx",
 					"assets/sfx", "assets/bg" };
@@ -85,20 +83,23 @@ public class Dinothawr extends Activity {
 	}
 
 	private float getRefreshRate() {
+		/*
 		WindowManager wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
 		Display display = wm.getDefaultDisplay();
 		return display.getRefreshRate();
+		*/
+		return 60.0f;
 	}
 
 	private void startRetroArch() {
 		Intent intent = new Intent(this, NativeActivity.class);
-		intent.putExtra("ROM", getCacheDir() + File.separator
+		intent.putExtra("ROM", getApplicationInfo().dataDir + File.separator
 				+ "dinothawr.game");
 		intent.putExtra("LIBRETRO", getApplicationInfo().nativeLibraryDir
 				+ "/libretro_dino.so");
 		intent.putExtra("REFRESHRATE", Float.toString(getRefreshRate()));
 		
-		String conf_path = getCacheDir() + File.separator + "retroarch.cfg";
+		String conf_path = getApplicationInfo().dataDir + File.separator + "retroarch.cfg";
 		if (new File(conf_path).exists())
 			intent.putExtra("CONFIGFILE", conf_path);
 		else
