@@ -33,47 +33,48 @@
    </chapter>
    <chapter name="Chapter 2">
       <map source="icy23.tmx" name="Level 23"/>
+      <map source="icy48.tmx" name="Level 48"/>
       <map source="icy26.tmx" name="Level 26"/>
       <map source="icy24.tmx" name="Level 24"/>
       <map source="icy19.tmx" name="Level 19"/>
-      <map source="icy22.tmx" name="Level 22"/>
    </chapter>
    <chapter name="Chapter 3">
+      <map source="icy22.tmx" name="Level 22"/>
       <map source="icy10.tmx" name="Level 10"/>
       <map source="icy12.tmx" name="Level 12"/>
       <map source="icy40.tmx" name="Level 40"/>
       <map source="icy44.tmx" name="Level 44"/>
-      <map source="icy11.tmx" name="Level 11"/>
    </chapter>
    <chapter name="Chapter 4">
+      <map source="icy11.tmx" name="Level 11"/>
       <map source="icy37.tmx" name="Level 37"/>
       <map source="icy14.tmx" name="Level 14"/>
       <map source="icy16.tmx" name="Level 16"/>
 		<map source="icy5.tmx"  name="Level 5"/>
-      <map source="icy7.tmx"  name="Level 7"/>
    </chapter>
    <chapter name="Chapter 5">
+      <map source="icy7.tmx"  name="Level 7"/>
       <map source="icy36.tmx" name="Level 36"/>
       <map source="icy38.tmx" name="Level 38"/>
       <map source="icy30.tmx" name="Level 30"/>
 		<map source="icy2.tmx"  name="Level 2"/>
-      <map source="icy4.tmx"  name="Level 4"/>
 	</chapter>
 	<chapter name="Chapter 6">
+      <map source="icy4.tmx"  name="Level 4"/>
       <map source="icy15.tmx" name="Level 15"/>
       <map source="icy27.tmx" name="Level 27"/>
       <map source="icy28.tmx" name="Level 28"/>
       <map source="icy6.tmx"  name="Level 6"/>
-      <map source="icy20.tmx" name="Level 20"/>
 	</chapter>
 	<chapter name="Chapter 7">
+      <map source="icy20.tmx" name="Level 20"/>
 		<map source="icy21.tmx" name="Level 21"/>
       <map source="icy43.tmx" name="Level 43"/>
       <map source="icy42.tmx" name="Level 42"/>
       <map source="icy35.tmx" name="Level 35"/>
-      <map source="icy33.tmx" name="Level 33"/>
 	</chapter>
 	<chapter name="Chapter 8">
+      <map source="icy33.tmx" name="Level 33"/>
       <map source="icy34.tmx" name="Level 34"/>
    </chapter>
    <chapter name="Test">
