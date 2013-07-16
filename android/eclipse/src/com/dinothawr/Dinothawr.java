@@ -6,10 +6,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.app.Activity;
 import android.app.NativeActivity;
+import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.View;
@@ -157,6 +159,18 @@ public class Dinothawr extends Activity {
 				startNative();
 			}
 		});
+		
+		AudioManager manager = (AudioManager)getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
+		if (android.os.Build.VERSION.SDK_INT >= 17) {
+			int rate = Integer.parseInt(manager
+					.getProperty(AudioManager.PROPERTY_OUTPUT_SAMPLE_RATE));
+			int frames = Integer
+					.parseInt(manager
+							.getProperty(AudioManager.PROPERTY_OUTPUT_FRAMES_PER_BUFFER));
+			Log.i(TAG, "Rate = " + rate + " Frames = " + frames);
+		} else {
+			Log.i(TAG, "Running Android SDK version " + android.os.Build.VERSION.SDK_INT + ", cannot query audio states.");
+		}
 	}
 	
 	@Override
