@@ -10,11 +10,10 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.app.Activity;
 import android.app.NativeActivity;
-import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
-import android.view.Display;
-import android.view.WindowManager;
+import android.view.View;
+import android.widget.Button;
 
 public class Dinothawr extends Activity {
 	static private final String TAG = "Dinothawr";
@@ -66,10 +65,10 @@ public class Dinothawr extends Activity {
 		String saves_folder = getFilesDir().getAbsolutePath();
 		Log.i(TAG, "Saves folder: " + saves_folder);
 
-		String cache = getCacheDir().getAbsolutePath();
+		String cache = getApplicationInfo().dataDir;
 		try {
 			String[] dirs = new String[] { "", "assets", "assets/sfx",
-					"assets/sfxr" };
+					"assets/sfx", "assets/bg" };
 			for (String dir : dirs) {
 				File dirfile = new File(cache + File.separator + dir);
 				if (!dirfile.exists()) {
@@ -85,20 +84,23 @@ public class Dinothawr extends Activity {
 	}
 
 	private float getRefreshRate() {
+		/*
 		WindowManager wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
 		Display display = wm.getDefaultDisplay();
 		return display.getRefreshRate();
+		*/
+		return 60.0f;
 	}
 
 	private void startRetroArch() {
 		Intent intent = new Intent(this, NativeActivity.class);
-		intent.putExtra("ROM", getCacheDir() + File.separator
+		intent.putExtra("ROM", getApplicationInfo().dataDir + File.separator
 				+ "dinothawr.game");
 		intent.putExtra("LIBRETRO", getApplicationInfo().nativeLibraryDir
 				+ "/libretro_dino.so");
 		intent.putExtra("REFRESHRATE", Float.toString(getRefreshRate()));
 		
-		String conf_path = getCacheDir() + File.separator + "retroarch.cfg";
+		String conf_path = getApplicationInfo().dataDir + File.separator + "retroarch.cfg";
 		if (new File(conf_path).exists())
 			intent.putExtra("CONFIGFILE", conf_path);
 		else
@@ -109,22 +111,57 @@ public class Dinothawr extends Activity {
 		intent.putExtra("IME", current_ime);
 
 		startActivity(intent);
-		finish();
 	}
 
 	private void startNative() {
 		try {
-			extractAll();
-			startRetroArch();
-		} catch (IOException e) {
-			Log.e(TAG, "Failed to start Dinothawr! :(");
+			if (extractThread != null)
+				extractThread.join();
+		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		extractThread = null;
+		startRetroArch();
 	}
+	
+	private Thread extractThread = null;
+	private boolean extracted = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		startNative();
+		setContentView(R.layout.title);
+		
+		if (savedInstanceState != null)
+			extracted = savedInstanceState.getBoolean("EXTRACTED", false);
+		
+		if (!extracted) {
+			Log.i(TAG, "Starting asset extraction thread ...");
+			extractThread = new Thread(new Runnable() {
+				public void run() {
+					try {
+						extractAll();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			});
+			extractThread.start();
+			extracted = true;
+		}
+		
+		Button button = (Button)findViewById(R.id.button1);
+		button.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				startNative();
+			}
+		});
+	}
+	
+	@Override
+	protected void onSaveInstanceState(Bundle bundle) {
+		super.onSaveInstanceState(bundle);
+		bundle.putBoolean("EXTRACTED", extracted);
 	}
 }

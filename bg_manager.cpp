@@ -1,16 +1,20 @@
 #include "game.hpp"
 #include <cstdlib>
 
+using namespace std;
+
 namespace Icy
 {
-   void BGManager::init(const std::vector<std::string>& paths)
+   void BGManager::init(const vector<string>& paths)
    {
       this->paths = paths;
-      std::srand(std::time(nullptr));
+      srand(time(nullptr));
    }
 
    void BGManager::step(Audio::Mixer& mixer)
    {
+      lock_guard<Audio::Mixer> guard(mixer);
+
       if (current && current->valid())
          return;
 
@@ -18,11 +22,11 @@ namespace Icy
          return;
 
       if (!loader.size())
-         loader.request_vorbis(paths[std::rand() % paths.size()]);
+         loader.request_vorbis(paths[rand() % paths.size()]);
 
       auto ret = loader.flush();
       if (ret)
-         current = std::make_shared<Audio::PCMStream>(ret);
+         current = make_shared<Audio::PCMStream>(ret);
       else
          current.reset();
 

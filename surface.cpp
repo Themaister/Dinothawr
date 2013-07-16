@@ -3,31 +3,33 @@
 #include <utility>
 #include <memory>
 
+using namespace std;
+
 namespace Blit
 {
    Surface::Surface(Pixel pix, int width, int height)
-      : data(std::make_shared<Data>(pix, width, height)),
+      : data(make_shared<Data>(pix, width, height)),
       m_active_alt_index(0), m_rect({0, 0}, width, height), m_ignore_camera(false)
    {}
 
-   Surface::Surface(std::shared_ptr<const Data> data)
+   Surface::Surface(shared_ptr<const Data> data)
       : data(data), m_active_alt_index(0), m_rect({0, 0}, data->w, data->h), m_ignore_camera(false)
    {}
 
-   Surface::Surface(const std::vector<Alt>& alts, const std::string& start_id) : m_ignore_camera(false)
+   Surface::Surface(const vector<Alt>& alts, const string& start_id) : m_ignore_camera(false)
    {
       if (alts.empty())
-         throw std::logic_error("Alts is empty.");
+         throw logic_error("Alts is empty.");
 
       Pos size{alts.front().data->w, alts.front().data->h};
       m_rect = {{0, 0}, size.x, size.y};
 
-      bool same_size = std::all_of(std::begin(alts) + 1, std::end(alts), [&alts, size](const Alt& alt) {
+      bool same_size = all_of(begin(alts) + 1, end(alts), [&alts, size](const Alt& alt) {
                return size == Pos{alt.data->w, alt.data->h};
             });
 
       if (!same_size)
-         throw std::logic_error("Not all alts are of same size.");
+         throw logic_error("Not all alts are of same size.");
 
       for (auto& alt : alts)
          this->alts.insert({alt.tag, alt.data});
@@ -35,17 +37,17 @@ namespace Blit
       active_alt(start_id);
    }
 
-   void Surface::active_alt(const std::string& id, unsigned index)
+   void Surface::active_alt(const string& id, unsigned index)
    {
       auto itr = alts.equal_range(id);
-      auto dist = std::distance(itr.first, itr.second);
+      auto dist = distance(itr.first, itr.second);
       if (dist <= static_cast<int>(index))
-         throw std::logic_error(Utils::join("Subindex is out of bounds. Requested Alt: \"", id, "\" Index: ", index));
+         throw logic_error(Utils::join("Subindex is out of bounds. Requested Alt: \"", id, "\" Index: ", index));
 
-      std::advance(itr.first, index);
+      advance(itr.first, index);
       auto ptr = itr.first->second;
       if (!ptr)
-         throw std::logic_error(Utils::join("Alt ID ", id, " does not exist."));
+         throw logic_error(Utils::join("Alt ID ", id, " does not exist."));
 
       m_active_alt = id;
       m_active_alt_index = index;
@@ -87,7 +89,7 @@ namespace Blit
       int x = pos.x, y = pos.y;
 
       if (x >= data->w || y >= data->h || x < 0 || y < 0)
-         throw std::logic_error(Utils::join(
+         throw logic_error(Utils::join(
                   "Pixel was fetched out-of-bounds. ",
                   "Asked for: (", x, ", ", y, "). ",
                   "Real dimension: (", data->w, ", ", data->h, ")."
@@ -98,15 +100,15 @@ namespace Blit
 
    void Surface::refill_color(Pixel pixel)
    {
-      std::vector<Pixel> pix;
+      vector<Pixel> pix;
       pix.reserve(data->w * data->h);
 
       auto& orig = data->pixels;
-      std::transform(std::begin(orig), std::end(orig), std::back_inserter(pix), [pixel](Pixel old) {
+      transform(begin(orig), end(orig), back_inserter(pix), [pixel](Pixel old) {
             return old & static_cast<Pixel>(Pixel::alpha_mask) ? pixel : Pixel();
          });
 
-      data = std::make_shared<Surface::Data>(std::move(pix), data->w, data->h);
+      data = make_shared<Surface::Data>(move(pix), data->w, data->h);
    }
 
    void Surface::ignore_camera(bool ignore)
@@ -119,14 +121,14 @@ namespace Blit
       return m_ignore_camera;
    }
 
-   Surface::Data::Data(std::vector<Pixel> pixels, int w, int h)
-      : pixels(std::move(pixels)), w(w), h(h)
+   Surface::Data::Data(vector<Pixel> pixels, int w, int h)
+      : pixels(move(pixels)), w(w), h(h)
    {}
 
    Surface::Data::Data(Pixel pixel, int w, int h)
       : pixels(w * h)
    {
-      std::fill(std::begin(pixels), std::end(pixels), pixel);
+      fill(begin(pixels), end(pixels), pixel);
    }
 }
 
