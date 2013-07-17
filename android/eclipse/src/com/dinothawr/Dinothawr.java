@@ -104,9 +104,23 @@ public class Dinothawr extends Activity {
 				+ "/libretro_dino.so");
 		intent.putExtra("REFRESHRATE", Float.toString(getRefreshRate()));
 		
-		String conf_path = getApplicationInfo().dataDir + File.separator + "retroarch.cfg";
-		if (new File(conf_path).exists())
-			intent.putExtra("CONFIGFILE", conf_path);
+		String dataDir = getApplicationInfo().dataDir + File.separator;
+		
+		ConfigFile conf = new ConfigFile();
+		conf.setInt("audio_out_rate", getOptimalSamplingRate());
+		conf.setString("input_overlay", dataDir + "overlay.cfg");
+		conf.setInt("input_back_behavior", 0);
+		conf.setDouble("video_aspect_ratio", -1.0);
+		conf.setBoolean("video_font_enable", false);
+		File rarchConfig = new File(dataDir, "retroarch.cfg");
+		try {
+			conf.write(rarchConfig);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		if (rarchConfig.exists())
+			intent.putExtra("CONFIGFILE", rarchConfig.getAbsolutePath());
 		else
 			intent.putExtra("CONFIGFILE", "");
 		
