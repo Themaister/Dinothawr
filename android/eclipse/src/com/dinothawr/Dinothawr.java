@@ -7,8 +7,10 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import android.media.AudioManager;
+import android.media.AudioTrack;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.NativeActivity;
 import android.content.Context;
@@ -160,17 +162,24 @@ public class Dinothawr extends Activity {
 			}
 		});
 		
+		Log.i(TAG, "Optimal sampling rate = " + getOptimalSamplingRate());
+	}
+	
+	@TargetApi(android.os.Build.VERSION_CODES.JELLY_BEAN_MR1)
+	private int getLowLatencyOptimalSamplingRate() {
 		AudioManager manager = (AudioManager)getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
-		if (android.os.Build.VERSION.SDK_INT >= 17) {
-			int rate = Integer.parseInt(manager
-					.getProperty(AudioManager.PROPERTY_OUTPUT_SAMPLE_RATE));
-			int frames = Integer
-					.parseInt(manager
-							.getProperty(AudioManager.PROPERTY_OUTPUT_FRAMES_PER_BUFFER));
-			Log.i(TAG, "Rate = " + rate + " Frames = " + frames);
-		} else {
-			Log.i(TAG, "Running Android SDK version " + android.os.Build.VERSION.SDK_INT + ", cannot query audio states.");
-		}
+		return Integer.parseInt(manager.getProperty(AudioManager.PROPERTY_OUTPUT_SAMPLE_RATE));
+	}
+
+	private int getOptimalSamplingRate() {
+		int ret;
+		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR1)
+			ret = getLowLatencyOptimalSamplingRate();
+		else
+			ret = AudioTrack.getNativeOutputSampleRate(AudioManager.STREAM_MUSIC);
+		
+		Log.i(TAG, "Using sampling rate: " + ret + " Hz");
+		return ret;
 	}
 	
 	@Override
