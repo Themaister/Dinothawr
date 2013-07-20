@@ -34,5 +34,7 @@
                android:name="android.app.func_name"
                android:value="ANativeActivity_onCreate" />
         </activity>
+        
+        <activity android:name="com.dinothawr.SettingsActivity" android:screenOrientation="landscape"></activity>
     </application>
 </manifest>

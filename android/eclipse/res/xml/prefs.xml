@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="Dinothawr settings" >
+    
+    <CheckBoxPreference
+        android:title="Pixel purist mode"
+        android:summary="Play Dinothawr without filtering. Scaling is only done in whole steps."
+        android:defaultValue="false"
+        android:key="pixel_purist" />
+    
+    <CheckBoxPreference
+        android:title="Enable audio"
+        android:defaultValue="true"
+        android:key="enable_audio" />
+
+</PreferenceScreen>

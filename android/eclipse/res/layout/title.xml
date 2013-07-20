@@ -30,6 +30,14 @@
             android:padding="5dp"
             android:text="@string/controls"
             android:textSize="20sp" />
+        
+        <Button
+            android:id="@+id/options_button"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="@string/options"
+            android:textSize="20sp" />        
 
         <Button
             android:id="@+id/credits_button"

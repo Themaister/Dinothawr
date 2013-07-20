@@ -9,6 +9,7 @@ import java.io.InputStream;
 import android.media.AudioManager;
 import android.media.AudioTrack;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -16,6 +17,8 @@ import android.app.AlertDialog;
 import android.app.NativeActivity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
@@ -39,6 +42,10 @@ public class Dinothawr extends Activity {
 		} catch (IOException e) {
 			return null;
 		}
+	}
+
+	private boolean isTablet() {
+		return (getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE;
 	}
 
 	private void extractAssets(String folder, String cache) throws IOException {
@@ -111,14 +118,31 @@ public class Dinothawr extends Activity {
 		intent.putExtra("REFRESHRATE", Float.toString(getRefreshRate()));
 
 		String dataDir = getApplicationInfo().dataDir + File.separator;
+		String overlay = isTablet() ? "overlay_big.cfg" : "overlay.cfg";
 
 		ConfigFile conf = new ConfigFile();
 		conf.setInt("audio_out_rate", getOptimalSamplingRate());
-		conf.setString("input_overlay", dataDir + "overlay.cfg");
+		conf.setString("input_overlay", dataDir + overlay);
 		conf.setInt("input_back_behavior", 0);
 		conf.setDouble("video_aspect_ratio", -1.0);
 		conf.setBoolean("video_font_enable", false);
 		File rarchConfig = new File(dataDir, "retroarch.cfg");
+		
+		SharedPreferences prefs = PreferenceManager
+				.getDefaultSharedPreferences(getBaseContext());
+		
+		boolean pixelPurist = prefs.getBoolean("pixel_purist", false);
+		boolean audioEnable = prefs.getBoolean("enable_audio", true);
+		if (pixelPurist) {
+			conf.setBoolean("video_scale_integer", true);
+			conf.setBoolean("video_smooth", false);
+		} else {
+			conf.setBoolean("video_scale_integer", false);
+			conf.setBoolean("video_smooth", true);
+		}
+		
+		conf.setBoolean("audio_enable", audioEnable);
+		
 		try {
 			conf.write(rarchConfig);
 		} catch (IOException e) {
@@ -166,6 +190,15 @@ public class Dinothawr extends Activity {
 		});
 
 		final Context ctx = this;
+		
+		button = (Button) findViewById(R.id.options_button);
+		button.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(ctx, SettingsActivity.class);
+				startActivity(intent);
+			}
+		});
 
 		button = (Button) findViewById(R.id.credits_button);
 		button.setOnClickListener(new View.OnClickListener() {
@@ -180,11 +213,10 @@ public class Dinothawr extends Activity {
 				link.setText(Html.fromHtml(getString(R.string.retroarch)));
 				link.setMovementMethod(LinkMovementMethod.getInstance());
 
-				link = (TextView) dialog
-						.findViewById(R.id.libvorbis_link);
+				link = (TextView) dialog.findViewById(R.id.libvorbis_link);
 				link.setText(Html.fromHtml(getString(R.string.libvorbis)));
 				link.setMovementMethod(LinkMovementMethod.getInstance());
-				
+
 				AlertDialog.Builder builder = new AlertDialog.Builder(ctx)
 						.setTitle("Credits").setView(dialog);
 				builder.show();

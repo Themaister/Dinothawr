@@ -26,5 +26,6 @@
     <string name="software_used">Software used</string>
 
     <string name="libvorbis"><![CDATA[<a href="http://xiph.org/vorbis/>libvorbis</a>]]></string>
+    <string name="options">Options</string>
 
 </resources>
