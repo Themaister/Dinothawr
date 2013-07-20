@@ -12,12 +12,18 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.NativeActivity;
 import android.content.Context;
 import android.content.Intent;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 public class Dinothawr extends Activity {
 	static private final String TAG = "Dinothawr";
@@ -89,10 +95,10 @@ public class Dinothawr extends Activity {
 
 	private float getRefreshRate() {
 		/*
-		WindowManager wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
-		Display display = wm.getDefaultDisplay();
-		return display.getRefreshRate();
-		*/
+		 * WindowManager wm = (WindowManager)
+		 * getSystemService(Context.WINDOW_SERVICE); Display display =
+		 * wm.getDefaultDisplay(); return display.getRefreshRate();
+		 */
 		return 60.0f;
 	}
 
@@ -103,9 +109,9 @@ public class Dinothawr extends Activity {
 		intent.putExtra("LIBRETRO", getApplicationInfo().nativeLibraryDir
 				+ "/libretro_dino.so");
 		intent.putExtra("REFRESHRATE", Float.toString(getRefreshRate()));
-		
+
 		String dataDir = getApplicationInfo().dataDir + File.separator;
-		
+
 		ConfigFile conf = new ConfigFile();
 		conf.setInt("audio_out_rate", getOptimalSamplingRate());
 		conf.setString("input_overlay", dataDir + "overlay.cfg");
@@ -118,12 +124,12 @@ public class Dinothawr extends Activity {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		if (rarchConfig.exists())
 			intent.putExtra("CONFIGFILE", rarchConfig.getAbsolutePath());
 		else
 			intent.putExtra("CONFIGFILE", "");
-		
+
 		String current_ime = Settings.Secure.getString(getContentResolver(),
 				Settings.Secure.DEFAULT_INPUT_METHOD);
 		intent.putExtra("IME", current_ime);
@@ -141,7 +147,51 @@ public class Dinothawr extends Activity {
 		extractThread = null;
 		startRetroArch();
 	}
-	
+
+	private void setupCallbacks() {
+		Button button = (Button) findViewById(R.id.start_button);
+		button.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				startNative();
+			}
+		});
+
+		button = (Button) findViewById(R.id.quit_button);
+		button.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				finish();
+			}
+		});
+
+		final Context ctx = this;
+
+		button = (Button) findViewById(R.id.credits_button);
+		button.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				LayoutInflater inflater = getLayoutInflater();
+				View dialog = inflater.inflate(R.layout.credits,
+						(ViewGroup) getCurrentFocus());
+
+				TextView link = (TextView) dialog
+						.findViewById(R.id.retroarch_link);
+				link.setText(Html.fromHtml(getString(R.string.retroarch)));
+				link.setMovementMethod(LinkMovementMethod.getInstance());
+
+				link = (TextView) dialog
+						.findViewById(R.id.libvorbis_link);
+				link.setText(Html.fromHtml(getString(R.string.libvorbis)));
+				link.setMovementMethod(LinkMovementMethod.getInstance());
+				
+				AlertDialog.Builder builder = new AlertDialog.Builder(ctx)
+						.setTitle("Credits").setView(dialog);
+				builder.show();
+			}
+		});
+	}
+
 	private Thread extractThread = null;
 	private boolean extracted = false;
 
@@ -149,10 +199,10 @@ public class Dinothawr extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.title);
-		
+
 		if (savedInstanceState != null)
 			extracted = savedInstanceState.getBoolean("EXTRACTED", false);
-		
+
 		if (!extracted) {
 			Log.i(TAG, "Starting asset extraction thread ...");
 			extractThread = new Thread(new Runnable() {
@@ -167,35 +217,32 @@ public class Dinothawr extends Activity {
 			extractThread.start();
 			extracted = true;
 		}
-		
-		Button button = (Button)findViewById(R.id.button1);
-		button.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				startNative();
-			}
-		});
-		
+
+		setupCallbacks();
+
 		Log.i(TAG, "Optimal sampling rate = " + getOptimalSamplingRate());
 	}
-	
-	@TargetApi(android.os.Build.VERSION_CODES.JELLY_BEAN_MR1)
+
+	@TargetApi(17)
 	private int getLowLatencyOptimalSamplingRate() {
-		AudioManager manager = (AudioManager)getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
-		return Integer.parseInt(manager.getProperty(AudioManager.PROPERTY_OUTPUT_SAMPLE_RATE));
+		AudioManager manager = (AudioManager) getApplicationContext()
+				.getSystemService(Context.AUDIO_SERVICE);
+		return Integer.parseInt(manager
+				.getProperty(AudioManager.PROPERTY_OUTPUT_SAMPLE_RATE));
 	}
 
 	private int getOptimalSamplingRate() {
 		int ret;
-		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR1)
+		if (android.os.Build.VERSION.SDK_INT >= 17)
 			ret = getLowLatencyOptimalSamplingRate();
 		else
-			ret = AudioTrack.getNativeOutputSampleRate(AudioManager.STREAM_MUSIC);
-		
+			ret = AudioTrack
+					.getNativeOutputSampleRate(AudioManager.STREAM_MUSIC);
+
 		Log.i(TAG, "Using sampling rate: " + ret + " Hz");
 		return ret;
 	}
-	
+
 	@Override
 	protected void onSaveInstanceState(Bundle bundle) {
 		super.onSaveInstanceState(bundle);

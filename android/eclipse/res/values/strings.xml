@@ -3,4 +3,28 @@
 
     <string name="app_name">Dinothawr</string>
 
+    <string name="controls">Controls</string>
+
+    <string name="credits">Credits</string>
+
+    <string name="quit">Quit</string>
+
+    <string name="title_image">Title image</string>
+
+    <string name="start">Start</string>
+
+    <string name="retroarch"><![CDATA[<a href="http://libretro.org">RetroArch</a>]]></string>
+
+    <string name="agnes_heyer">Agnes Heyer</string>
+
+    <string name="_art_n_level_design">" Art\n Level design"</string>
+
+    <string name="hans_kristian_arntzen">Hans-Kristian Arntzen</string>
+
+    <string name="_programming_n_music">" Programming\n Music\n Level design"</string>
+
+    <string name="software_used">Software used</string>
+
+    <string name="libvorbis"><![CDATA[<a href="http://xiph.org/vorbis/>libvorbis</a>]]></string>
+
 </resources>

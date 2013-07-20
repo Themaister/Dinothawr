@@ -5,25 +5,58 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="fill_parent"
-        android:layout_gravity="bottom"
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:gravity="center"
-        android:layout_margin="20dp"
-        android:textSize="50sp"
-        android:layout_height="wrap_content"
-        android:text="Dinothawr" />
-    
-    <Button
-        android:id="@+id/button1"
-        android:layout_gravity="bottom"
-        android:layout_below="@id/textView1"
-        android:layout_alignParentBottom="true"
+        android:layout_margin="10dp"
+        android:orientation="vertical" >
+
+        <Button
+            android:id="@+id/start_button"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="@string/start"
+            android:textSize="25sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/controls_button"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="@string/controls"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/credits_button"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="@string/credits"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/quit_button"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="@string/quit"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/titleImage"
         android:layout_width="fill_parent"
-        android:textSize="25sp"
-        android:layout_height="wrap_content"
-        android:text="Start Dinothawr" />
+        android:layout_height="fill_parent"
+        android:layout_alignParentRight="true"
+        android:layout_margin="10dp"
+        android:layout_toRightOf="@id/linearLayout"
+        android:contentDescription="@string/title_image"
+        android:scaleType="fitCenter"
+        android:src="@drawable/title" />
 
 </RelativeLayout>
