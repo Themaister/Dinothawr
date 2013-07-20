@@ -349,7 +349,7 @@
    <tile gid="26"/>
   </data>
  </layer>
- <layer name="Blocks" width="10" height="10" visible="0">
+ <layer name="Blocks" width="10" height="10">
   <data>
    <tile gid="0"/>
    <tile gid="0"/>
