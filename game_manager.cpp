@@ -328,15 +328,37 @@ namespace Icy
       bool pressed_menu_ok     = m_input_cb(Input::Push);
       bool pressed_menu			 = m_input_cb(Input::Menu);
 
-      if (pressed_menu_left && !old_pressed_menu_left && level_select > 0)
+      int levels_in_chapter = chapters.at(chap_select).num_levels();
+      int chapter_size = chapters.size();
+
+      if (pressed_menu_left && !old_pressed_menu_left)
       {
-         level_select--;
-         start_slide({-8, 0}, preview_slide_cnt);
+         if (level_select > 0)
+         {
+            level_select--;
+            start_slide({-8, 0}, preview_slide_cnt);
+         }
+         else if (level_select == 0 && chap_select > 0)
+         {
+            int levels_in_prev_chapter = chapters[chap_select - 1].num_levels();
+            chap_select--;
+            start_slide({(levels_in_prev_chapter - 1) * 8, -8}, preview_slide_cnt);
+            level_select = levels_in_prev_chapter - 1;
+         }
       }
-      else if (pressed_menu_right && !old_pressed_menu_right && level_select < static_cast<int>(chapters.at(chap_select).num_levels()) - 1)
+      else if (pressed_menu_right && !old_pressed_menu_right)
       {
-         level_select++;
-         start_slide({8, 0}, preview_slide_cnt);
+         if (level_select < levels_in_chapter - 1)
+         {
+            level_select++;
+            start_slide({8, 0}, preview_slide_cnt);
+         }
+         else if (level_select == levels_in_chapter - 1 && chap_select < chapter_size - 1)
+         {
+            chap_select++;
+            start_slide({(levels_in_chapter - 1) * -8, 8}, preview_slide_cnt);
+            level_select = 0;
+         }
       }
       else if (pressed_menu_up && !old_pressed_menu_up && chap_select > 0)
       {

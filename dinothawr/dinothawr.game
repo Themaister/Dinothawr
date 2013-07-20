@@ -24,7 +24,7 @@
       <bg source="assets/bg/bg7.ogg"/>
       <bg source="assets/bg/bg8.ogg"/>
    </music>
-   <chapter name="Chapter 1" minimum_clear="1">
+   <chapter name="Chapter 1" minimum_clear="5">
       <map source="icy25.tmx" name="Level 25"/>
       <map source="icy9.tmx"  name="Level 9"/>
       <map source="icy18.tmx" name="Level 18"/>
