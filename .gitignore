@@ -8,8 +8,10 @@
 *.d
 *.a
 /android/eclipse/bin
+/android/eclipse/gen
 /android/eclipse/assets
 /android/eclipse/.classpath
 /android/eclipse/.project
+/android/eclipse/.settings
 *.swp
 *.swo
