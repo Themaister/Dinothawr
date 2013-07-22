@@ -33,9 +33,9 @@
    </chapter>
    <chapter name="Chapter 2">
       <map source="icy48.tmx" name="Level 48"/>
-      <map source="icy26.tmx" name="Level 26"/>
       <map source="icy24.tmx" name="Level 24"/>
       <map source="icy23.tmx" name="Level 23"/>
+      <map source="icy26.tmx" name="Level 26"/>
       <map source="icy19.tmx" name="Level 19"/>
    </chapter>
    <chapter name="Chapter 3">
@@ -81,5 +81,7 @@
       <map source="icy34.tmx" name="Level 34"/>
    </chapter>
    <chapter name="Test">
+      <map source="icy49.tmx" name="Level 49"/>
+      <map source="icy50.tmx" name="Level 50"/>
    </chapter>
 </game>
