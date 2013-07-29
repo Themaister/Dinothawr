@@ -12,5 +12,11 @@
         android:title="Enable audio"
         android:defaultValue="true"
         android:key="enable_audio" />
+    
+    <CheckBoxPreference
+        android:title="Enable gamepad overlay"
+        android:summary="Displays an overlay which resembles a gamepad. Useful for touch-only devices."
+        android:defaultValue="true"
+        android:key="overlay_enable" />
 
 </PreferenceScreen>

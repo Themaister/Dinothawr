@@ -122,7 +122,6 @@ public class Dinothawr extends Activity {
 
 		ConfigFile conf = new ConfigFile();
 		conf.setInt("audio_out_rate", getOptimalSamplingRate());
-		conf.setString("input_overlay", dataDir + overlay);
 		conf.setInt("input_back_behavior", 0);
 		conf.setDouble("video_aspect_ratio", -1.0);
 		conf.setBoolean("video_font_enable", false);
@@ -130,6 +129,8 @@ public class Dinothawr extends Activity {
 		
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(getBaseContext());
+		
+		conf.setString("input_overlay", prefs.getBoolean("overlay_enable", true) ? dataDir + overlay : "");
 		
 		boolean pixelPurist = prefs.getBoolean("pixel_purist", false);
 		boolean audioEnable = prefs.getBoolean("enable_audio", true);
@@ -205,8 +206,7 @@ public class Dinothawr extends Activity {
 			@Override
 			public void onClick(View v) {
 				LayoutInflater inflater = getLayoutInflater();
-				View dialog = inflater.inflate(R.layout.credits,
-						(ViewGroup) getCurrentFocus());
+				View dialog = inflater.inflate(R.layout.credits, null);
 
 				TextView link = (TextView) dialog
 						.findViewById(R.id.retroarch_link);
