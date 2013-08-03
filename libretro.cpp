@@ -162,8 +162,8 @@ static void load_game(const string& path)
          case Input::Down:  btn = RETRO_DEVICE_ID_JOYPAD_DOWN; break;
          case Input::Left:  btn = RETRO_DEVICE_ID_JOYPAD_LEFT; break;
          case Input::Right: btn = RETRO_DEVICE_ID_JOYPAD_RIGHT; break;
-         case Input::Push:  btn = RETRO_DEVICE_ID_JOYPAD_A; break;
-         case Input::Menu:  btn = RETRO_DEVICE_ID_JOYPAD_B; break;
+         case Input::Push:  btn = RETRO_DEVICE_ID_JOYPAD_B; break;
+         case Input::Menu:  btn = RETRO_DEVICE_ID_JOYPAD_A; break;
          case Input::Reset: btn = RETRO_DEVICE_ID_JOYPAD_SELECT; break;
          default: return false;
       }
