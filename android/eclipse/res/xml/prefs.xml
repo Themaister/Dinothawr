@@ -18,5 +18,11 @@
         android:summary="Displays an overlay which resembles a gamepad. Useful for touch-only devices."
         android:defaultValue="true"
         android:key="overlay_enable" />
+    
+    <CheckBoxPreference
+        android:title="Demo mode"
+        android:summary="Deletes the save file when starting game. Allows many people to test from a clean state."
+        android:defaultValue="false"
+        android:key="demo_mode" />
 
 </PreferenceScreen>

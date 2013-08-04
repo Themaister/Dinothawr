@@ -24,7 +24,6 @@ import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -148,6 +147,14 @@ public class Dinothawr extends Activity {
 			conf.write(rarchConfig);
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+		
+		if (prefs.getBoolean("demo_mode", false)) {
+			File save = new File(getApplicationInfo().dataDir, "dinothawr.srm");
+			if (save.exists()) {
+				Log.i(TAG, "Demo mode, deleting save file.");
+				save.delete();
+			}
 		}
 
 		if (rarchConfig.exists())

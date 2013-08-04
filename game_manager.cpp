@@ -9,6 +9,10 @@ using namespace Blit;
 using namespace pugi;
 using namespace std;
 
+#ifdef ANDROID
+#include <android/log.h>
+#endif
+
 namespace Icy
 {
    GameManager::GameManager(const string& path_game,
@@ -526,9 +530,7 @@ namespace Icy
       {
          string pushes;
          for (auto& level : chap.levels())
-         {
             pushes += Utils::join(level.get_best_pushes(), ",");
-         }
          full_pushes += pushes + '\n';
       }
 
@@ -548,6 +550,10 @@ namespace Icy
       last++;
       save = save.substr(0, last);
 
+#ifdef ANDROID
+      __android_log_print(ANDROID_LOG_INFO, "Dinothawr: ", "Save file: \n%s\n", save.c_str());
+#endif
+
       auto chapters = Utils::split(save, '\n');
       auto chap_itr = begin(chaps);
       for (auto& chap : chapters)
@@ -565,7 +571,6 @@ namespace Icy
             unsigned pushes = Utils::stoi(level);
             level_itr->set_best_pushes(pushes);
             level_itr->set_completion(pushes);
-
             ++level_itr;
          }
 
