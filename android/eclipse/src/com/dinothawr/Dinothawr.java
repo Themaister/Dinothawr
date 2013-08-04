@@ -143,6 +143,13 @@ public class Dinothawr extends Activity {
 		
 		conf.setBoolean("audio_enable", audioEnable);
 		
+		String shader = prefs.getString("shader", "");
+		if (shader != null && !shader.isEmpty()) {
+			conf.setBoolean("video_shader_enable", true);
+			conf.setString("video_shader", getApplicationInfo().dataDir + File.separator + shader);
+		} else
+			conf.setBoolean("video_shader_enable", false);
+		
 		try {
 			conf.write(rarchConfig);
 		} catch (IOException e) {
@@ -156,7 +163,7 @@ public class Dinothawr extends Activity {
 				save.delete();
 			}
 		}
-
+		
 		if (rarchConfig.exists())
 			intent.putExtra("CONFIGFILE", rarchConfig.getAbsolutePath());
 		else

@@ -27,5 +27,20 @@
 
     <string name="libvorbis"><![CDATA[<a href="http://xiph.org/vorbis/>libvorbis</a>]]></string>
     <string name="options">Options</string>
+    
+    <string-array name="shaders">
+        <item>None</item>
+        <item>Scanline</item>
+        <item>HQ2x</item>
+        <item>LCD3x</item>
+        <item>Phosphor</item>
+    </string-array>
+    <string-array name="shaders_path">
+        <item></item>
+        <item>scanline.glsl</item>
+        <item>hq2x.glslp</item>
+        <item>lcd3x.glslp</item>
+        <item>phosphor.glsl</item>
+    </string-array>
 
 </resources>

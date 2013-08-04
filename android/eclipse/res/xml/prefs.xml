@@ -24,5 +24,12 @@
         android:summary="Deletes the save file when starting game. Allows many people to test from a clean state."
         android:defaultValue="false"
         android:key="demo_mode" />
+    
+    <ListPreference
+        android:title="Shader"
+        android:summary="Use a shader effect. Only recommended for powerful devices."
+        android:key="shader"
+        android:entries="@array/shaders"
+        android:entryValues="@array/shaders_path" />
 
 </PreferenceScreen>
