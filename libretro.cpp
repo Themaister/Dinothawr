@@ -27,6 +27,7 @@ static bool use_frame_time_cb;
 
 static retro_usec_t frame_time;
 static retro_usec_t time_reference;
+static retro_usec_t total_time;
 static bool present_frame;
 
 namespace Icy
@@ -120,7 +121,7 @@ static void audio_callback(void)
 
 static void frame_time_cb(retro_usec_t usec)
 {
-   frame_time += usec;
+   frame_time = usec;
 }
 
 void retro_run(void)
@@ -130,7 +131,12 @@ void retro_run(void)
 
    input_poll_cb();
 
-   int frames = (frame_time + (time_reference >> 1)) / time_reference;
+   if (frame_time < (time_reference >> 1))
+      total_time += frame_time;
+   else
+      total_time += ((frame_time + (time_reference >> 1)) / time_reference) * time_reference;
+   int frames = (total_time + (time_reference >> 1)) / time_reference;
+
    if (frames <= 0)
       video_cb(nullptr, Game::fb_width, Game::fb_height, 0);
    else
@@ -140,7 +146,7 @@ void retro_run(void)
          game->iterate();
       present_frame = true;
       game->iterate();
-      frame_time -= time_reference * frames;
+      total_time -= time_reference * frames;
    }
 
    get_bg().step(mixer);
