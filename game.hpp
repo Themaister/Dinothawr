@@ -293,8 +293,6 @@ namespace Icy
          Blit::RenderTarget ui_target;
          Blit::FontCluster font;
 
-         Blit::Surface arrow_top;
-         Blit::Surface arrow_bottom;
          Blit::Surface level_complete;
          Blit::Surface level_select_bg;
          Blit::Surface game_bg;

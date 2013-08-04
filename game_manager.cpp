@@ -55,16 +55,6 @@ namespace Icy
 
    void GameManager::init_menu_sprite(xml_node doc)
    {
-      auto arrow = cache.from_sprite(Utils::join(dir, "/", doc.child("game").child("arrow").attribute("source").value()));
-      arrow.ignore_camera(true);
-      arrow_top = arrow;
-      arrow_top.active_alt("up");
-      arrow_bottom = arrow;
-
-      int arrow_x = (Game::fb_width - arrow.rect().w) / 2;
-      arrow_top.rect().pos = { arrow_x, 8 };
-      arrow_bottom.rect().pos = { arrow_x, 160 };
-
       level_complete = cache.from_image(Utils::join(dir, "/", doc.child("game").child("level_complete").attribute("source").value()));
 
       int complete_x = preview_base_x + Game::fb_width / 2 - level_complete.rect().w - 2;
@@ -246,16 +236,6 @@ namespace Icy
    {
       if (menu_slide_dir.y == 0)
       {
-         // Render up/down arrows.
-         if (chap_select > 0)
-            ui_target.blit(arrow_top, {});
-
-         if (static_cast<unsigned>(chap_select) < chapters.size() - 1)
-         {
-            arrow_bottom.active_alt(chapters[chap_select].cleared() ? "down" : "lock");
-            ui_target.blit(arrow_bottom, {});
-         }
-
          // Render tick if level is complete.
          if (menu_slide_dir == Pos{} && chapters[chap_select].get_completion(level_select))
             ui_target.blit(level_complete, {});
