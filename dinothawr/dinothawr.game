@@ -87,4 +87,7 @@
       <map source="icy52.tmx" name="Level 51"/>
       <map source="icy53.tmx" name="Level 53"/>
    </chapter>
+   <chapter name="Test2">
+      <map source="icy54.tmx" name="Level 54"/>
+   </chapter>
 </game>
