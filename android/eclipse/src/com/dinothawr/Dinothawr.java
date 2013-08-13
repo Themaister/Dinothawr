@@ -16,6 +16,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.NativeActivity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -108,6 +109,71 @@ public class Dinothawr extends Activity {
 		return 60.0f;
 	}
 
+	private void runControlDialog() {
+		final SharedPreferences prefs = PreferenceManager
+				.getDefaultSharedPreferences(getBaseContext());
+		final Context ctx = this;
+		
+		final AlertDialog alert = new AlertDialog.Builder(this)
+				.setTitle("Thanks for playing Dinothawr!")
+				.setMessage(
+						"This is your first time playing Dinothawr.\n\nThis game is designed with gamepads in mind. If you only have a touchscreen available, you can use an on-screen overlay to control the game.\n\nWould you like to enable overlays now?\n\nYou can always change this option later under 'Options' menu.")
+				.setNeutralButton("Controls",
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+							}
+						})
+				.setPositiveButton("Yes",
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								SharedPreferences.Editor edit = prefs.edit();
+								edit.putBoolean("overlay_enable", true);
+								edit.commit();
+							}
+						})
+				.setNegativeButton("No", new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						SharedPreferences.Editor edit = prefs.edit();
+						edit.putBoolean("overlay_enable", false);
+						edit.commit();
+					}
+				}).create();
+		alert.setOnShowListener(new DialogInterface.OnShowListener() {
+			@Override
+			public void onShow(DialogInterface dialog) {
+				Button neutral = alert.getButton(AlertDialog.BUTTON_NEUTRAL);
+				neutral.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						Intent intent = new Intent(ctx, Controls.class);
+						startActivity(intent);
+					}
+				});
+			}
+		});
+		alert.show();
+	}
+	
+	private void runPopupControls() {
+		SharedPreferences prefs = PreferenceManager
+				.getDefaultSharedPreferences(getBaseContext());
+		
+		boolean demoMode = prefs.getBoolean("demo_mode", false);
+		boolean firstTime = prefs.getBoolean("first_time", true);
+
+		if (demoMode || firstTime)
+			runControlDialog();
+		
+		SharedPreferences.Editor edit = prefs.edit();
+		edit.putBoolean("first_time", false);
+		edit.commit();
+	}
+
 	private void startRetroArch() {
 		Intent intent = new Intent(this, NativeActivity.class);
 		intent.putExtra("ROM", getApplicationInfo().dataDir + File.separator
@@ -188,11 +254,22 @@ public class Dinothawr extends Activity {
 	}
 
 	private void setupCallbacks() {
+		final Context ctx = this;
+		
 		Button button = (Button) findViewById(R.id.start_button);
 		button.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				startNative();
+			}
+		});
+		
+		button = (Button) findViewById(R.id.controls_button);
+		button.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(ctx, Controls.class);
+				startActivity(intent);
 			}
 		});
 
@@ -204,8 +281,6 @@ public class Dinothawr extends Activity {
 			}
 		});
 
-		final Context ctx = this;
-		
 		button = (Button) findViewById(R.id.options_button);
 		button.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -240,14 +315,17 @@ public class Dinothawr extends Activity {
 
 	private Thread extractThread = null;
 	private boolean extracted = false;
+	private boolean dialog = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.title);
 
-		if (savedInstanceState != null)
+		if (savedInstanceState != null) {
 			extracted = savedInstanceState.getBoolean("EXTRACTED", false);
+			dialog = savedInstanceState.getBoolean("DIALOG", false);
+		}
 
 		if (!extracted) {
 			Log.i(TAG, "Starting asset extraction thread ...");
@@ -265,8 +343,10 @@ public class Dinothawr extends Activity {
 		}
 
 		setupCallbacks();
-
 		Log.i(TAG, "Optimal sampling rate = " + getOptimalSamplingRate());
+		
+		if (!dialog)
+			runPopupControls();
 	}
 
 	@TargetApi(17)
@@ -293,5 +373,6 @@ public class Dinothawr extends Activity {
 	protected void onSaveInstanceState(Bundle bundle) {
 		super.onSaveInstanceState(bundle);
 		bundle.putBoolean("EXTRACTED", extracted);
+		bundle.putBoolean("DIALOG", true);
 	}
 }

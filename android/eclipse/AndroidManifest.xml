@@ -14,7 +14,7 @@
         android:label="@string/app_name"
         android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
         <activity
-            android:name="com.dinothawr.Dinothawr"
+            android:name=".Dinothawr"
             android:label="@string/app_name"
             android:screenOrientation="landscape" >
             <intent-filter>
@@ -35,6 +35,8 @@
                android:value="ANativeActivity_onCreate" />
         </activity>
         
-        <activity android:name="com.dinothawr.SettingsActivity" android:screenOrientation="landscape"></activity>
+        <activity android:name=".SettingsActivity" android:screenOrientation="landscape"></activity>
+        <activity android:name=".Controls" android:screenOrientation="landscape"></activity>
+        
     </application>
 </manifest>
