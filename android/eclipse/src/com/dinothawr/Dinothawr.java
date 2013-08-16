@@ -14,6 +14,7 @@ import android.provider.Settings;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.NativeActivity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -243,13 +244,6 @@ public class Dinothawr extends Activity {
 	}
 
 	private void startNative() {
-		try {
-			if (extractThread != null)
-				extractThread.join();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		extractThread = null;
 		startRetroArch();
 	}
 
@@ -328,6 +322,11 @@ public class Dinothawr extends Activity {
 		}
 
 		if (!extracted) {
+			final Dialog dialog = new Dialog(this);
+			dialog.setCancelable(false);
+			dialog.setContentView(R.layout.assets);
+			dialog.setTitle("Asset extraction");
+			
 			Log.i(TAG, "Starting asset extraction thread ...");
 			extractThread = new Thread(new Runnable() {
 				public void run() {
@@ -336,10 +335,13 @@ public class Dinothawr extends Activity {
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
+					dialog.dismiss();
 				}
 			});
 			extractThread.start();
 			extracted = true;
+			
+			dialog.show();
 		}
 
 		setupCallbacks();
