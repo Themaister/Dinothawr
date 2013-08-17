@@ -51,6 +51,8 @@ namespace Icy
          std::shared_ptr<Audio::Stream> current;
          Audio::VorbisLoader loader;
          std::vector<std::string> paths;
+         bool first = true;
+         unsigned last = 0;
    };
 
    BGManager& get_bg();

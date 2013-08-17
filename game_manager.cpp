@@ -291,7 +291,7 @@ namespace Icy
 
       menu_slide_dir = dir;
 
-      get_sfx().play_sfx("level_next");
+      get_sfx().play_sfx("level_next", 0.5);
    }
 
    void GameManager::step_menu()
@@ -361,7 +361,7 @@ namespace Icy
             level_select = new_level;
          }
          else
-            get_sfx().play_sfx("chapter_locked");
+            get_sfx().play_sfx("chapter_locked", 0.5);
       }
       else if (pressed_menu_ok && !old_pressed_menu_ok)
          init_level(chap_select, level_select);

@@ -22,7 +22,24 @@ namespace Icy
          return;
 
       if (!loader.size())
-         loader.request_vorbis(paths[rand() % paths.size()]);
+      {
+         if (first)
+         {
+            loader.request_vorbis(paths[0]);
+            last = 0;
+         }
+         else
+         {
+            unsigned index = rand() % paths.size();
+            if (index == last)
+               index = (index + 1) % paths.size();
+
+            loader.request_vorbis(paths[index]);
+            last = index;
+         }
+
+         first = false;
+      }
 
       auto ret = loader.flush();
       if (ret)
