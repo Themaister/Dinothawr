@@ -337,6 +337,7 @@ namespace Icy
       if (!map.collision(tile_pos + (2 * offset)))
       {
          stepper = bind(&Game::tile_stepper, this, ref(*tile), offset);
+         stepper_cnt = 0;
          player_walking = false;
          player.active_alt_index(0);
          get_sfx().play_sfx("dino_push", 2.0);
@@ -360,6 +361,13 @@ namespace Icy
    bool Game::tile_stepper(Surface& surf, Pos step_dir)
    {
       surf.rect() += 2 * step_dir;
+
+      if (!player_walking)
+      {
+         unsigned alt = stepper_cnt <= 6 ? 7 : 0;
+         player.active_alt_index(alt);
+         stepper_cnt++;
+      }
 
       if (surf.rect().pos.x % map.tile_width() || surf.rect().pos.y % map.tile_height())
          return true;

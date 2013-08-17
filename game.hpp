@@ -122,6 +122,7 @@ namespace Icy
          unsigned frame_cnt;
          bool player_walking;
          bool is_sliding;
+         unsigned stepper_cnt;
 
          void set_initial_pos(const std::string& level);
          void update_player();
