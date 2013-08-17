@@ -73,10 +73,19 @@ namespace Icy
    {
       auto sfx = doc.child("game").child("music");
       Utils::xml_node_walker walk{sfx, "bg", "source"};
-      vector<string> paths;
+      vector<BGManager::Track> tracks;
       for (auto& val : walk)
-         paths.push_back(Utils::join(dir, "/", val));
-      get_bg().init(paths);
+         tracks.push_back({Utils::join(dir, "/", val), 1.0f});
+
+      auto itr = begin(tracks);
+      Utils::xml_node_walker walk_volume{sfx, "bg", "volume"};
+      for (auto& val : walk_volume)
+      {
+         itr->gain = val.empty() ? 1.0f : stof(val);
+         ++itr;
+      }
+
+      get_bg().init(tracks);
    }
 
    void GameManager::init_sfx(xml_node doc)
@@ -211,7 +220,7 @@ namespace Icy
 
    void GameManager::step_title()
    {
-      if (m_input_cb(Input::Push))
+      if (m_input_cb(Input::Push) || m_input_cb(Input::Menu))
       {
          set_initial_level();
          enter_menu();

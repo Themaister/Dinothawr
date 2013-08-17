@@ -15,7 +15,7 @@
       <sound source="assets/sfx/dino_push.wav" name="dino_push"/>
    </sfx>
    <music>
-      <bg source="assets/bg/theme.ogg"/>
+      <bg source="assets/bg/theme.ogg" volume="0.35"/>
       <bg source="assets/bg/bg1.ogg"/>
       <bg source="assets/bg/bg2.ogg"/>
       <bg source="assets/bg/bg3.ogg"/>

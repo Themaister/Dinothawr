@@ -5,10 +5,11 @@ using namespace std;
 
 namespace Icy
 {
-   void BGManager::init(const vector<string>& paths)
+   void BGManager::init(const vector<Track>& tracks)
    {
-      this->paths = paths;
+      this->tracks = tracks;
       srand(time(nullptr));
+      first = true;
    }
 
    void BGManager::step(Audio::Mixer& mixer)
@@ -18,23 +19,23 @@ namespace Icy
       if (current && current->valid())
          return;
 
-      if (!paths.size())
+      if (!tracks.size())
          return;
 
       if (!loader.size())
       {
          if (first)
          {
-            loader.request_vorbis(paths[0]);
+            loader.request_vorbis(tracks[0].path);
             last = 0;
          }
          else
          {
-            unsigned index = rand() % paths.size();
+            unsigned index = rand() % tracks.size();
             if (index == last)
-               index = (index + 1) % paths.size();
+               index = (index + 1) % tracks.size();
 
-            loader.request_vorbis(paths[index]);
+            loader.request_vorbis(tracks[index].path);
             last = index;
          }
 
@@ -43,7 +44,10 @@ namespace Icy
 
       auto ret = loader.flush();
       if (ret)
+      {
          current = make_shared<Audio::PCMStream>(ret);
+         current->volume(tracks[last].gain);
+      }
       else
          current.reset();
 

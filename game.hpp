@@ -44,15 +44,21 @@ namespace Icy
    class BGManager
    {
       public:
-         void init(const std::vector<std::string>& paths);
+         struct Track
+         {
+            std::string path;
+            float gain;
+         };
+         void init(const std::vector<Track>& tracks);
          void step(Audio::Mixer& mixer);
 
       private:
          std::shared_ptr<Audio::Stream> current;
          Audio::VorbisLoader loader;
-         std::vector<std::string> paths;
+         std::vector<Track> tracks;
          bool first = true;
          unsigned last = 0;
+         float request_volume = 0.0f;
    };
 
    BGManager& get_bg();
