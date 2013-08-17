@@ -29,7 +29,15 @@
             android:layout_height="wrap_content"
             android:padding="5dp"
             android:text="@string/controls"
-            android:textSize="20sp" />  
+            android:textSize="20sp" />
+        
+        <Button
+            android:id="@+id/instruction_button"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="@string/instructions"
+            android:textSize="20sp" />
         
         <Button
             android:id="@+id/options_button"

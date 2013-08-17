@@ -18,7 +18,7 @@ ifeq ($(TARGET_ARCH),mips)
 endif
 
 LOCAL_SRC_FILES += $(wildcard ../../*.cpp) $(wildcard ../../*/*.cpp) $(wildcard ../../vorbis/*.c) $(wildcard ../../ogg/*.c)
-LOCAL_CPPFLAGS += -Wall -std=gnu++11 -fexceptions -DOV_EXCLUDE_STATIC_CALLBACKS 
+LOCAL_CPPFLAGS += -Wall -std=gnu++11 -fexceptions -DOV_EXCLUDE_STATIC_CALLBACKS -Wno-literal-suffix
 LOCAL_CFLAGS += -O2 -ffast-math -D_GLIBCXX_HAS_GTHREADS -DANDROID
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/../.. $(LOCAL_PATH)/../../vorbis
 LOCAL_LDLIBS += -lz -llog

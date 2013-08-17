@@ -266,6 +266,15 @@ public class Dinothawr extends Activity {
 				startActivity(intent);
 			}
 		});
+		
+		button = (Button) findViewById(R.id.instruction_button);
+		button.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(ctx, Instructions.class);
+				startActivity(intent);
+			}
+		});
 
 		button = (Button) findViewById(R.id.quit_button);
 		button.setOnClickListener(new View.OnClickListener() {
