@@ -31,5 +31,11 @@
         android:key="shader"
         android:entries="@array/shaders"
         android:entryValues="@array/shaders_path" />
+    
+    <Preference android:title="Set Input Method" android:summary="Sets IME to be used in-game.">
+       <intent
+          android:targetClass="com.dinothawr.IMEActivity"
+          android:targetPackage="com.dinothawr" />
+    </Preference>
 
 </PreferenceScreen>

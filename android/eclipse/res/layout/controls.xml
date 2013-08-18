@@ -42,15 +42,22 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="15dp"
         android:text="Gamepad controls" />
+    
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:textSize="12dp"
+        android:layout_marginBottom="10dp"
+        android:layout_height="wrap_content"
+        android:text="Note: Several different external gamepads are supported. You might have to set the IME first (see Options -> Set Input Method)." />
 
     <ImageView
         android:id="@+id/imageView1"
-        android:contentDescription="Shield controller"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:contentDescription="Shield controller"
         android:scaleType="fitStart"
         android:src="@drawable/shield" />
 
-</LinearLayout>
-
+  </LinearLayout>
 </LinearLayout>
