@@ -197,6 +197,7 @@ public class Dinothawr extends Activity {
 				.getDefaultSharedPreferences(getBaseContext());
 		
 		conf.setString("input_overlay", prefs.getBoolean("overlay_enable", true) ? dataDir + overlay : "");
+		conf.setDouble("input_overlay_opacity", 0.5);
 		
 		boolean pixelPurist = prefs.getBoolean("pixel_purist", false);
 		boolean audioEnable = prefs.getBoolean("enable_audio", true);
