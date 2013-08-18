@@ -309,6 +309,10 @@ public class Dinothawr extends Activity {
 				link = (TextView) dialog.findViewById(R.id.libvorbis_link);
 				link.setText(Html.fromHtml(getString(R.string.libvorbis)));
 				link.setMovementMethod(LinkMovementMethod.getInstance());
+				
+				link = (TextView) dialog.findViewById(R.id.pugixml_link);
+				link.setText(Html.fromHtml(getString(R.string.pugixml)));
+				link.setMovementMethod(LinkMovementMethod.getInstance());
 
 				AlertDialog.Builder builder = new AlertDialog.Builder(ctx)
 						.setTitle("Credits").setView(dialog);

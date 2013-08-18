@@ -44,5 +44,6 @@
     </string-array>
         <string name="extracting_assets_please_wait_">Extracting assets, please wait ...</string>
         <string name="instructions">Instructions</string>
+        <string name="pugixml"><![CDATA[<a href="http://code.google.com/p/pugixml/">pugixml</a>]]></string>
 
 </resources>

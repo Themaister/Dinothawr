@@ -64,6 +64,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/libvorbis" />
+        
+        <TextView
+            android:id="@+id/pugixml_link"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/pugixml" />
     </LinearLayout>
 
 </LinearLayout>
