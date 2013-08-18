@@ -32,15 +32,13 @@
         <item>None</item>
         <item>Scanline</item>
         <item>HQ2x</item>
-        <item>LCD3x</item>
-        <item>Phosphor</item>
+        <item>xBR (LV2-A)</item>
     </string-array>
     <string-array name="shaders_path">
         <item></item>
         <item>scanline.glsl</item>
         <item>hq2x.glslp</item>
-        <item>lcd3x.glslp</item>
-        <item>phosphor.glsl</item>
+        <item>xbr-lv2-a.glslp</item>
     </string-array>
         <string name="extracting_assets_please_wait_">Extracting assets, please wait ...</string>
         <string name="instructions">Instructions</string>
