@@ -58,6 +58,11 @@ namespace Icy
    {
       level_complete = cache.from_image(Utils::join(dir, "/", doc.child("game").child("level_complete").attribute("source").value()));
 
+      lock_sprite = cache.from_image(Utils::join(dir, "/", doc.child("game").child("lock_sprite").attribute("source").value()));
+      lock_sprite.ignore_camera(true);
+      int arrow_x = (Game::fb_width - lock_sprite.rect().w) / 2;
+      lock_sprite.rect().pos = { arrow_x, 160 };
+
       int complete_x = preview_base_x + Game::fb_width / 2 - level_complete.rect().w - 2;
       int complete_y = preview_base_y + Game::fb_height / 2 - level_complete.rect().h - 2;
       level_complete.rect().pos = { complete_x, complete_y };
@@ -246,13 +251,14 @@ namespace Icy
    {
       if (menu_slide_dir.y == 0)
       {
-         // Render tick if level is complete.
-         if (menu_slide_dir == Pos{} && chapters[chap_select].get_completion(level_select))
-            ui_target.blit(level_complete, {});
-      }
+         unsigned chap = chap_select;
+         if (chap < chapters.size() - 1 && !chapters[chap_select].cleared())
+            ui_target.blit(lock_sprite, {});
 
-      if (menu_slide_dir.y == 0)
-      {
+         // Render tick if level is complete.
+         if (menu_slide_dir.x == 0 && chapters[chap_select].get_completion(level_select))
+            ui_target.blit(level_complete, {});
+
          font.set_id("white");
          font.render_msg(ui_target, Utils::join(chap_select + 1,
                   "-", level_select + 1), 240, 155, Font::RenderAlignment::Right);
@@ -349,9 +355,14 @@ namespace Icy
          }
          else if (level_select == levels_in_chapter - 1 && chap_select < chapter_size - 1)
          {
-            chap_select++;
-            start_slide({(levels_in_chapter - 1) * -8, 8}, preview_slide_cnt);
-            level_select = 0;
+            if (chapters[chap_select].cleared())
+            {
+               chap_select++;
+               start_slide({(levels_in_chapter - 1) * -8, 8}, preview_slide_cnt);
+               level_select = 0;
+            }
+            else
+               get_sfx().play_sfx("chapter_locked", 0.5);
          }
       }
       else if (pressed_menu_up && !old_pressed_menu_up && chap_select > 0)

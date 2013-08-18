@@ -4,8 +4,8 @@
    <menu_bg source="assets/level_select_bg.png"/>
    <game_bg source="assets/bg.png"/>
    <font source="dino.font"/>
-   <arrow source="assets/nav.sprite"/>
    <level_complete source="assets/finished.png"/>
+   <lock_sprite source="assets/lock.png"/>
    <sfx>
       <sound source="assets/sfx/level_next.wav" name="level_next"/>
       <sound source="assets/sfx/chapter_locked.wav" name="chapter_locked"/>

@@ -302,6 +302,8 @@ namespace Icy
          Blit::RenderTarget ui_target;
          Blit::FontCluster font;
 
+         Blit::Surface lock_sprite;
+
          Blit::Surface level_complete;
          Blit::Surface level_select_bg;
          Blit::Surface game_bg;
