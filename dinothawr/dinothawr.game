@@ -15,13 +15,13 @@
       <sound source="assets/sfx/dino_push.wav" name="dino_push"/>
    </sfx>
    <music>
-      <bg source="assets/bg/theme.ogg" volume="0.35"/>
+      <bg source="assets/bg/theme.ogg" volume="0.25"/>
       <bg source="assets/bg/bg1.ogg"/>
       <bg source="assets/bg/bg2.ogg"/>
       <bg source="assets/bg/bg3.ogg"/>
-      <bg source="assets/bg/bg4.ogg"/>
-      <bg source="assets/bg/bg5.ogg"/>
-      <bg source="assets/bg/bg8.ogg"/>
+      <bg source="assets/bg/bg4.ogg" volume="0.75"/>
+      <bg source="assets/bg/bg5.ogg" volume="0.65"/>
+      <bg source="assets/bg/bg8.ogg" volume="0.70"/>
    </music>
    <chapter name="Chapter 1" minimum_clear="5">
       <map source="icy25.tmx" name="Level 25"/>
@@ -90,5 +90,6 @@
       <map source="icy54.tmx" name="Level 54"/>
       <map source="icy55.tmx" name="Level 55"/>
       <map source="icy56.tmx" name="Level 56"/>
+      <map source="icy57.tmx" name="Level 57"/>
    </chapter>
 </game>
