@@ -98,5 +98,6 @@
       <map source="icy60.tmx" name="Level 60"/>
       <map source="icy61.tmx" name="Level 61"/>
       <map source="icy62.tmx" name="Level 62"/>
+      <map source="icy00.tmx" name="Level 00"/>
    </chapter>
 </game>
