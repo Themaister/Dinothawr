@@ -41,62 +41,61 @@
       <map source="icy10.tmx" name="Level 10"/>
       <map source="icy22.tmx" name="Level 22"/>
       <map source="icy12.tmx" name="Level 12"/>
-      <map source="icy40.tmx" name="Level 40"/>
-      <map source="icy44.tmx" name="Level 44"/>
+      <map source="icy60.tmx" name="Level 60"/>
+      <map source="icy57.tmx" name="Level 57"/>
    </chapter>
    <chapter name="Chapter 4">
+      <map source="icy40.tmx" name="Level 40"/>
+      <map source="icy59.tmx" name="Level 59"/>
+      <map source="icy44.tmx" name="Level 44"/>
       <map source="icy11.tmx" name="Level 11"/>
       <map source="icy37.tmx" name="Level 37"/>
-      <map source="icy14.tmx" name="Level 14"/>
-      <map source="icy16.tmx" name="Level 16"/>
-		<map source="icy5.tmx"  name="Level 5"/>
    </chapter>
    <chapter name="Chapter 5">
+      <map source="icy16.tmx" name="Level 16"/>
+		<map source="icy5.tmx"  name="Level 5"/>
       <map source="icy7.tmx"  name="Level 7"/>
       <map source="icy36.tmx" name="Level 36"/>
       <map source="icy38.tmx" name="Level 38"/>
-      <map source="icy30.tmx" name="Level 30"/>
-		<map source="icy2.tmx"  name="Level 2"/>
 	</chapter>
 	<chapter name="Chapter 6">
+      <map source="icy30.tmx" name="Level 30"/>
+		<map source="icy2.tmx"  name="Level 2"/>
       <map source="icy4.tmx"  name="Level 4"/>
       <map source="icy15.tmx" name="Level 15"/>
       <map source="icy27.tmx" name="Level 27"/>
-      <map source="icy28.tmx" name="Level 28"/>
-      <map source="icy6.tmx"  name="Level 6"/>
 	</chapter>
 	<chapter name="Chapter 7">
+      <map source="icy28.tmx" name="Level 28"/>
+      <map source="icy6.tmx"  name="Level 6"/>
       <map source="icy20.tmx" name="Level 20"/>
 		<map source="icy21.tmx" name="Level 21"/>
-      <map source="icy45.tmx" name="Level 45"/>
-      <map source="icy47.tmx" name="Level 47"/>
-      <map source="icy43.tmx" name="Level 43"/>
+      <map source="icy56.tmx" name="Level 56"/>
 	</chapter>
 	<chapter name="Chapter 8">
+      <map source="icy49.tmx" name="Level 49"/>
+      <map source="icy50.tmx" name="Level 50"/>
+      <map source="icy51.tmx" name="Level 51"/>
+      <map source="icy47.tmx" name="Level 47"/>
+      <map source="icy43.tmx" name="Level 43"/>
+   </chapter>
+   <chapter name="Chapter 9">
+      <map source="icy45.tmx" name="Level 45"/>
       <map source="icy42.tmx" name="Level 42"/>
       <map source="icy35.tmx" name="Level 35"/>
       <map source="icy33.tmx" name="Level 33"/>
       <map source="icy46.tmx" name="Level 46"/>
+   </chapter>
+   <chapter name="Chapter 10">
       <map source="icy34.tmx" name="Level 34"/>
-   </chapter>
-   <chapter name="Test">
-      <map source="icy49.tmx" name="Level 49"/>
-      <map source="icy50.tmx" name="Level 50"/>
-      <map source="icy51.tmx" name="Level 51"/>
       <map source="icy52.tmx" name="Level 51"/>
-      <map source="icy53.tmx" name="Level 53"/>
-   </chapter>
-   <chapter name="Test2">
       <map source="icy54.tmx" name="Level 54"/>
-      <map source="icy55.tmx" name="Level 55"/>
-      <map source="icy56.tmx" name="Level 56"/>
-      <map source="icy57.tmx" name="Level 57"/>
-      <map source="icy58.tmx" name="Level 58"/>
-   </chapter>
-   <chapter name="Test3">
-      <map source="icy59.tmx" name="Level 59"/>
-      <map source="icy60.tmx" name="Level 60"/>
       <map source="icy61.tmx" name="Level 61"/>
       <map source="icy62.tmx" name="Level 62"/>
+   </chapter>
+   <chapter name="Test3">
+      <map source="icy53.tmx" name="Level 53"/>
+      <map source="icy58.tmx" name="Level 58"/>
+      <map source="icy55.tmx" name="Level 55"/>
    </chapter>
 </game>
