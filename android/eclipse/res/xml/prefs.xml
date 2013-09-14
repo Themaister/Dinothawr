@@ -25,6 +25,12 @@
         android:defaultValue="false"
         android:key="demo_mode" />
     
+    <CheckBoxPreference
+        android:title="Timer as FPS reference"
+        android:summary="Use the system timer as reference for keeping game speed instead of VSync. Can cause jittery video. Only enable when necessary."
+        android:defaultValue="false"
+        android:key="time_reference" />
+    
     <ListPreference
         android:title="Shader"
         android:summary="Use a shader effect. Only recommended for powerful devices."

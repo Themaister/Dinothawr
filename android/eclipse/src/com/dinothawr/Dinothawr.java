@@ -243,7 +243,7 @@ public class Dinothawr extends Activity {
 		
 		
 		conf = new ConfigFile();
-		conf.setString("dino_timer", "disabled");
+		conf.setString("dino_timer", prefs.getBoolean("time_reference", false) ? "enabled" : "disabled");
 		try {
 			conf.write(new File(dataDir, ".retroarch-core-options.cfg"));
 		} catch (IOException e) {
