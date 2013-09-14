@@ -240,6 +240,15 @@ public class Dinothawr extends Activity {
 		String current_ime = Settings.Secure.getString(getContentResolver(),
 				Settings.Secure.DEFAULT_INPUT_METHOD);
 		intent.putExtra("IME", current_ime);
+		
+		
+		conf = new ConfigFile();
+		conf.setString("dino_timer", "disabled");
+		try {
+			conf.write(new File(dataDir, ".retroarch-core-options.cfg"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 		startActivity(intent);
 	}

@@ -24,6 +24,7 @@ static BGManager bg_music;
 
 static bool use_audio_cb;
 static bool use_frame_time_cb;
+static bool option_use_frame_time;
 
 static retro_usec_t frame_time;
 static retro_usec_t time_reference;
@@ -37,6 +38,10 @@ namespace Icy
    SFXManager& get_sfx() { return sfx; }
    BGManager& get_bg() { return bg_music; }
 }
+
+#ifdef ANDROID
+#include <android/log.h>
+#endif
 
 #define AUDIO_FRAMES (44100 / 60)
 static int16_t audio_buffer[2 * AUDIO_FRAMES];
@@ -82,6 +87,11 @@ static retro_input_state_t input_state_cb;
 void retro_set_environment(retro_environment_t cb)
 {
    environ_cb = cb;
+   retro_variable vars[] = {
+      { "dino_timer", "Timer as FPS reference; enabled|disabled" },
+      { nullptr, nullptr },
+   };
+   cb(RETRO_ENVIRONMENT_SET_VARIABLES, vars);
 }
 
 void retro_set_audio_sample(retro_audio_sample_t cb)
@@ -124,10 +134,34 @@ static void frame_time_cb(retro_usec_t usec)
    frame_time = usec;
 }
 
+static void update_variables()
+{
+   retro_variable var = { "dino_timer" };
+   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+   {
+      if (!strcmp(var.value, "enabled"))
+         option_use_frame_time = true;
+      else if (!strcmp(var.value, "disabled"))
+         option_use_frame_time = false;
+
+#ifdef ANDROID
+      __android_log_print(ANDROID_LOG_INFO, "Dinothawr: ", "Using timer as FPS reference: %s.\n", option_use_frame_time ? "enabled" : "disabled");
+#endif
+   }
+}
+
+static void check_variables()
+{
+   bool update = false;
+   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE_UPDATE, &update) && update)
+      update_variables();
+}
+
 void retro_run(void)
 {
-   if (!use_frame_time_cb)
-      frame_time += time_reference;
+   check_variables();
+   if (!use_frame_time_cb || !option_use_frame_time)
+      frame_time = time_reference;
 
    input_poll_cb();
 
@@ -216,6 +250,7 @@ bool retro_load_game(const struct retro_game_info* info)
       retro_pixel_format fmt = RETRO_PIXEL_FORMAT_XRGB8888;
       environ_cb(RETRO_ENVIRONMENT_SET_PIXEL_FORMAT, &fmt);
 
+      update_variables();
       return true;
    }
    catch (const exception& e)
