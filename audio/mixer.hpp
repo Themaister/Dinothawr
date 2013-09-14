@@ -140,11 +140,15 @@ namespace Audio
          void lock() { m_lock->lock(); }
          void unlock() { m_lock->unlock(); }
 
+         void enable(bool enable) { m_enabled->store(enable); }
+         bool enabled() const { return m_enabled->load(); }
+
       private:
          std::vector<float> buffer;
          std::vector<float> conv_buffer;
          std::vector<std::shared_ptr<Stream>> streams;
          std::unique_ptr<std::recursive_mutex> m_lock;
+         std::unique_ptr<std::atomic<unsigned>> m_enabled; // Have to use pointer as std::atomic is not CopyAssignable.
 
          float master_vol;
          void purge_dead_streams();

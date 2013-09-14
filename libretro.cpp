@@ -129,6 +129,11 @@ static void audio_callback(void)
    }
 }
 
+static void audio_set_state(bool enable)
+{
+   mixer.enable(enable);
+}
+
 static void frame_time_cb(retro_usec_t usec)
 {
    frame_time = usec;
@@ -234,7 +239,7 @@ bool retro_load_game(const struct retro_game_info* info)
 {
    try
    {
-      struct retro_audio_callback cb = { audio_callback };
+      struct retro_audio_callback cb = { audio_callback, audio_set_state };
       use_audio_cb = environ_cb(RETRO_ENVIRONMENT_SET_AUDIO_CALLBACK, &cb);
 
       time_reference = 1000000 / 60;

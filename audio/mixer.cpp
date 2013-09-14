@@ -13,7 +13,11 @@ typedef lock_guard<recursive_mutex> LockGuard;
 
 namespace Audio
 {
-   Mixer::Mixer() : master_vol(1.0f) { m_lock = make_unique<recursive_mutex>(); }
+   Mixer::Mixer() : master_vol(1.0f)
+   {
+      m_enabled = make_unique<std::atomic<unsigned>>();
+      m_lock = make_unique<recursive_mutex>();
+   }
 
    void Mixer::add_stream(shared_ptr<Stream> str)
    {
