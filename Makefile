@@ -27,6 +27,7 @@ else ifeq ($(platform), osx)
    fpic := -fPIC
    SHARED := -dynamiclib
 else
+   CC = gcc
    CXX = g++
    TARGET := $(LIBRETRO)_libretro.dll
    SHARED := -shared -static-libgcc -static-libstdc++ -static -s -Wl,--version-script=link.T -Wl,--no-undefined
