@@ -3,7 +3,7 @@
    <title source="assets/titlescreen.png"/>
    <menu_bg source="assets/level_select_bg.png"/>
    <game_bg source="assets/bg.png"/>
-   <end_bg source="assets/titlescreen.png"/>
+   <end_bg source="assets/ending.png"/>
    <font source="dino.font"/>
    <level_complete source="assets/finished.png"/>
    <lock_sprite source="assets/lock.png"/>
