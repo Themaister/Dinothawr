@@ -58,7 +58,6 @@ namespace Icy
          std::vector<Track> tracks;
          bool first = true;
          unsigned last = 0;
-         float request_volume = 0.0f;
    };
 
    BGManager& get_bg();
