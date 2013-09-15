@@ -71,6 +71,9 @@ namespace Icy
       level_select_bg = cache.from_image(Utils::join(dir, "/", doc.child("game").child("menu_bg").attribute("source").value()));
       level_select_bg.ignore_camera(true);
 
+      end_credit_bg = cache.from_image(Utils::join(dir, "/", doc.child("game").child("end_bg").attribute("source").value()));
+      end_credit_bg.ignore_camera(true);
+
       game_bg = cache.from_image(Utils::join(dir, "/", doc.child("game").child("game_bg").attribute("source").value()));
       game_bg.ignore_camera(true);
    }
@@ -423,14 +426,56 @@ namespace Icy
          chapters[m_current_chap].level(m_current_level).set_best_pushes(pushes);
 
          game.reset();
+         bool trigger_completion = !chapters[m_current_chap].get_completion(m_current_level);
          chapters[m_current_chap].set_completion(m_current_level, true);
          save.serialize();
 
-         if (find_next_unsolved_level(m_current_chap, m_current_level))
-            change_level(m_current_chap, m_current_level);
+         // Go to ending screen on the event that all levels have been cleared.
+         bool cleared_all = trigger_completion;
+         if (trigger_completion)
+         {
+            for (auto& chap : chapters)
+            {
+               if (chap.cleared_count() != chap.num_levels())
+               {
+                  cleared_all = false;
+                  break;
+               }
+            }
+         }
+
+         if (cleared_all)
+         {
+            m_game_state = State::End;
+            old_pressed_menu_ok = true; // Don't allow us to exit immediately after we enter end credits.
+         }
          else
-            enter_menu();
+         {
+            if (find_next_unsolved_level(m_current_chap, m_current_level))
+               change_level(m_current_chap, m_current_level);
+            else
+               enter_menu();
+         }
       }
+   }
+
+   void GameManager::step_end()
+   {
+      ui_target.blit(end_credit_bg, {});
+
+      bool pressed_menu_ok = m_input_cb(Input::Push);
+      bool trigger_ok = pressed_menu_ok && !old_pressed_menu_ok;
+      old_pressed_menu_ok = pressed_menu_ok;
+      bool pressed_menu = m_input_cb(Input::Menu);
+      bool trigger_menu = pressed_menu && !old_pressed_menu;
+      old_pressed_menu = pressed_menu;
+
+      if (trigger_ok || trigger_menu)
+         enter_menu();
+
+      font.set_id("white");
+      font.render_msg(ui_target, "You completed all levels! Awesome! :D\nThanks for playing Dinothawr!", 160, 140, Font::RenderAlignment::Centered, 2);
+      m_video_cb(ui_target.buffer(), ui_target.width(), ui_target.height(), ui_target.width() * sizeof(Pixel));
    }
 
    void GameManager::iterate()
@@ -441,13 +486,14 @@ namespace Icy
          case State::Menu: return step_menu();
          case State::MenuSlide: return step_menu_slide();
          case State::Game: return step_game();
+         case State::End: return step_end();
          default: throw logic_error("Game state is invalid.");
       }
    }
 
    bool GameManager::done() const
    {
-      return !game && m_game_state == State::Game;
+      return false;
    }
 
    unsigned GameManager::total_levels() const

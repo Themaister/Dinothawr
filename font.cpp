@@ -1,5 +1,6 @@
 #include "font.hpp"
 #include "pugixml/pugixml.hpp"
+#include "utils.hpp"
 
 #include <stdexcept>
 
@@ -69,23 +70,18 @@ namespace Blit
    {
       int orig_x = x;
 
-      x -= Font::adjust_x(str, dir);
-
-      for (auto c : str)
+      auto lines = Utils::split(str, '\n');
+      for (auto& line : lines)
       {
-         if (c != '\n')
+         x -= Font::adjust_x(line, dir);
+         for (auto c : line)
          {
             auto& surf = surface(c);
             target.blit_offset(surf, {}, {x, y});
             x += glyphwidth;
          }
-         else
-         {
-            y += glyphheight + newline_offset;
-            x = orig_x;
-
-            x -= Font::adjust_x(str, dir);
-         }
+         y += glyphheight + newline_offset;
+         x = orig_x;
       }
    }
 

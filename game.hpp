@@ -168,7 +168,8 @@ namespace Icy
             Title,
             Menu,
             MenuSlide,
-            Game
+            Game,
+            End
          };
 
          GameManager(const std::string& path_game,
@@ -305,6 +306,7 @@ namespace Icy
 
          Blit::Surface level_complete;
          Blit::Surface level_select_bg;
+         Blit::Surface end_credit_bg;
          Blit::Surface game_bg;
 
          std::function<bool (Input)> m_input_cb;
@@ -321,6 +323,7 @@ namespace Icy
 
          void step_title();
          void step_game();
+         void step_end();
 
          // Menu stuff.
          void enter_menu();
