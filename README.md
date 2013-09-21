@@ -36,7 +36,7 @@ Dinothawr supports a large number of platforms. We only provide bundled builds f
 After release, we expect bundled builds to show up.
 
 ### libretro/RetroArch
-Dinothawr implements the libretro API, and uses e.g. RetroArch as a frontend. On Android, RetroArch is bundled, and is transparent to the user.
+Dinothawr implements the [libretro API](http://libretro.com), and uses e.g. [RetroArch](https://github.com/libretro/RetroArch) as a frontend. On Android, RetroArch is bundled, and is transparent to the user.
 
 ### Building (Android)
 Make sure latest SDKs and NDKs (r9) are installed.
