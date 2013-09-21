@@ -15,7 +15,7 @@ The game itself is a shared library and needs a libretro frontend (e.g. RetroArc
 To play Dinothawr, use the right libretro core, and dinothawr.game as a game ROM.
 An example command line would be:
 
-<tt>retroarch -L dinothawr_libretro_linux_x86_64.so dinothawr/dinothawr.game</tt>
+    retroarch -L dinothawr_libretro_linux_x86_64.so dinothawr/dinothawr.game
 
 ### Controls (gamepad)
 Dinothawrs gamepad control are mapped as shown [here](http://themaister.net/dinothawr/shield.png).
