@@ -59,7 +59,7 @@ Make sure latest SDKs and NDKs (r9) are installed.
     cp -r armeabi-v7a x86 mips "$DINOTHAWR_TOP_FOLDER/android/eclipse/libs/"
 
 #### Copy Dinothawr assets
-    cd $DINOTHAWR_TOP_FOLDER
+    cd "$DINOTHAWR_TOP_FOLDER"
     mkdir -p android/eclipse/assets
     cp -r dinothawr/* android/eclipse/assets/
 
