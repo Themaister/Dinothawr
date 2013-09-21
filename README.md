@@ -7,8 +7,9 @@ Through puzzles it is your task to free the dinos from their ice prison.
 Android APK ([link](http://themaister.net/dinothawr/Dinothawr.apk), [QR](http://themaister.net/dinothawr/qr.png))
 
 ### Downloads (PC)
-Game files ([link](http://themaister.net/dinothawr/dinothawr-data.zip))
-Libretro cores (Win32, Win64, Linux 64-bit) ([link](http://themaister.net/dinothawr/libretro-cores.zip))
+
+   - Game files ([link](http://themaister.net/dinothawr/dinothawr-data.zip))
+   - Libretro cores (Win32, Win64, Linux 64-bit) ([link](http://themaister.net/dinothawr/libretro-cores.zip))
 
 #### Playing the game in RetroArch
 The game itself is a shared library and needs a libretro frontend (e.g. RetroArch) to run.
