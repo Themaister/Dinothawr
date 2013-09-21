@@ -45,7 +45,7 @@ HEADERS := $(wildcard *.hpp) $(wildcard */*.hpp) $(wildcard vorbis/*.h) $(wildca
 SOURCES := $(wildcard *.cpp) $(wildcard */*.cpp)
 CSOURCES := $(wildcard ogg/*.c) $(wildcard vorbis/*.c)
 OBJECTS := $(SOURCES:.cpp=.o) $(CSOURCES:.c=.o)
-CXXFLAGS += -std=gnu++11 -ffast-math -Wall -pedantic $(fpic) -I. -DOV_EXCLUDE_STATIC_CALLBACKS
+CXXFLAGS += -std=gnu++0x -ffast-math -Wall -pedantic $(fpic) -I. -DOV_EXCLUDE_STATIC_CALLBACKS
 CFLAGS += -std=gnu99 -ffast-math $(fpic) -I. -Ivorbis
 
 all: $(TARGET)

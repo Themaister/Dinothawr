@@ -117,6 +117,7 @@ namespace Icy
          CameraManager camera;
 
          unsigned won_frame_cnt;
+         bool m_won_early;
          enum { won_frame_cnt_limit = 60 * 5 };
          bool won_condition();
 

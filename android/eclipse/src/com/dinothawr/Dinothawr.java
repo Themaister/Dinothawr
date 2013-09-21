@@ -48,6 +48,17 @@ public class Dinothawr extends Activity {
 	private boolean isTablet() {
 		return (getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE;
 	}
+	
+	private boolean isGamepadLet() {
+		// If we're a "gamepadlet", don't display questions about overlay.
+		final String[] devices = { "SHIELD", "GAMEMID_BT", "OUYA Console",
+				"R800x", };
+
+		for (String dev : devices)
+			if (android.os.Build.MODEL.equals(dev))
+				return true;
+		return false;
+	}
 
 	private void extractAssets(String folder, String cache) throws IOException {
 		String[] assets = getAssets().list(folder);
@@ -102,12 +113,7 @@ public class Dinothawr extends Activity {
 	}
 
 	private float getRefreshRate() {
-		/*
-		 * WindowManager wm = (WindowManager)
-		 * getSystemService(Context.WINDOW_SERVICE); Display display =
-		 * wm.getDefaultDisplay(); return display.getRefreshRate();
-		 */
-		return 60.0f;
+		return 60.0f; // Doesn't really matter what the real refresh rate is. Audio is threaded.
 	}
 
 	private void runControlDialog() {
@@ -161,6 +167,9 @@ public class Dinothawr extends Activity {
 	}
 	
 	private void runPopupControls() {
+		if (isGamepadLet())
+			return;
+
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(getBaseContext());
 		

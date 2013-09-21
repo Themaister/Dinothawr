@@ -205,6 +205,9 @@ namespace Icy
          level++;
          if (level >= chapters[chap].num_levels())
          {
+            if (!chapters[chap].cleared())
+               break;
+
             chap++;
             level = 0;
          }
@@ -474,7 +477,7 @@ namespace Icy
          enter_menu();
 
       font.set_id("white");
-      font.render_msg(ui_target, "You completed all levels! Awesome! :D\nThanks for playing Dinothawr!", 160, 140, Font::RenderAlignment::Centered, 2);
+      font.render_msg(ui_target, "You completed all levels!\nAwesome! :D\nThanks for playing Dinothawr!", 160, 155, Font::RenderAlignment::Centered, 2);
       m_video_cb(ui_target.buffer(), ui_target.width(), ui_target.height(), ui_target.width() * sizeof(Pixel));
    }
 

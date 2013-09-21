@@ -24,6 +24,7 @@ namespace Icy
          won_frame_cnt(0), is_sliding(false), best_pushes(best_pushes), pushes(0), 
          chapter(chapter), level(level), push(true) 
    {
+      m_won_early = false;
       set_initial_pos(level_path);
       bg = nullptr;
    }
@@ -33,6 +34,7 @@ namespace Icy
          camera(target, player.rect(), {map.pix_width(), map.pix_height()}),
          won_frame_cnt(0), is_sliding(false), push(true) 
    {
+      m_won_early = false;
       set_initial_pos(level_path);
       bg = nullptr;
    }
@@ -148,6 +150,7 @@ namespace Icy
             block.get().offset = player_off;
       }
 
+      m_won_early = (won_frame_cnt >= frame_per_iter * 3) && push.set(m_input_cb(Input::Push));
       return true;
    }
 
@@ -156,13 +159,15 @@ namespace Icy
       won_frame_cnt = 1;
       player_walking = false;
 
+      push.set(true); // Avoid exiting win animation early.
+      m_won_early = false;
       stepper = bind(&Game::win_animation_stepper, this);
       get_sfx().play_sfx("frozen_dino_melt", 0.25);
    }
 
    bool Game::won() const
    {
-      return won_frame_cnt >= won_frame_cnt_limit;
+      return m_won_early || (won_frame_cnt >= won_frame_cnt_limit);
    }
 
    // Checks if all goals on floor and blocks are aligned with each other.
