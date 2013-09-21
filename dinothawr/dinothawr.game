@@ -81,7 +81,7 @@
       <map source="icy45.tmx" name="Level 45"/>
    </chapter>
    <chapter name="Chapter 9">
-      <map source="icy42.tmx" name="Level 42"/>
+      <map source="icy59.tmx" name="Level 59"/>
       <map source="icy46.tmx" name="Level 46"/>
       <map source="icy34.tmx" name="Level 34"/>
       <map source="icy52.tmx" name="Level 51"/>
@@ -89,9 +89,9 @@
    </chapter>
    <chapter name="Chapter 10">
       <map source="icy55.tmx" name="Level 55"/>
-      <map source="icy59.tmx" name="Level 59"/>
-      <map source="icy58.tmx" name="Level 58"/>
-      <map source="icy53.tmx" name="Level 53"/>
+      <map source="icy42.tmx" name="Level 42"/>
       <map source="icy61.tmx" name="Level 61"/>
+      <map source="icy53.tmx" name="Level 53"/>
+      <map source="icy58.tmx" name="Level 58"/>
    </chapter>
 </game>
