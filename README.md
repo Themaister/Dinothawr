@@ -22,6 +22,7 @@ Dinothawrs gamepad control are mapped as shown [here](http://themaister.net/dino
 
 ### Controls (keyboard)
 On PC build of RetroArch, the default keyboard binds are:
+
    - Z: Push
    - X: Toggle menu
    - S: Reset level
