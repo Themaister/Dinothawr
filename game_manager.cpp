@@ -205,6 +205,9 @@ namespace Icy
          level++;
          if (level >= chapters[chap].num_levels())
          {
+            if (!chapters[chap].cleared())
+               break;
+
             chap++;
             level = 0;
          }
