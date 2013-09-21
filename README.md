@@ -1,0 +1,62 @@
+## Dinothawr
+Dinothawr is a block pushing puzzle game on slippery surfaces.
+Our hero is a dinosaur whose friends are trapped in ice.
+Through puzzles it is your task to free the dinos from their ice prison.
+
+### Downloads (Android)
+Android APK ([link](http://themaister.net/dinothawr/Dinothawr.apk), [QR](http://themaister.net/dinothawr/qr.png))
+
+### Downloads (PC)
+Data files (common) ([link](http://themaister.net/dinothawr/dinothawr-data.zip))
+
+### Platforms
+
+Dinothawr supports a large number of platforms. We only provide bundled builds for Android.
+After release, we expect builds to show up soon.
+
+### libretro/RetroArch
+Dinothawr implements the libretro API, and uses e.g. RetroArch as a frontend. On Android, RetroArch is bundled, and is transparent to the user.
+
+### Building (Android)
+Make sure latest SDKs and NDKs (r9) are installed.
+
+#### Clone repo
+    git clone git://github.com/Themaister/Dinothawr.git
+    cd Dinothawr
+    export DINOTHAWR_TOP_FOLDER="$(pwd)"
+
+#### Build native libretro library
+    cd android/eclipse/jni
+    ndk-build -j4
+
+#### Build RetroArch native activity
+    git clone git://github.com/libretro/RetroArch.git
+    cd RetroArch
+    cd android/native/jni
+    ndk-build -j4
+
+#### Copy RetroArch libraries to dinothawr
+    cd ../libs
+    cp -r armeabi-v7a x86 mips "$DINOTHAWR_TOP_FOLDER/android/eclipse/libs/"
+
+#### Copy Dinothawr assets
+    cd $DINOTHAWR_TOP_FOLDER
+    mkdir -p android/eclipse/assets
+    cp -r dinothawr/* android/eclipse/assets/
+
+#### Build Java frontend
+Open Eclipse and import project from `android/eclipse`. You should see Dinothawr assets in assets/ folder, and various libraries in libs/.
+Try running the project on your device, and you should see Dinothawr.apk in android/eclipse/bin/.
+
+### Building (Linux, OSX, Windows)
+
+#### Clone repo
+    git clone git://github.com/Themaister/Dinothawr.git
+    cd Dinothawr
+
+#### Build libretro core
+    make -j4   # (on OSX, you might need make CC=clang CXX="clang++ -stdlib=libc++")
+
+#### Run Dinothawr in RetroArch
+    retroarch -L dinothawr_libretro.so dinothawr/dinothawr.game
+
