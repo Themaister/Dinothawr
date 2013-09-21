@@ -7,7 +7,14 @@ Through puzzles it is your task to free the dinos from their ice prison.
 Android APK ([link](http://themaister.net/dinothawr/Dinothawr.apk), [QR](http://themaister.net/dinothawr/qr.png))
 
 ### Downloads (PC)
-Data files (common) ([link](http://themaister.net/dinothawr/dinothawr-data.zip))
+Game files ([link](http://themaister.net/dinothawr/dinothawr-data.zip))
+Libretro cores (Win32, Win64, Linux 64-bit) ([link](http://themaister.net/dinothawr/libretro-cores.zip))
+
+#### Playing the game in RetroArch
+The game itself is a shared library. To play Dinothawr, use the right libretro core, and dinothawr.game as a game ROM.
+An example command line would be:
+
+    retroarch -L dinothawr_libretro_linux_x86_64.so dinothawr/dinothawr.game
 
 ### Platforms
 
@@ -59,4 +66,9 @@ Try running the project on your device, and you should see Dinothawr.apk in andr
 
 #### Run Dinothawr in RetroArch
     retroarch -L dinothawr_libretro.so dinothawr/dinothawr.game
+
+### Customizing / Hacking 
+Dinothawr is fairly hackable. dinothawr.game is the game file itself. It is a simple XML file which points to all assets used by the game.
+Levels are organized in chapters. Levels themselves are created using the [Tiled](http://www.mapeditor.org/) editor.
+If you want to try making your own levels, make sure you use the "plain XML" format for .tmx files and not the default zlib base64.
 

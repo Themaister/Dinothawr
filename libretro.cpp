@@ -64,7 +64,7 @@ void retro_get_system_info(struct retro_system_info *info)
 {
    memset(info, 0, sizeof(*info));
    info->library_name     = "Dinothawr";
-   info->library_version  = "v0";
+   info->library_version  = "v1.0";
    info->need_fullpath    = true;
    info->valid_extensions = "game";
 }
