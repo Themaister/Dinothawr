@@ -1,4 +1,4 @@
-## Dinothawr
+# Dinothawr
 Dinothawr is a block pushing puzzle game on slippery surfaces.
 Our hero is a dinosaur whose friends are trapped in ice.
 Through puzzles it is your task to free the dinos from their ice prison.
@@ -7,10 +7,14 @@ Through puzzles it is your task to free the dinos from their ice prison.
    - Agnes Heyer (art, level design, some code)
    - Hans-Kristian Arntzen (programming, music, some level design)
 
-### Downloads (Android)
+## Downloads (Android)
 Android APK ([link](http://themaister.net/dinothawr/Dinothawr.apk), [QR](http://themaister.net/dinothawr/qr.png))
 
-### Downloads (PC)
+## Downloads (Bundled Windows 32-bit/64-bit)
+   - Dinothawr v1.0 (Windows 32-bit) [here](http://themaister.net/dinothawr/dinothawr-win32-v1.0.zip)
+   - Dinothawr v1.0 (Windows 64-bit) [here](http://themaister.net/dinothawr/dinothawr-win64-v1.0.zip)
+
+### Downloads (Other)
 
    - Game files ([link](http://themaister.net/dinothawr/dinothawr-data.zip))
    - Libretro cores (Win32, Win64, Linux 64-bit) ([link](http://themaister.net/dinothawr/libretro-cores.zip))
