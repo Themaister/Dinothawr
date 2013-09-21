@@ -11,15 +11,27 @@ Game files ([link](http://themaister.net/dinothawr/dinothawr-data.zip))
 Libretro cores (Win32, Win64, Linux 64-bit) ([link](http://themaister.net/dinothawr/libretro-cores.zip))
 
 #### Playing the game in RetroArch
-The game itself is a shared library. To play Dinothawr, use the right libretro core, and dinothawr.game as a game ROM.
+The game itself is a shared library and needs a libretro frontend (e.g. RetroArch) to run.
+To play Dinothawr, use the right libretro core, and dinothawr.game as a game ROM.
 An example command line would be:
 
-    retroarch -L dinothawr_libretro_linux_x86_64.so dinothawr/dinothawr.game
+<tt>retroarch -L dinothawr_libretro_linux_x86_64.so dinothawr/dinothawr.game</tt>
+
+### Controls (gamepad)
+Dinothawrs gamepad control are mapped as shown [here](http://themaister.net/dinothawr/shield.png).
+
+### Controls (keyboard)
+On PC build of RetroArch, the default keyboard binds are:
+   - Z: Push
+   - X: Toggle menu
+   - S: Reset level
+   - Arrow keys: Move around
+   - Escape: Exit game
 
 ### Platforms
 
 Dinothawr supports a large number of platforms. We only provide bundled builds for Android.
-After release, we expect builds to show up soon.
+After release, we expect bundled builds to show up.
 
 ### libretro/RetroArch
 Dinothawr implements the libretro API, and uses e.g. RetroArch as a frontend. On Android, RetroArch is bundled, and is transparent to the user.

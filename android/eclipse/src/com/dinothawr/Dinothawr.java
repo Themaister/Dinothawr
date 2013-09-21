@@ -167,12 +167,14 @@ public class Dinothawr extends Activity {
 	}
 	
 	private void runPopupControls() {
-		if (isGamepadLet())
-			return;
-
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(getBaseContext());
 		
+		if (isGamepadLet()) {
+			prefs.edit().putBoolean("overlay_enable", false).commit();
+			return;
+		}
+
 		boolean demoMode = prefs.getBoolean("demo_mode", false);
 		boolean firstTime = prefs.getBoolean("first_time", true);
 
