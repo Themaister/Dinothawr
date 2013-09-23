@@ -32,6 +32,7 @@ else ifeq ($(platform), ios)
    TARGET := $(LIBRETRO)_libretro_ios.dylib
    fpic := -fPIC
    SHARED := -dynamiclib
+   LDFLAGS += -stdlib=libc++
    CC = clang -arch armv7 -isysroot $(IOSSDK)
    CXX = clang++ -arch armv7 -isysroot $(IOSSDK)
    CXXFLAGS += -std=c++11 $(LDFLAGS)
@@ -52,7 +53,7 @@ endif
 
 ifneq ($(platform), osx)
 ifneq ($(platform), ios)
-CXXFLAGS += -std=gnu++0x -stdlib=libc++
+CXXFLAGS += -std=gnu++0x
 CFLAGS += -std=gnu99
 endif
 endif
