@@ -4,6 +4,8 @@
 #include "utils.hpp"
 #include <algorithm>
 #include <cstdint>
+#include <vector>
+
 #include <climits>
 
 #if defined(__SSE2__) && defined(USE_SIMD)

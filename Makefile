@@ -25,7 +25,17 @@ ifeq ($(platform), unix)
 else ifeq ($(platform), osx)
    TARGET := $(LIBRETRO)_libretro.dylib
    fpic := -fPIC
+   CC = clang
+   CXX = clang++
    SHARED := -dynamiclib
+   CXXFLAGS += -std=c++11 -stdlib=libc++
+else ifeq ($(platform), ios)
+   TARGET := $(LIBRETRO)_libretro_ios.dylib
+   fpic := -fPIC
+   SHARED := -dynamiclib
+   CC = clang -arch armv7 -isysroot $(IOSSDK)
+   CXX = clang++ -arch armv7 -isysroot $(IOSSDK)
+   CXXFLAGS += -std=c++11
 else
    CC = gcc
    CXX = g++
@@ -41,12 +51,19 @@ else
    CFLAGS += -O3
 endif
 
+ifneq ($(platform), osx)
+ifneq ($(platform), ios)
+CXXFLAGS += -std=gnu++0x -stdlib=libc++
+CFLAGS += -std=gnu99
+endif
+endif
+
 HEADERS := $(wildcard *.hpp) $(wildcard */*.hpp) $(wildcard vorbis/*.h) $(wildcard ogg/*.h)
 SOURCES := $(wildcard *.cpp) $(wildcard */*.cpp)
 CSOURCES := $(wildcard ogg/*.c) $(wildcard vorbis/*.c)
 OBJECTS := $(SOURCES:.cpp=.o) $(CSOURCES:.c=.o)
-CXXFLAGS += -std=gnu++0x -ffast-math -Wall -pedantic $(fpic) -I. -DOV_EXCLUDE_STATIC_CALLBACKS
-CFLAGS += -std=gnu99 -ffast-math $(fpic) -I. -Ivorbis
+CXXFLAGS += -ffast-math -Wall -pedantic $(fpic) -I. -DOV_EXCLUDE_STATIC_CALLBACKS
+CFLAGS += -ffast-math $(fpic) -I. -Ivorbis
 
 all: $(TARGET)
 
