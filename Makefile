@@ -25,17 +25,16 @@ ifeq ($(platform), unix)
 else ifeq ($(platform), osx)
    TARGET := $(LIBRETRO)_libretro.dylib
    fpic := -fPIC
-   CC = clang
-   CXX = clang++
    SHARED := -dynamiclib
-   CXXFLAGS += -std=c++11 -stdlib=libc++
+   LDFLAGS += -stdlib=libc++
+   CXXFLAGS += -std=c++11 $(LDFLAGS)
 else ifeq ($(platform), ios)
    TARGET := $(LIBRETRO)_libretro_ios.dylib
    fpic := -fPIC
    SHARED := -dynamiclib
    CC = clang -arch armv7 -isysroot $(IOSSDK)
    CXX = clang++ -arch armv7 -isysroot $(IOSSDK)
-   CXXFLAGS += -std=c++11
+   CXXFLAGS += -std=c++11 $(LDFLAGS)
 else
    CC = gcc
    CXX = g++
@@ -68,7 +67,7 @@ CFLAGS += -ffast-math $(fpic) -I. -Ivorbis
 all: $(TARGET)
 
 $(TARGET): $(OBJECTS)
-	$(CXX) $(fpic) $(SHARED) $(INCLUDES) -o $@ $(OBJECTS) $(LIBS) -lm -lz
+	$(CXX) $(fpic) $(SHARED) $(LDFLAGS) $(INCLUDES) -o $@ $(OBJECTS) $(LIBS) -lm -lz
 
 %.o: %.cpp $(HEADERS)
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
