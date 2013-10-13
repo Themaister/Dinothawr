@@ -1,4 +1,3 @@
-
 DEBUG = 0
 
 ifeq ($(platform),)
@@ -18,7 +17,7 @@ LIBRETRO := dinothawr
 LIBDIR = $(DESTDIR)/usr/lib/libretro
 ASSETDIR = $(DESTDIR)/usr/share/dinothawr
 
-ifeq ($(platform), unix)
+ifneq (,$(findstring unix,$(platform)))
    TARGET := $(LIBRETRO)_libretro.so
    fpic := -fPIC
    SHARED := -shared -Wl,--version-script=link.T -Wl,--no-undefined
