@@ -1,4 +1,3 @@
-
 DEBUG = 0
 
 ifeq ($(platform),)
@@ -18,7 +17,7 @@ LIBRETRO := dinothawr
 LIBDIR = $(DESTDIR)/usr/lib/libretro
 ASSETDIR = $(DESTDIR)/usr/share/dinothawr
 
-ifeq ($(platform), unix)
+ifneq (,$(findstring unix,$(platform)))
    TARGET := $(LIBRETRO)_libretro.so
    fpic := -fPIC
    SHARED := -shared -Wl,--version-script=link.T -Wl,--no-undefined
@@ -33,9 +32,9 @@ else ifeq ($(platform), ios)
    fpic := -fPIC
    SHARED := -dynamiclib
    LDFLAGS += -stdlib=libc++
-   CC = clang -arch armv7 -isysroot $(IOSSDK)
-   CXX = clang++ -arch armv7 -isysroot $(IOSSDK)
-   CXXFLAGS += -std=c++11 $(LDFLAGS)
+   CC = clang -arch armv7 -isysroot $(IOSSDK) -miphoneos-version-min=5.0
+   CXX = clang++ -arch armv7 -isysroot $(IOSSDK) -miphoneos-version-min=5.0
+   CXXFLAGS += -std=c++11 $(LDFLAGS) -miphoneos-version-min=5.0
 else
    CC = gcc
    CXX = g++
