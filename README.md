@@ -94,3 +94,4 @@ Dinothawr is fairly hackable. dinothawr.game is the game file itself. It is a si
 Levels are organized in chapters. Levels themselves are created using the [Tiled](http://www.mapeditor.org/) editor.
 If you want to try making your own levels, make sure you use the "plain XML" format for .tmx files and not the default zlib base64.
 
+[Level design guide](http://retinaleclipse.com/dinothawr-guide.pdf) (pdf)
