@@ -26,6 +26,14 @@ static bool use_audio_cb;
 static bool use_frame_time_cb;
 static bool option_use_frame_time;
 
+retro_log_printf_t log_cb;
+static retro_video_refresh_t video_cb;
+static retro_audio_sample_t audio_cb;
+static retro_audio_sample_batch_t audio_batch_cb;
+static retro_environment_t environ_cb;
+static retro_input_poll_t input_poll_cb;
+static retro_input_state_t input_state_cb;
+
 static retro_usec_t frame_time;
 static retro_usec_t time_reference;
 static retro_usec_t total_time;
@@ -39,15 +47,17 @@ namespace Icy
    BGManager& get_bg() { return bg_music; }
 }
 
-#ifdef ANDROID
-#include <android/log.h>
-#endif
-
 #define AUDIO_FRAMES (44100 / 60)
 static int16_t audio_buffer[2 * AUDIO_FRAMES];
 
 void retro_init(void)
-{}
+{
+   struct retro_log_callback log;
+
+   environ_cb(RETRO_ENVIRONMENT_GET_LOG_INTERFACE, &log);
+   if (log.log)
+      log_cb = log.log;
+}
 
 void retro_deinit(void)
 {}
@@ -77,12 +87,6 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
    info->geometry = { width, height, width, height };
 }
 
-static retro_video_refresh_t video_cb;
-static retro_audio_sample_t audio_cb;
-static retro_audio_sample_batch_t audio_batch_cb;
-static retro_environment_t environ_cb;
-static retro_input_poll_t input_poll_cb;
-static retro_input_state_t input_state_cb;
 
 void retro_set_environment(retro_environment_t cb)
 {
@@ -149,9 +153,8 @@ static void update_variables()
       else if (!strcmp(var.value, "disabled"))
          option_use_frame_time = false;
 
-#ifdef ANDROID
-      __android_log_print(ANDROID_LOG_INFO, "Dinothawr: ", "Using timer as FPS reference: %s.\n", option_use_frame_time ? "enabled" : "disabled");
-#endif
+      if (log_cb)
+         log_cb(RETRO_LOG_INFO, "Dinothawr: ", "Using timer as FPS reference: %s.\n", option_use_frame_time ? "enabled" : "disabled");
    }
 }
 
