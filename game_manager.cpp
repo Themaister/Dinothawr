@@ -10,10 +10,6 @@ using namespace Blit;
 using namespace pugi;
 using namespace std;
 
-#ifdef ANDROID
-#include <android/log.h>
-#endif
-
 namespace Icy
 {
    GameManager::GameManager(const string& path_game,
@@ -600,9 +596,8 @@ namespace Icy
       last++;
       save = save.substr(0, last);
 
-#ifdef ANDROID
-      __android_log_print(ANDROID_LOG_INFO, "Dinothawr: ", "Save file: \n%s\n", save.c_str());
-#endif
+      if (log_cb)
+         log_cb(RETRO_LOG_INFO, "Dinothawr: ", "Save file: \n%s\n", save.c_str());
 
       auto chapters = Utils::split(save, '\n');
       auto chap_itr = begin(chaps);

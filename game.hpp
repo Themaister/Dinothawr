@@ -12,6 +12,8 @@
 #include <functional>
 #include <random>
 
+#include "libretro.h"
+
 namespace Icy
 {
    Audio::Mixer& get_mixer();
@@ -364,6 +366,8 @@ namespace Icy
          };
    };
 }
+
+extern retro_log_printf_t log_cb;
 
 #endif
 
