@@ -23,7 +23,7 @@ ifneq (,$(findstring unix,$(platform)))
    SHARED := -shared -Wl,--version-script=link.T -Wl,--no-undefined
 else ifeq ($(platform), osx)
    TARGET := $(LIBRETRO)_libretro.dylib
-   fpic := -fPIC
+   fpic := -fPIC -mmacosx-version-min=10.7
    SHARED := -dynamiclib
    LDFLAGS += -stdlib=libc++
    CXXFLAGS += -std=c++11 $(LDFLAGS)
