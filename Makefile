@@ -42,6 +42,13 @@ else ifeq ($(platform), wii)
    AR = $(DEVKITPPC)/bin/powerpc-eabi-ar$(EXE_EXT)
    PLATFORM_DEFINES += -DGEKKO -DHW_RVL -mrvl -mcpu=750 -meabi -mhard-float
 	STATIC_LINKING = 1
+else ifeq ($(platform), psp1)
+   TARGET := $(TARGET_NAME)_libretro_psp1.a
+   CC = psp-gcc$(EXE_EXT)
+   CXX = psp-g++$(EXE_EXT)
+   AR = psp-ar$(EXE_EXT)
+   PLATFORM_DEFINES += -DPSP -G0 -DLSB_FIRST -std=gnu++0x
+	STATIC_LINKING = 1
 else
    CC = gcc
    CXX = g++
