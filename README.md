@@ -8,7 +8,7 @@ Through puzzles it is your task to free the dinos from their ice prison.
    - Hans-Kristian Arntzen (programming, music, some level design)
 
 ## Downloads (Android)
-Android APK ([link](http://themaister.net/dinothawr/Dinothawr.apk), [QR](http://themaister.net/dinothawr/qr.png))
+Android APK ([Google Play](https://play.google.com/store/apps/details?id=com.dinothawr), [direct download](http://themaister.net/dinothawr/Dinothawr.apk), [QR for direct download](http://themaister.net/dinothawr/qr.png))
 
 ## Downloads (Bundled Windows 32-bit/64-bit)
    - Dinothawr v1.0 (Windows 32-bit) [here](http://themaister.net/dinothawr/dinothawr-win32-v1.0.zip)
