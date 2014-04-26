@@ -23,18 +23,28 @@ ifneq (,$(findstring unix,$(platform)))
    SHARED := -shared -Wl,--version-script=link.T -Wl,--no-undefined
 else ifeq ($(platform), osx)
    TARGET := $(LIBRETRO)_libretro.dylib
-   fpic := -fPIC -mmacosx-version-min=10.7
+   fpic := -fPIC
    SHARED := -dynamiclib
    LDFLAGS += -stdlib=libc++
    CXXFLAGS += -std=c++11 $(LDFLAGS)
+OSXVER = `sw_vers -productVersion | cut -c 4`
+ifneq ($(OSXVER),9)
+   fpic += -mmacosx-version-min=10.7
+endif
 else ifeq ($(platform), ios)
    TARGET := $(LIBRETRO)_libretro_ios.dylib
    fpic := -fPIC
    SHARED := -dynamiclib
    LDFLAGS += -stdlib=libc++
-   CC = clang -arch armv7 -isysroot $(IOSSDK) -miphoneos-version-min=5.0
-   CXX = clang++ -arch armv7 -isysroot $(IOSSDK) -miphoneos-version-min=5.0
-   CXXFLAGS += -std=c++11 $(LDFLAGS) -miphoneos-version-min=5.0
+   CC = clang -arch armv7 -isysroot $(IOSSDK)
+   CXX = clang++ -arch armv7 -isysroot $(IOSSDK)
+   CXXFLAGS += -std=c++11 $(LDFLAGS)
+OSXVER = `sw_vers -productVersion | cut -c 4`
+ifneq ($(OSXVER),9)
+   CC += -miphoneos-version-min=5.0
+   CXX += -miphoneos-version-min=5.0
+   CXXFLAGS += -miphoneos-version-min=5.0
+endif
 else ifeq ($(platform), wii)
    TARGET := $(TARGET_NAME)_libretro_wii.a
    CC = $(DEVKITPPC)/bin/powerpc-eabi-gcc$(EXE_EXT)
