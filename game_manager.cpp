@@ -597,7 +597,7 @@ namespace Icy
       save = save.substr(0, last);
 
       if (log_cb)
-         log_cb(RETRO_LOG_INFO, "Dinothawr: ", "Save file: \n%s\n", save.c_str());
+         log_cb(RETRO_LOG_INFO, "Dinothawr: Save file: \n%s\n", save.c_str());
 
       auto chapters = Utils::split(save, '\n');
       auto chap_itr = begin(chaps);

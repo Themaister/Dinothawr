@@ -77,14 +77,14 @@ namespace Blit
       inline std::string tolower(const std::string& str)
       {
          std::string tmp;
-         std::transform(std::begin(str), std::end(str), std::back_inserter(tmp), [](char c) -> char { return ::tolower(c); });
+         std::transform(str.begin(), str.end(), std::back_inserter(tmp), [](char c) -> char { return ::tolower(c); });
          return tmp;
       }
 
       inline std::string toupper(const std::string& str)
       {
          std::string tmp;
-         std::transform(std::begin(str), std::end(str), std::back_inserter(tmp), [](char c) -> char { return ::toupper(c); });
+         std::transform(str.begin(), str.end(), std::back_inserter(tmp), [](char c) -> char { return ::toupper(c); });
          return tmp;
       }
 
@@ -110,7 +110,7 @@ namespace Blit
       inline auto find_or_default(const T& mapper, const typename T::key_type& key, const typename T::mapped_type& def) -> typename T::mapped_type
       {
          auto itr = mapper.find(key);
-         if (itr == std::end(mapper))
+         if (itr == mapper.end())
             return def;
 
          return itr->second;
