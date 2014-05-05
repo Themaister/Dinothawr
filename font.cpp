@@ -13,26 +13,26 @@ namespace Blit
 
    Font::Font(const string& font)
    {
-      auto dir = Utils::basedir(font);
+      string dir = Utils::basedir(font);
 
       xml_document doc;
       if (!doc.load_file(font.c_str()))
          throw runtime_error(Utils::join("Failed to load font: ", font, "."));
 
-      auto glyph       = doc.child("font").child("glyphs");
+      xml_node glyph       = doc.child("font").child("glyphs");
       char start_ascii = glyph.attribute("startascii").as_int();
 
       int width   = glyph.attribute("width").as_int();
       int height  = glyph.attribute("height").as_int();
       glyphwidth  = glyph.attribute("glyphwidth").as_int();
       glyphheight = glyph.attribute("glyphheight").as_int();
-      auto source = glyph.attribute("source").value();
+      const char * source = glyph.attribute("source").value();
 
       if (!width || !height || !glyphwidth || !glyphheight)
          throw logic_error("Invalid glpyh arguments.");
 
       SurfaceCache cache;
-      auto surf = cache.from_image(Utils::join(dir, "/", source));
+      Surface surf = cache.from_image(Utils::join(dir, "/", source));
 
       if (surf.rect().w != width * glyphwidth || surf.rect().h != height * glyphheight)
          throw logic_error("Geometry of font and attributes do not match.");

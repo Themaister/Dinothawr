@@ -18,7 +18,7 @@ namespace Blit
       if (!doc.load_file(path.c_str()))
          throw std::runtime_error(Utils::join("Failed to load XML map: ", path, "."));
 
-      auto map   = doc.child("map");
+      xml_node map   = doc.child("map");
       width      = map.attribute("width").as_int();
       height     = map.attribute("height").as_int();
       tilewidth  = map.attribute("tilewidth").as_int();

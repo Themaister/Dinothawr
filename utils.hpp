@@ -67,7 +67,7 @@ namespace Blit
 
       inline std::string basedir(const std::string& path)
       {
-         auto last = path.find_last_of("/\\");
+         std::string::size_type last = path.find_last_of("/\\");
          if (last != std::string::npos)
             return path.substr(0, last);
          else
