@@ -15,7 +15,7 @@ namespace Blit
 
    void RenderTarget::clear(Pixel pix)
    {
-      std::fill(std::begin(m_buffer), std::end(m_buffer), pix);
+      std::fill(m_buffer.begin(), m_buffer.end(), pix);
    }
 
    Surface RenderTarget::convert_surface()

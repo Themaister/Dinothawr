@@ -186,11 +186,11 @@ namespace Icy
          return a.surf.rect().pos < b.surf.rect().pos;
       };
 
-      sort(begin(goal_floor), end(goal_floor), func);
-      sort(begin(goal_blocks), end(goal_blocks), func);
+      sort(goal_floor.begin(), goal_floor.end(), func);
+      sort(goal_blocks.begin(), goal_blocks.end(), func);
 
-      return equal(begin(goal_floor), end(goal_floor),
-            begin(goal_blocks), [](const SurfaceCluster::Elem& a, const SurfaceCluster::Elem& b) {
+      return equal(goal_floor.begin(), goal_floor.end(),
+            goal_blocks.begin(), [](const SurfaceCluster::Elem& a, const SurfaceCluster::Elem& b) {
                return a.surf.rect().pos == b.surf.rect().pos;
             });
    }

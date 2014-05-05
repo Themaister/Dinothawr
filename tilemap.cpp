@@ -96,7 +96,7 @@ namespace Blit
          {
             int id = first_gid + id_cnt;
             tiles[id] = surf.sub({{x, y}, tilewidth, tileheight});
-            std::copy(std::begin(global_attr), std::end(global_attr), std::inserter(tiles[id].attr(), std::begin(tiles[id].attr()))); 
+            std::copy(global_attr.begin(), global_attr.end(), std::inserter(tiles[id].attr(), std::begin(tiles[id].attr()))); 
          }
       }
 
@@ -106,11 +106,11 @@ namespace Blit
          int id = first_gid + tile.attribute("id").as_int();
 
          auto attrs = get_attributes(tile.child("properties"), "property");
-         std::copy(std::begin(global_attr), std::end(global_attr), std::inserter(attrs, std::begin(attrs)));
+         std::copy(global_attr.begin(), global_attr.end(), std::inserter(attrs, std::begin(attrs)));
 
          auto itr = attrs.find("sprite");
 
-         if (itr != std::end(attrs))
+         if (itr != attrs.end())
             tiles[id] = cache.from_sprite(Utils::join(dir, "/", itr->second));
 
          tiles[id].attr() = std::move(attrs);
@@ -196,11 +196,11 @@ namespace Blit
       auto& layer = m_layers.at(layer_index);
       auto& elems = layer.cluster.vec();
 
-      auto itr = std::find_if(std::begin(elems), std::end(elems), [offset](const SurfaceCluster::Elem& elem) {
+      auto itr = std::find_if(elems.begin(), elems.end(), [offset](const SurfaceCluster::Elem& elem) {
                return (elem.surf.rect().pos + elem.offset) == offset;
             });
 
-      if (itr == std::end(elems))
+      if (itr == elems.end())
          return nullptr;
 
       return &itr->surf;
@@ -208,11 +208,11 @@ namespace Blit
 
    Surface* Tilemap::find_tile(const std::string& name, Pos pos)
    {
-      auto layer = std::find_if(std::begin(m_layers), std::end(m_layers), [&name](const Layer& layer) {
+      auto layer = std::find_if(m_layers.begin(), m_layers.end(), [&name](const Layer& layer) {
                return Utils::tolower(layer.name) == name;
             });
 
-      if (layer == std::end(m_layers))
+      if (layer == m_layers.end())
          return nullptr;
 
       return find_tile(std::distance(std::begin(m_layers), layer), pos);
@@ -223,11 +223,11 @@ namespace Blit
       auto& layer = m_layers.at(layer_index);
       auto& elems = layer.cluster.vec();
 
-      auto itr = std::find_if(std::begin(elems), std::end(elems), [offset](const SurfaceCluster::Elem& elem) {
+      auto itr = std::find_if(elems.begin(), elems.end(), [offset](const SurfaceCluster::Elem& elem) {
                return (elem.surf.rect().pos + elem.offset) == offset;
             });
 
-      if (itr == std::end(elems))
+      if (itr == elems.end())
          return nullptr;
 
       return &itr->surf;
@@ -235,23 +235,23 @@ namespace Blit
 
    const Surface* Tilemap::find_tile(const std::string& name, Pos pos) const
    {
-      auto layer = std::find_if(std::begin(m_layers), std::end(m_layers), [&name](const Layer& layer) {
+      auto layer = std::find_if(m_layers.begin(), m_layers.end(), [&name](const Layer& layer) {
                return Utils::tolower(layer.name) == name;
             });
 
-      if (layer == std::end(m_layers))
+      if (layer == m_layers.end())
          return nullptr;
 
-      return find_tile(std::distance(std::begin(m_layers), layer), pos);
+      return find_tile(std::distance(m_layers.begin(), layer), pos);
    }
 
    const Tilemap::Layer* Tilemap::find_layer(const std::string& name) const
    {
-      auto layer = std::find_if(std::begin(m_layers), std::end(m_layers), [&name](const Layer& layer) {
+      auto layer = std::find_if(m_layers.begin(), m_layers.end(), [&name](const Layer& layer) {
                return Utils::tolower(layer.name) == name;
             });
 
-      if (layer != std::end(m_layers))
+      if (layer != m_layers.end())
          return &*layer;
       else
          return nullptr;
@@ -259,23 +259,23 @@ namespace Blit
 
    int Tilemap::find_layer_index(const std::string& name) const
    {
-      auto layer = std::find_if(std::begin(m_layers), std::end(m_layers), [&name](const Layer& layer) {
+      auto layer = std::find_if(m_layers.begin(), m_layers.end(), [&name](const Layer& layer) {
                return Utils::tolower(layer.name) == name;
             });
 
-      if (layer != std::end(m_layers))
-         return layer - std::begin(m_layers);
+      if (layer != m_layers.end())
+         return layer - m_layers.begin();
       else
          return -1;
    }
 
    Tilemap::Layer* Tilemap::find_layer(const std::string& name)
    {
-      auto layer = std::find_if(std::begin(m_layers), std::end(m_layers), [&name](const Layer& layer) {
+      auto layer = std::find_if(m_layers.begin(), m_layers.end(), [&name](const Layer& layer) {
                return Utils::tolower(layer.name) == name;
             });
 
-      if (layer != std::end(m_layers))
+      if (layer != m_layers.end())
          return &*layer;
       else
          return nullptr;

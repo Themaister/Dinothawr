@@ -52,7 +52,7 @@ namespace Blit
    const Surface& Font::surface(char c) const
    {
       auto itr = surf_map.find(c);
-      if (itr == end(surf_map))
+      if (itr == surf_map.end())
          throw logic_error(Utils::join("Character '", c, "' not found in font."));
 
       return itr->second;
@@ -113,7 +113,7 @@ namespace Blit
    Pos FontCluster::glyph_size() const
    {
       auto itr = fonts_map.find(current_id);
-      if (itr == end(fonts_map))
+      if (itr == fonts_map.end())
          throw runtime_error(Utils::join("Font ID: ", current_id, " not found in map!"));
 
       auto& fonts = itr->second;
@@ -125,8 +125,8 @@ namespace Blit
          return a.glyph_size().y < b.glyph_size().y;
       };
 
-      auto max_x = max_element(begin(fonts), end(fonts), func_x);
-      auto max_y = max_element(begin(fonts), end(fonts), func_y);
+      auto max_x = max_element(fonts.begin(), fonts.end(), func_x);
+      auto max_y = max_element(fonts.begin(), fonts.end(), func_y);
 
       return {max_x->glyph_size().x, max_y->glyph_size().y};
    }

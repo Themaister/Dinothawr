@@ -24,7 +24,7 @@ namespace Blit
       Pos size{alts.front().data->w, alts.front().data->h};
       m_rect = {{0, 0}, size.x, size.y};
 
-      bool same_size = all_of(begin(alts) + 1, end(alts), [&alts, size](const Alt& alt) {
+      bool same_size = all_of(alts.begin() + 1, alts.end(), [&alts, size](const Alt& alt) {
                return size == Pos{alt.data->w, alt.data->h};
             });
 
@@ -104,7 +104,7 @@ namespace Blit
       pix.reserve(data->w * data->h);
 
       auto& orig = data->pixels;
-      transform(begin(orig), end(orig), back_inserter(pix), [pixel](Pixel old) {
+      transform(orig.begin(), orig.end(), back_inserter(pix), [pixel](Pixel old) {
             return old & static_cast<Pixel>(Pixel::alpha_mask) ? pixel : Pixel();
          });
 
@@ -128,7 +128,7 @@ namespace Blit
    Surface::Data::Data(Pixel pixel, int w, int h)
       : pixels(w * h)
    {
-      fill(begin(pixels), end(pixels), pixel);
+      fill(pixels.begin(), pixels.end(), pixel);
    }
 }
 
