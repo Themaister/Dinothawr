@@ -34,9 +34,9 @@ namespace Blit
          Surface(std::shared_ptr<const Data> data);
          Surface(const std::vector<Alt>& alts, const std::string& start_id);
          Surface(const Surface&) = default;
-         Surface& operator=(const Surface&) = default;
+         Surface& operator=(const Surface&);
          Surface(Surface&&) = default;
-         Surface& operator=(Surface&&) = default;
+         Surface& operator=(Surface&&)= default;
 
          Surface sub(Rect rect) const;
          void refill_color(Pixel pix);
@@ -50,7 +50,7 @@ namespace Blit
          Pixel pixel(Pos pos) const;
          const Pixel* pixel_raw(Pos pos) const;
 
-         std::pair<std::string, unsigned> active_alt() const { return { m_active_alt, m_active_alt_index }; }
+         std::pair<std::string, unsigned> active_alt() const { return std::pair<std::string, unsigned>(m_active_alt, m_active_alt_index); }
          void active_alt(const std::string& id, unsigned index = 0);
          void active_alt_index(unsigned index);
 
@@ -95,8 +95,8 @@ namespace Blit
          };
 
          SurfaceCluster() = default;
-         SurfaceCluster(SurfaceCluster&&) = default;
-         SurfaceCluster& operator=(SurfaceCluster&&) = default;
+         SurfaceCluster(SurfaceCluster&&)= default;
+         SurfaceCluster& operator=(SurfaceCluster&&);
 
          std::vector<Elem>& vec();
          const std::vector<Elem>& vec() const;
