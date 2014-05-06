@@ -15,7 +15,7 @@ namespace Blit
          const Surface& surface(char c) const; 
          Pos glyph_size() const { return Pos(glyphwidth, glyphheight); }
 
-         enum class RenderAlignment : unsigned
+         enum RenderAlignment
          {
             Left = 0,
             Right,
@@ -45,7 +45,7 @@ namespace Blit
          void add_font(const std::string& font, Pos offset, Pixel color, std::string id = "");
          void set_id(std::string id);
          void render_msg(RenderTarget& target, const std::string& msg, int x, int y,
-               Font::RenderAlignment dir = Font::RenderAlignment::Left, int newline_offset = 0) const;
+               Font::RenderAlignment dir = Font::Left, int newline_offset = 0) const;
 
       private:
          struct OffsetFont : public Font
