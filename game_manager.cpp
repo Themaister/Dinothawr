@@ -96,8 +96,8 @@ namespace Icy
    void GameManager::init_sfx(xml_node doc)
    {
       auto sfx = doc.child("game").child("sfx");
-      Utils::xml_node_walker walk{sfx, "sound", "name"};
-      Utils::xml_node_walker walk_source{sfx, "sound", "source"};
+      Utils::xml_node_walker walk(sfx, "sound", "name");
+      Utils::xml_node_walker walk_source(sfx, "sound", "source");
 
       vector<pair<string, string>> sfxs;
       for (auto& val : walk)
@@ -139,7 +139,7 @@ namespace Icy
          i++;
       }
 
-      Chapter loaded_chap = { move(levels), chap.attribute("name").value() };
+      Chapter loaded_chap = Chapter(move(levels), chap.attribute("name").value());
       loaded_chap.set_minimum_clear(chap.attribute("minimum_clear").as_int());
       return move(loaded_chap);
    }
@@ -460,7 +460,7 @@ namespace Icy
 
    void GameManager::step_end()
    {
-      ui_target.blit(end_credit_bg, {});
+      ui_target.blit(end_credit_bg, Rect());
 
       bool pressed_menu_ok = m_input_cb(Input::Push);
       bool trigger_ok = pressed_menu_ok && !old_pressed_menu_ok;
@@ -548,13 +548,13 @@ namespace Icy
       game.iterate();
 
       preview = Surface(make_shared<Surface::Data>(std::move(data), preview_width, preview_height));
-      pos(Pos{Game::fb_width, Game::fb_height} / scale_factor - Pos{5, 5});
+      pos(Pos(Game::fb_width, Game::fb_height) / scale_factor - Pos(5, 5));
    }
 
    void GameManager::Level::render(RenderTarget& target) const
    {
       //preview.rect().pos = position;
-      target.blit_offset(preview, {}, position); 
+      target.blit_offset(preview, Rect(), position); 
    }
 
    GameManager::SaveManager::SaveManager(vector<GameManager::Chapter> &chaps)
@@ -586,7 +586,7 @@ namespace Icy
 
    void GameManager::SaveManager::unserialize()
    {
-      string save{begin(save_data), end(save_data)};
+      string save{save_data.begin(), save_data.end()};
 
       // Strip trailing zeroes
       auto last = save.find_last_not_of('\0');
