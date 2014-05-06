@@ -17,7 +17,7 @@ namespace Blit
          Font& operator=(Font&&) = default;
 
          const Surface& surface(char c) const; 
-         Pos glyph_size() const { return { glyphwidth, glyphheight }; }
+         Pos glyph_size() const { return Pos(glyphwidth, glyphheight); }
 
          enum class RenderAlignment : unsigned
          {
