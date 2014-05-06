@@ -5,7 +5,7 @@
 namespace Blit
 {
    RenderTarget::RenderTarget(int width, int height)
-      : m_buffer(width * height), rect({0, 0}, width, height)
+      : m_buffer(width * height), rect(Pos(0, 0), width, height)
    {}
 
    const Pixel* RenderTarget::buffer() const
@@ -21,9 +21,9 @@ namespace Blit
    Surface RenderTarget::convert_surface()
    {
       int width = rect.w, height = rect.h;
-      rect = {};
+      rect = Rect();
 
-      return {std::make_shared<Surface::Data>(std::move(m_buffer), width, height)};
+      return Surface(std::make_shared<Surface::Data>(std::move(m_buffer), width, height));
    }
 
    int RenderTarget::width() const
@@ -53,12 +53,12 @@ namespace Blit
 
    void RenderTarget::blit(const Surface& surf, Rect subrect)
    {
-      blit_offset(surf, subrect, {0, 0});
+      blit_offset(surf, subrect, Pos(0, 0));
    }
 
    void RenderTarget::blit_offset(const Surface& surf_, Rect subrect, Pos pos)
    {
-      Surface surf{surf_};
+      Surface surf(surf_);
       surf.rect() += pos;
 
       Rect surf_rect = surf.rect();
@@ -66,7 +66,7 @@ namespace Blit
 
       bool ignore_camera = surf.ignore_camera();
       if (ignore_camera)
-         dest_rect.pos = {0, 0};
+         dest_rect.pos = Pos(0, 0);
 
       Rect blit_rect = surf_rect & dest_rect;
 

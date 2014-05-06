@@ -25,12 +25,12 @@ namespace Icy
          throw runtime_error(Utils::join("Failed to load game: ", path_game, "."));
 
       auto font_path = Utils::join(dir, "/", doc.child("game").child("font").attribute("source").value());
-      font.add_font(font_path, {-1, 1}, Pixel::ARGB(0xff, 0xc0, 0x98, 0x00), "yellow");
-      font.add_font(font_path, { 0, 0}, Pixel::ARGB(0xff, 0xff, 0xde, 0x00), "yellow");
-      font.add_font(font_path, {-1, 1}, Pixel::ARGB(0xff, 0x73, 0x73, 0x8b), "white");
-      font.add_font(font_path, { 0, 0}, Pixel::ARGB(0xff, 0xff, 0xff, 0xff), "white");
-      font.add_font(font_path, {-1, 1}, Pixel::ARGB(0xff, 0x39, 0x5a, 0x94), "lime");
-      font.add_font(font_path, { 0, 0}, Pixel::ARGB(0xff, 0xb8, 0xe8, 0xb0), "lime");
+      font.add_font(font_path, Pos(-1, 1), Pixel::ARGB(0xff, 0xc0, 0x98, 0x00), "yellow");
+      font.add_font(font_path, Pos( 0, 0), Pixel::ARGB(0xff, 0xff, 0xde, 0x00), "yellow");
+      font.add_font(font_path, Pos(-1, 1), Pixel::ARGB(0xff, 0x73, 0x73, 0x8b), "white");
+      font.add_font(font_path, Pos( 0, 0), Pixel::ARGB(0xff, 0xff, 0xff, 0xff), "white");
+      font.add_font(font_path, Pos(-1, 1), Pixel::ARGB(0xff, 0x39, 0x5a, 0x94), "lime");
+      font.add_font(font_path, Pos( 0, 0), Pixel::ARGB(0xff, 0xb8, 0xe8, 0xb0), "lime");
 
       init_menu(doc.child("game").child("title").attribute("source").value());
       init_menu_sprite(doc);
@@ -57,11 +57,11 @@ namespace Icy
       lock_sprite = cache.from_image(Utils::join(dir, "/", doc.child("game").child("lock_sprite").attribute("source").value()));
       lock_sprite.ignore_camera(true);
       int arrow_x = (Game::fb_width - lock_sprite.rect().w) / 2;
-      lock_sprite.rect().pos = { arrow_x, 160 };
+      lock_sprite.rect().pos = Pos( arrow_x, 160 );
 
       int complete_x = preview_base_x + Game::fb_width / 2 - level_complete.rect().w - 2;
       int complete_y = preview_base_y + Game::fb_height / 2 - level_complete.rect().h - 2;
-      level_complete.rect().pos = { complete_x, complete_y };
+      level_complete.rect().pos = Pos( complete_x, complete_y );
       level_complete.ignore_camera(true);
 
       level_select_bg = cache.from_image(Utils::join(dir, "/", doc.child("game").child("menu_bg").attribute("source").value()));
@@ -77,13 +77,13 @@ namespace Icy
    void GameManager::init_bg(xml_node doc)
    {
       auto sfx = doc.child("game").child("music");
-      Utils::xml_node_walker walk{sfx, "bg", "source"};
+      Utils::xml_node_walker walk(sfx, "bg", "source");
       vector<BGManager::Track> tracks;
       for (auto& val : walk)
          tracks.push_back({Utils::join(dir, "/", val), 1.0f});
 
       auto itr = begin(tracks);
-      Utils::xml_node_walker walk_volume{sfx, "bg", "volume"};
+      Utils::xml_node_walker walk_volume(sfx, "bg", "volume");
       for (auto& val : walk_volume)
       {
          itr->gain = val.empty() ? 1.0f : std::strtod(val.c_str(), nullptr);
@@ -116,8 +116,8 @@ namespace Icy
 
    GameManager::Chapter GameManager::load_chapter(xml_node chap, int chapter)
    {
-      Utils::xml_node_walker walk{chap, "map", "source"};
-      Utils::xml_node_walker walk_name{chap, "map", "name"};
+      Utils::xml_node_walker walk(chap, "map", "source");
+      Utils::xml_node_walker walk_name(chap, "map", "name");
 
       vector<Level> levels;
       for (auto& val : walk)
@@ -134,7 +134,7 @@ namespace Icy
       for (auto& level : levels)
       {
          //cerr << "Found level: " << level.path() << endl;
-         level.pos({preview_base_x + i * preview_delta_x, preview_base_y + preview_delta_y * chapter});
+         level.pos(Pos(preview_base_x + i * preview_delta_x, preview_base_y + preview_delta_y * chapter));
 
          i++;
       }
@@ -149,7 +149,7 @@ namespace Icy
       Surface surf = cache.from_image(Utils::join(dir, "/", level));
 
       target = RenderTarget(Game::fb_width, Game::fb_height);
-      target.blit(surf, {});
+      target.blit(surf, Rect());
 
       font.set_id("yellow");
       font.render_msg(target, "Press OK/Push button", 160, 170, Font::RenderAlignment::Centered);
@@ -255,11 +255,11 @@ namespace Icy
       {
          unsigned chap = chap_select;
          if (chap < chapters.size() - 1 && !chapters[chap_select].cleared())
-            ui_target.blit(lock_sprite, {});
+            ui_target.blit(lock_sprite, Rect());
 
          // Render tick if level is complete.
          if (menu_slide_dir.x == 0 && chapters[chap_select].get_completion(level_select))
-            ui_target.blit(level_complete, {});
+            ui_target.blit(level_complete, Rect());
 
          font.set_id("white");
          font.render_msg(ui_target, Utils::join(chap_select + 1,
@@ -284,7 +284,7 @@ namespace Icy
          menu_slide_dir = {};
       }
 
-      ui_target.blit(level_select_bg, {});
+      ui_target.blit(level_select_bg, Rect());
 
       for (auto& chap : chapters)
          for (auto& preview : chap.levels())
@@ -314,7 +314,7 @@ namespace Icy
 
    void GameManager::step_menu()
    {
-      ui_target.blit(level_select_bg, {});
+      ui_target.blit(level_select_bg, Rect());
 
       for (auto& chap : chapters)
          for (auto& preview : chap.levels())

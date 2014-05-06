@@ -196,8 +196,8 @@ namespace Blit
 
       Rect& operator+=(Pos pos)       { this->pos += pos; return *this; }
       Rect& operator-=(Pos pos)       { this->pos -= pos; return *this; }
-      Rect  operator+ (Pos pos) const { return { this->pos + pos, w, h }; }
-      Rect  operator- (Pos pos) const { return { this->pos - pos, w, h }; }
+      Rect  operator+ (Pos pos) const { return Rect( this->pos + pos, w, h ); }
+      Rect  operator- (Pos pos) const { return Rect( this->pos - pos, w, h ); }
 
       // Intersection
       Rect  operator&(Rect rect) const

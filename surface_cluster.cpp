@@ -20,7 +20,7 @@ namespace Blit
    void SurfaceCluster::render(RenderTarget& target) const
    {
       for (auto& surf : elems)
-         target.blit_offset(surf.surf, {},
+         target.blit_offset(surf.surf, Rect(),
                position + (func ? func(surf.offset) : surf.offset));
    }
 }

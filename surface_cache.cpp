@@ -13,7 +13,7 @@ namespace Blit
    {
       auto ptr = cache[path];
       if (ptr)
-         return {ptr};
+         return Surface(ptr);
       
       cache[path] = load_image(path);
       return cache[path];
@@ -44,7 +44,7 @@ namespace Blit
          alts.push_back(Surface::Alt{ptr, id});
       }
 
-      return {alts, sprite.attribute("start_id").value()};
+      return Surface(alts, sprite.attribute("start_id").value());
    }
 
    std::shared_ptr<const Surface::Data> SurfaceCache::load_image(const std::string& path)
