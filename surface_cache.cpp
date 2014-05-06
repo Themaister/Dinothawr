@@ -49,7 +49,7 @@ namespace Blit
 
    std::shared_ptr<const Surface::Data> SurfaceCache::load_image(const std::string& path)
    {
-      uint32_t *image = nullptr;
+      uint32_t *image = NULL;
       unsigned width = 0, height = 0;
       bool loaded = rpng_load_image_argb(path.c_str(), &image, &width, &height);
 

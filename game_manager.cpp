@@ -86,7 +86,7 @@ namespace Icy
       Utils::xml_node_walker walk_volume(sfx, "bg", "volume");
       for (auto& val : walk_volume)
       {
-         itr->gain = val.empty() ? 1.0f : std::strtod(val.c_str(), nullptr);
+         itr->gain = val.empty() ? 1.0f : std::strtod(val.c_str(), NULL);
          ++itr;
       }
 

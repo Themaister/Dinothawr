@@ -34,10 +34,12 @@ namespace Blit
          ((1u << green_bits) - 1) << green_shift |
          ((1u << blue_bits)  - 1) << blue_shift;
 
+#if 0
       static_assert((alpha_bits + red_bits + green_bits + blue_bits) <= CHAR_BIT * sizeof(T),
             "ARGB bitmasks do not match with pixel format.");
       static_assert(alpha_bits + red_bits && green_bits && blue_bits,
             "All colors must have at least 1 bit.");
+#endif
 
       PixelBase(T pixel) : pixel(pixel) {}
       PixelBase() : pixel(0) {}
@@ -157,7 +159,7 @@ namespace Blit
       // Allows Pos to be placed in binary trees.
       bool operator<(Pos pos) const
       {
-         static_assert(CHAR_BIT * sizeof(int) == 32, "int is not 32-bit. This algorithm will fail.");
+         //static_assert(CHAR_BIT * sizeof(int) == 32, "int is not 32-bit. This algorithm will fail.");
          std::uint64_t self = static_cast<std::uint32_t>(x);
          self <<= 32;
          self |= static_cast<std::uint32_t>(y);

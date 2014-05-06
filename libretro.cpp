@@ -93,7 +93,7 @@ void retro_set_environment(retro_environment_t cb)
    environ_cb = cb;
    retro_variable vars[] = {
       { "dino_timer", "Timer as FPS reference; enabled|disabled" },
-      { nullptr, nullptr },
+      { NULL, NULL },
    };
    cb(RETRO_ENVIRONMENT_SET_VARIABLES, vars);
 }
@@ -180,7 +180,7 @@ void retro_run(void)
    int frames = (total_time + (time_reference >> 1)) / time_reference;
 
    if (frames <= 0)
-      video_cb(nullptr, Game::fb_width, Game::fb_height, 0);
+      video_cb(NULL, Game::fb_width, Game::fb_height, 0);
    else
    {
       present_frame = false;
@@ -197,7 +197,7 @@ void retro_run(void)
       audio_callback();
 
    if (game->done())
-      environ_cb(RETRO_ENVIRONMENT_SHUTDOWN, nullptr);
+      environ_cb(RETRO_ENVIRONMENT_SHUTDOWN, NULL);
 }
 
 static void load_game(const string& path)
@@ -301,7 +301,7 @@ bool retro_unserialize(const void*, size_t)
 void* retro_get_memory_data(unsigned id)
 {
    if (id != RETRO_MEMORY_SAVE_RAM)
-      return nullptr;
+      return NULL;
 
    return game->save_data();
 }

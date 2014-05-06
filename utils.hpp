@@ -91,7 +91,7 @@ namespace Blit
       // Mirrors std::stoi, as it doesn't seem to work on Mingw 64-bit.
       inline int stoi(const std::string& str)
       {
-         char *next = nullptr;
+         char *next = NULL;
          errno = 0;
          long res = strtol(str.c_str(), &next, 10);
          if (errno)
@@ -129,7 +129,7 @@ namespace Blit
                   iterator(pugi::xml_node parent, const char* child, const char* attr) :
                      child_name(child), attr(attr), node(parent.child(child)), val(node.attribute(attr).value()) {}
 
-                  iterator() : child_name(nullptr), attr(nullptr) {}
+                  iterator() : child_name(NULL), attr(NULL) {}
 
                   const std::string& operator*() const { return val; }
                   const std::string* operator->() const { return &val; }

@@ -26,17 +26,17 @@ namespace Icy
    {
       m_won_early = false;
       set_initial_pos(level_path);
-      bg = nullptr;
+      bg = NULL;
    }
 
    Game::Game(const string& level_path)
-      : map(level_path), target(fb_width, fb_height), font(nullptr),
+      : map(level_path), target(fb_width, fb_height), font(NULL),
          camera(target, player.rect(), Pos(map.pix_width(), map.pix_height())),
          won_frame_cnt(0), is_sliding(false), push(true) 
    {
       m_won_early = false;
       set_initial_pos(level_path);
-      bg = nullptr;
+      bg = NULL;
    }
 
    void Game::set_bg(const Blit::Surface& bg)

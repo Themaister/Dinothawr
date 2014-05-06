@@ -201,7 +201,7 @@ namespace Blit
             });
 
       if (itr == elems.end())
-         return nullptr;
+         return NULL;
 
       return &itr->surf;
    }
@@ -213,7 +213,7 @@ namespace Blit
             });
 
       if (layer == m_layers.end())
-         return nullptr;
+         return NULL;
 
       return find_tile(std::distance(std::begin(m_layers), layer), pos);
    }
@@ -228,7 +228,7 @@ namespace Blit
             });
 
       if (itr == elems.end())
-         return nullptr;
+         return NULL;
 
       return &itr->surf;
    }
@@ -240,7 +240,7 @@ namespace Blit
             });
 
       if (layer == m_layers.end())
-         return nullptr;
+         return NULL;
 
       return find_tile(std::distance(m_layers.begin(), layer), pos);
    }
@@ -254,7 +254,7 @@ namespace Blit
       if (layer != m_layers.end())
          return &*layer;
       else
-         return nullptr;
+         return NULL;
    }
 
    int Tilemap::find_layer_index(const std::string& name) const
@@ -278,7 +278,7 @@ namespace Blit
       if (layer != m_layers.end())
          return &*layer;
       else
-         return nullptr;
+         return NULL;
    }
 }
 

@@ -8,7 +8,7 @@ namespace Icy
    void BGManager::init(const vector<Track>& tracks)
    {
       this->tracks = tracks;
-      srand(time(nullptr));
+      srand(time(NULL));
       first = true;
    }
 
