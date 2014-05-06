@@ -41,8 +41,8 @@ namespace Blit
       {
          for (int x = 0; x < width; x++, start_ascii++)
          {
-            surf_map[start_ascii] = surf.sub({{x * glyphwidth, y * glyphheight},
-                  glyphwidth, glyphheight});
+            surf_map[start_ascii] = surf.sub(Rect(Pos(x * glyphwidth, y * glyphheight),
+                  glyphwidth, glyphheight));
 
             surf_map[start_ascii].ignore_camera(true);
          }
@@ -76,8 +76,8 @@ namespace Blit
          x -= Font::adjust_x(line, dir);
          for (auto c : line)
          {
-            auto& surf = surface(c);
-            target.blit_offset(surf, {}, {x, y});
+            const Surface& surf = surface(c);
+            target.blit_offset(surf, Rect(), Pos(x, y));
             x += glyphwidth;
          }
          y += glyphheight + newline_offset;
@@ -98,7 +98,7 @@ namespace Blit
    {
       auto& fonts = fonts_map[move(id)];
 
-      OffsetFont tmp{font};
+      OffsetFont tmp(font);
       tmp.set_color(color);
       tmp.offset = offset;
 
