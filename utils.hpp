@@ -56,7 +56,7 @@ namespace Blit
       inline std::vector<std::string> split(const std::string& str, char delim)
       {
          std::vector<std::string> ret;
-         std::istringstream stream{str};
+         std::istringstream stream(str);
          std::string line;
 
          while (std::getline(stream, line, delim) && !line.empty())
