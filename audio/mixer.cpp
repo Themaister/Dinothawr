@@ -194,7 +194,7 @@ namespace Audio
       cerr << "Vorbis info:" << endl;
       cerr << "\tStreams: " << ov_streams(&vf) << endl;
 
-      auto info = ov_info(&vf, 0);
+      vorbis_info *info = (vorbis_info*)ov_info(&vf, 0);
       if (info)
       {
          switch (info->channels)

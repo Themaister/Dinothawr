@@ -24,7 +24,7 @@ namespace Icy
       if (!doc.load_file(path_game.c_str()))
          throw runtime_error(Utils::join("Failed to load game: ", path_game, "."));
 
-      auto font_path = Utils::join(dir, "/", doc.child("game").child("font").attribute("source").value());
+      string font_path = Utils::join(dir, "/", doc.child("game").child("font").attribute("source").value());
       font.add_font(font_path, Pos(-1, 1), Pixel::ARGB(0xff, 0xc0, 0x98, 0x00), "yellow");
       font.add_font(font_path, Pos( 0, 0), Pixel::ARGB(0xff, 0xff, 0xde, 0x00), "yellow");
       font.add_font(font_path, Pos(-1, 1), Pixel::ARGB(0xff, 0x73, 0x73, 0x8b), "white");
