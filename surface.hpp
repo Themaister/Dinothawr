@@ -33,10 +33,6 @@ namespace Blit
          Surface(Pixel pix, int width, int height);
          Surface(std::shared_ptr<const Data> data);
          Surface(const std::vector<Alt>& alts, const std::string& start_id);
-         Surface(const Surface&) = default;
-         Surface& operator=(const Surface&);
-         Surface(Surface&&) = default;
-         Surface& operator=(Surface&&)= default;
 
          Surface sub(Rect rect) const;
          void refill_color(Pixel pix);
@@ -94,9 +90,9 @@ namespace Blit
             unsigned tag;
          };
 
-         SurfaceCluster() = default;
-         SurfaceCluster(SurfaceCluster&&)= default;
-         SurfaceCluster& operator=(SurfaceCluster&&);
+         SurfaceCluster()
+         {
+         }
 
          std::vector<Elem>& vec();
          const std::vector<Elem>& vec() const;
@@ -123,10 +119,11 @@ namespace Blit
    class RenderTarget
    {
       public:
-         RenderTarget() = default;
+         RenderTarget()
+         {
+         }
+
          RenderTarget(int width, int height);
-         RenderTarget(RenderTarget&&) = default;
-         RenderTarget& operator=(RenderTarget&&) = default;
 
          Surface convert_surface();
 

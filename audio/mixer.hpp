@@ -125,8 +125,6 @@ namespace Audio
          static const unsigned channels = 2;
 
          Mixer();
-         Mixer& operator=(Mixer&&) = default;
-         Mixer(Mixer&&) = default;
 
          void add_stream(std::shared_ptr<Stream> str);
 

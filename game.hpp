@@ -180,8 +180,6 @@ namespace Icy
                std::function<void (const void*, unsigned, unsigned, std::size_t)> video_cb);
 
          GameManager();
-         GameManager(GameManager&&) = default;
-         GameManager& operator=(GameManager&&) = default;
 
          void input_cb(std::function<bool (Input)> cb) { m_input_cb = cb; }
          void video_cb(std::function<void (const void*, unsigned, unsigned, std::size_t)> cb) { m_video_cb = cb; }
@@ -204,10 +202,6 @@ namespace Icy
          {
             public:
                Level() : completion(false), best_pushes(0) {}
-               Level& operator=(const Level&) = default;
-               Level(const Level&) = default;
-               Level& operator=(Level&&) = default;
-               Level(Level&&) = default;
 
                Level(const std::string& path, const Blit::Surface& bg);
                const std::string& path() const { return m_path; }
@@ -235,10 +229,6 @@ namespace Icy
          {
             public:
                Chapter() : minimum_clear(0) {}
-               Chapter& operator=(const Chapter&) = default;
-               Chapter(const Chapter&) = default;
-               Chapter& operator=(Chapter&&) = default;
-               Chapter(Chapter&&) = default;
 
                Chapter(std::vector<Level> levels, const std::string& name) :
                   m_levels(std::move(levels)), m_name(name), minimum_clear(0) {}

@@ -20,10 +20,10 @@ namespace Blit
             std::string name;
          };
 
-         Tilemap() = default;
+         Tilemap()
+         {
+         }
          Tilemap(const std::string& path);
-         Tilemap(Tilemap&&) = default;
-         Tilemap& operator=(Tilemap&&) = default;
 
          std::vector<Layer>& layers() { return m_layers; }
          const std::vector<Layer>& layers() const { return m_layers; }

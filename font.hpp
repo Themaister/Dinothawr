@@ -11,10 +11,6 @@ namespace Blit
       public:
          Font();
          Font(const std::string& font);
-         Font(const Font&) = default;
-         Font& operator=(const Font&) = default;
-         Font(Font&&) = default;
-         Font& operator=(Font&&) = default;
 
          const Surface& surface(char c) const; 
          Pos glyph_size() const { return Pos(glyphwidth, glyphheight); }
@@ -40,11 +36,9 @@ namespace Blit
    class FontCluster
    {
       public:
-         FontCluster() = default;
-         FontCluster(const FontCluster&) = default;
-         FontCluster& operator=(const FontCluster&) = default;
-         FontCluster(FontCluster&&) = default;
-         FontCluster& operator=(FontCluster&&) = default;
+         FontCluster()
+         {
+         }
 
          Pos glyph_size() const;
 
@@ -56,12 +50,10 @@ namespace Blit
       private:
          struct OffsetFont : public Font
          {
-            OffsetFont() = default;
+            OffsetFont()
+            {
+            }
             OffsetFont(const std::string& font);
-            OffsetFont(const OffsetFont&) = default;
-            OffsetFont& operator=(const OffsetFont&) = default;
-            OffsetFont(OffsetFont&&) = default;
-            OffsetFont& operator=(OffsetFont&&) = default;
 
             void render_msg(RenderTarget& target, const std::string& msg, int x, int y,
                   Font::RenderAlignment dir, int newline_offset) const;
