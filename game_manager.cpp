@@ -580,8 +580,8 @@ namespace Icy
          full_pushes += pushes + '\n';
       }
 
-      fill(begin(save_data), end(save_data), '\0');
-      copy(begin(full_pushes), end(full_pushes), begin(save_data));
+      fill(save_data.begin(), save_data.end(), '\0');
+      copy(full_pushes.begin(), full_pushes.end(), begin(save_data));
    }
 
    void GameManager::SaveManager::unserialize()
@@ -600,17 +600,17 @@ namespace Icy
          log_cb(RETRO_LOG_INFO, "Dinothawr: Save file: \n%s\n", save.c_str());
 
       auto chapters = Utils::split(save, '\n');
-      auto chap_itr = begin(chaps);
+      auto chap_itr = chaps.begin();
       for (auto& chap : chapters)
       {
-         if (chap_itr == end(chaps))
+         if (chap_itr == chaps.end())
             return;
 
          auto levels = Utils::split(chap, ',');
          auto level_itr = begin(chap_itr->levels());
          for (auto& level : levels)
          {
-            if (level_itr == end(chap_itr->levels()))
+            if (level_itr == chap_itr->levels().end())
                break;
 
             unsigned pushes = Utils::stoi(level);

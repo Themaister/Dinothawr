@@ -14,7 +14,7 @@ namespace Icy
    void SFXManager::play_sfx(const string &ident, float volume) const
    {
       auto sfx = effects.find(ident);
-      if (sfx == end(effects))
+      if (sfx == effects.end())
          throw runtime_error("Invalid SFX!");
 
       auto duped = make_shared<Audio::PCMStream>(sfx->second);

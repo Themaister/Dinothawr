@@ -28,10 +28,10 @@ namespace Audio
    void Mixer::purge_dead_streams()
    {
       LockGuard guard(*m_lock);
-      streams.erase(remove_if(begin(streams), end(streams),
+      streams.erase(remove_if(streams.begin(), streams.end(),
                [](const shared_ptr<Stream> &str) {
                   return !str->valid();
-               }), end(streams));
+               }), streams.end());
    }
 
    void Mixer::render(float* out_buffer, size_t frames)
@@ -142,7 +142,7 @@ namespace Audio
          if (channels == 1)
          {
             pcm_data.resize(2 * wave_size / sizeof(int16_t));
-            auto ptr = begin(pcm_data);
+            auto ptr = pcm_data.begin();
             for (auto val : wave)
             {
                float fval = static_cast<float>(val) / 0x8000;
@@ -154,7 +154,7 @@ namespace Audio
          else
          {
             pcm_data.resize(wave_size / sizeof(int16_t));
-            auto ptr = begin(pcm_data);
+            auto ptr = pcm_data.begin();
             for (auto val : wave)
             {
                float fval = static_cast<float>(val) / 0x8000;
@@ -180,7 +180,7 @@ namespace Audio
       float buffer[4096 * Mixer::channels];
       size_t rendered = 0;
       while ((rendered = render(buffer, 4096)))
-         data.insert(end(data), buffer, buffer + rendered * Mixer::channels);
+         data.insert(data.end(), buffer, buffer + rendered * Mixer::channels);
 
       return data;
    }
@@ -298,10 +298,10 @@ namespace Audio
 
    void VorbisLoader::cleanup()
    {
-      inflight.erase(remove_if(begin(inflight),
-               end(inflight), [](const future<vector<float>>& fut) {
+      inflight.erase(remove_if(inflight.begin(),
+               inflight.end(), [](const future<vector<float>>& fut) {
                return !fut.valid();
-               }), end(inflight));
+               }), inflight.end());
    }
 
    shared_ptr<vector<float>> VorbisLoader::flush()

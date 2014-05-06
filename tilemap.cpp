@@ -96,7 +96,7 @@ namespace Blit
          {
             int id = first_gid + id_cnt;
             tiles[id] = surf.sub({{x, y}, tilewidth, tileheight});
-            std::copy(global_attr.begin(), global_attr.end(), std::inserter(tiles[id].attr(), std::begin(tiles[id].attr()))); 
+            std::copy(global_attr.begin(), global_attr.end(), std::inserter(tiles[id].attr(), tiles[id].attr().begin())); 
          }
       }
 
@@ -106,7 +106,7 @@ namespace Blit
          int id = first_gid + tile.attribute("id").as_int();
 
          auto attrs = get_attributes(tile.child("properties"), "property");
-         std::copy(global_attr.begin(), global_attr.end(), std::inserter(attrs, std::begin(attrs)));
+         std::copy(global_attr.begin(), global_attr.end(), std::inserter(attrs, attrs.begin()));
 
          auto itr = attrs.find("sprite");
 
@@ -215,7 +215,7 @@ namespace Blit
       if (layer == m_layers.end())
          return NULL;
 
-      return find_tile(std::distance(std::begin(m_layers), layer), pos);
+      return find_tile(std::distance(m_layers.begin(), layer), pos);
    }
 
    const Surface* Tilemap::find_tile(unsigned layer_index, Pos offset) const

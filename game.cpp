@@ -105,11 +105,11 @@ namespace Icy
       if (!layer)
          return surfs;
 
-      copy_if(begin(layer->cluster.vec()),
-            end(layer->cluster.vec()),
+      copy_if(layer->cluster.vec().begin(),
+            layer->cluster.vec().end(),
             back_inserter(surfs), [&attr, &val](const SurfaceCluster::Elem& surf) -> bool {
                if (val.empty())
-                  return surf.surf.attr().find(attr) != end(surf.surf.attr());
+                  return surf.surf.attr().find(attr) != surf.surf.attr().end();
                else
                   return Utils::find_or_default(surf.surf.attr(), attr, "") == val; 
             });

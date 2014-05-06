@@ -137,7 +137,7 @@ namespace Blit
          int newline_offset) const
    {
       auto itr = fonts_map.find(current_id);
-      if (itr == end(fonts_map))
+      if (itr == fonts_map.end())
          throw runtime_error(Utils::join("Font ID: ", current_id, " not found in map!"));
 
       for (auto& font : itr->second)
