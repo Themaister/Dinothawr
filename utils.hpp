@@ -107,9 +107,9 @@ namespace Blit
       }
 
       template <typename T>
-      inline auto find_or_default(const T& mapper, const typename T::key_type& key, const typename T::mapped_type& def) -> typename T::mapped_type
+      inline typename T::mapped_type find_or_default(const T& mapper, const typename T::key_type& key, const typename T::mapped_type& def)
       {
-         auto itr = mapper.find(key);
+         typename T::const_iterator itr = mapper.find(key);
          if (itr == mapper.end())
             return def;
 
