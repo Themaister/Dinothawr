@@ -10,7 +10,6 @@
 #include <functional>
 #include <cstddef>
 #include <functional>
-#include <random>
 
 #include "libretro.h"
 
