@@ -17,7 +17,7 @@ namespace Icy
       if (sfx == effects.end())
          throw runtime_error("Invalid SFX!");
 
-      auto duped = make_shared<Audio::PCMStream>(sfx->second);
+      std::shared_ptr<Audio::PCMStream> duped = make_shared<Audio::PCMStream>(sfx->second);
       duped->volume(volume);
       auto& mixer = get_mixer();
       if (mixer.enabled())

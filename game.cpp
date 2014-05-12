@@ -46,11 +46,11 @@ namespace Icy
 
    void Game::set_initial_pos(const string& level)
    {
-      auto layer = map.find_layer("floor");
+      Blit::Tilemap::Layer *layer = map.find_layer("floor");
       if (!layer)
          throw runtime_error("Floor layer not found.");
 
-      auto sprite_path = Utils::find_or_default(layer->attr, "player_sprite", "");
+      std::basic_string<char> sprite_path = Utils::find_or_default(layer->attr, "player_sprite", "");
       if (sprite_path.empty())
          player = cache.from_sprite(Utils::join(level, ".sprite"));
       else
@@ -60,7 +60,7 @@ namespace Icy
       int y     = Utils::stoi(Utils::find_or_default(layer->attr, "start_y", "1"));
       int off_x = Utils::stoi(Utils::find_or_default(layer->attr, "player_offset_x", "0"));
       int off_y = Utils::stoi(Utils::find_or_default(layer->attr, "player_offset_y", "0"));
-      auto face = Utils::find_or_default(layer->attr, "start_facing", "right");
+      std::basic_string<char> face = Utils::find_or_default(layer->attr, "start_facing", "right");
 
       player.rect().pos = Pos(x * map.tile_width(), y * map.tile_height());
       player_off = Pos(off_x, off_y);
@@ -101,7 +101,7 @@ namespace Icy
          const string& attr, const string& val)
    {
       vector<reference_wrapper<SurfaceCluster::Elem>> surfs;
-      auto layer = map.find_layer(name);
+      Blit::Tilemap::Layer *layer = map.find_layer(name);
       if (!layer)
          return surfs;
 
@@ -297,7 +297,7 @@ namespace Icy
 
    bool Game::is_offset_collision(Surface& surf, Pos offset)
    {
-      auto new_rect = surf.rect() + offset;
+      Blit::Rect new_rect = surf.rect() + offset;
 
       // Always assume that the rect in question is inside a single tile.
       // This is needed as the dino sprite can be slightly larger than 16x16, but it's
@@ -328,9 +328,9 @@ namespace Icy
 
    void Game::push_block()
    {
-      auto offset = input_to_offset(facing);
-      auto dir    = offset * Pos(map.tile_width(), map.tile_height());
-      auto tile   = map.find_tile("blocks", player.rect().pos + dir);
+      Blit::Pos offset = input_to_offset(facing);
+      Blit::Pos dir    = offset * Pos(map.tile_width(), map.tile_height());
+      Blit::Surface *tile   = map.find_tile("blocks", player.rect().pos + dir);
 
       if (!tile)
          return;
@@ -355,7 +355,7 @@ namespace Icy
       facing = input;
       player.active_alt(input_to_string(facing));
 
-      auto offset = input_to_offset(input);
+      Blit::Pos offset = input_to_offset(input);
       if (!is_offset_collision(player, offset))
       {
          stepper = bind(&Game::tile_stepper, this, ref(player), offset);
@@ -388,7 +388,7 @@ namespace Icy
       }
 
       //cerr << "Player: " << player.rect().pos << " Surf: " << surf->rect().pos << endl; 
-      auto surface  = map.find_tile("floor", surf.rect().pos);
+      Blit::Surface *surface  = map.find_tile("floor", surf.rect().pos);
       bool slippery = surface && Utils::find_or_default(surface->attr(),
             &surf == &player ? "slippery_player" : "slippery_block", "") == "true";
 
@@ -413,13 +413,13 @@ namespace Icy
          target->camera_set((map_size - Pos(target->width(), target->height())) / 2);
       else // Center around player, but clamp if player isn't near walls.
       {
-         auto pos = rect->pos;
+         Blit::Pos pos = rect->pos;
          pos += Pos(rect->w, rect->h) / 2;
 
          Pos target_size(target->width(), target->height());
 
-         auto pos_base = pos - target_size / 2;
-         auto pos_max  = pos_base + target_size;
+         Blit::Pos pos_base = pos - target_size / 2;
+         Blit::Pos pos_max  = pos_base + target_size;
 
          if (pos_base.x < 0)
             pos_base.x = 0;

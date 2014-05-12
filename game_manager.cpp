@@ -39,7 +39,7 @@ namespace Icy
 
       for (xml_node node = doc.child("game").child("chapter"); node; node = node.next_sibling("chapter"))
       {
-         auto chapter = load_chapter(node, chapters.size());
+         Icy::GameManager::Chapter chapter = load_chapter(node, chapters.size());
          if (chapter.num_levels() > 0)
             chapters.push_back(move(chapter));
       }
@@ -76,7 +76,7 @@ namespace Icy
 
    void GameManager::init_bg(xml_node doc)
    {
-      auto sfx = doc.child("game").child("music");
+      pugi::xml_node sfx = doc.child("game").child("music");
       Utils::xml_node_walker walk(sfx, "bg", "source");
       vector<BGManager::Track> tracks;
       for (auto& val : walk)
@@ -95,7 +95,7 @@ namespace Icy
 
    void GameManager::init_sfx(xml_node doc)
    {
-      auto sfx = doc.child("game").child("sfx");
+      pugi::xml_node sfx = doc.child("game").child("sfx");
       Utils::xml_node_walker walk(sfx, "sound", "name");
       Utils::xml_node_walker walk_source(sfx, "sound", "source");
 
@@ -589,7 +589,7 @@ namespace Icy
       string save{save_data.begin(), save_data.end()};
 
       // Strip trailing zeroes
-      auto last = save.find_last_not_of('\0');
+      long unsigned int last = save.find_last_not_of('\0');
       if (last == string::npos) // Nothing to unserialize ...
          return;
 
@@ -599,14 +599,14 @@ namespace Icy
       if (log_cb)
          log_cb(RETRO_LOG_INFO, "Dinothawr: Save file: \n%s\n", save.c_str());
 
-      auto chapters = Utils::split(save, '\n');
+      std::vector<std::basic_string<char> > chapters = Utils::split(save, '\n');
       auto chap_itr = chaps.begin();
       for (auto& chap : chapters)
       {
          if (chap_itr == chaps.end())
             return;
 
-         auto levels = Utils::split(chap, ',');
+         std::vector<std::basic_string<char> > levels = Utils::split(chap, ',');
          auto level_itr = begin(chap_itr->levels());
          for (auto& level : levels)
          {

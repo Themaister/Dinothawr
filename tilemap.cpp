@@ -56,7 +56,7 @@ namespace Blit
       int tilewidth  = node.attribute("tilewidth").as_int();
       int tileheight = node.attribute("tileheight").as_int();
 
-      auto image     = node.child("image");
+      pugi::xml_node image     = node.child("image");
       auto source    = image.attribute("source").value();
       int width      = image.attribute("width").as_int();
       int height     = image.attribute("height").as_int();
@@ -76,12 +76,12 @@ namespace Blit
          throw std::logic_error("Tilemap is malformed.");
 
       SurfaceCache cache;
-      auto surf = cache.from_image(Utils::join(dir, "/", source));
+      Blit::Surface surf = cache.from_image(Utils::join(dir, "/", source));
 
       if (surf.rect().w != width || surf.rect().h != height)
          throw std::logic_error("Tilemap geometry does not correspond with image values.");
 
-      auto global_attr = get_attributes(node.child("properties"), "property");
+      std::map<std::basic_string<char>, std::basic_string<char> > global_attr = get_attributes(node.child("properties"), "property");
 
 #if 0
       std::cerr << "Dumping attrs:" << std::endl;
@@ -105,7 +105,7 @@ namespace Blit
       {
          int id = first_gid + tile.attribute("id").as_int();
 
-         auto attrs = get_attributes(tile.child("properties"), "property");
+         std::map<std::basic_string<char>, std::basic_string<char> > attrs = get_attributes(tile.child("properties"), "property");
          std::copy(global_attr.begin(), global_attr.end(), std::inserter(attrs, attrs.begin()));
 
          auto itr = attrs.find("sprite");
@@ -143,7 +143,7 @@ namespace Blit
          unsigned gid = Utils::stoi(gid_str);
          if (gid)
          {
-            auto& surf = tiles[gid];
+            Blit::Surface surf = tiles[gid];
             surf.rect().pos = pos * Pos(tilewidth, tileheight);
 
             layer.cluster.vec().push_back({surf, Pos()});

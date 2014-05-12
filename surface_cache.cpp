@@ -11,7 +11,7 @@ namespace Blit
 {
    Surface SurfaceCache::from_image(const std::string& path)
    {
-      auto ptr = cache[path];
+      std::shared_ptr<const Blit::Surface::Data> ptr = cache[path];
       if (ptr)
          return Surface(ptr);
       
@@ -25,16 +25,16 @@ namespace Blit
       if (!doc.load_file(path.c_str()))
          throw std::runtime_error(Utils::join("Failed to load XML sprite: ", path, "."));
 
-      auto basedir = Utils::basedir(path);
+      std::basic_string<char> basedir = Utils::basedir(path);
       std::vector<Surface::Alt> alts;
 
-      auto sprite = doc.child("sprite");
+      pugi::xml_node sprite = doc.child("sprite");
       for (auto face = sprite.child("face"); face; face = face.next_sibling())
       {
          auto id = face.attribute("id").value();
-         auto path   = Utils::join(basedir, "/", face.attribute("source").value());
+         std::basic_string<char> path   = Utils::join(basedir, "/", face.attribute("source").value());
 
-         auto ptr = cache[path];
+         std::shared_ptr<const Blit::Surface::Data> ptr = cache[path];
          if (!ptr)
          {
             cache[path] = load_image(path);

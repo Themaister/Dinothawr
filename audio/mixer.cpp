@@ -44,7 +44,7 @@ namespace Audio
       buffer.reserve(frames * channels);
       for (auto& stream : streams)
       {
-         auto rendered = stream->render(buffer.data(), frames);
+         long unsigned int rendered = stream->render(buffer.data(), frames);
          audio_mix_volume(out_buffer, buffer.data(), master_vol * stream->volume(), rendered * channels);
       }
    }
@@ -255,7 +255,7 @@ namespace Audio
 
                if (ov_time_seek(&vf, 0.0) == 0)
                {
-                  auto ret = render(buffer, frames);
+                  long unsigned int ret = render(buffer, frames);
                   return rendered + ret;
                }
                else
@@ -316,8 +316,8 @@ namespace Audio
 
          if (finished.size())
          {
-            auto& f = finished.front();
-            auto ret = make_shared<vector<float>>(move(f));
+            std::vector<float> f = finished.front();
+            std::shared_ptr<std::vector<float> > ret = make_shared<vector<float>>(move(f));
             finished.pop();
             return move(ret);
          }
