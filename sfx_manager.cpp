@@ -19,7 +19,7 @@ namespace Icy
 
       std::shared_ptr<Audio::PCMStream> duped = make_shared<Audio::PCMStream>(sfx->second);
       duped->volume(volume);
-      auto& mixer = get_mixer();
+      Audio::Mixer& mixer = get_mixer();
       if (mixer.enabled())
          mixer.add_stream(duped);
    }

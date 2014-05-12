@@ -29,9 +29,9 @@ namespace Blit
       std::vector<Surface::Alt> alts;
 
       pugi::xml_node sprite = doc.child("sprite");
-      for (auto face = sprite.child("face"); face; face = face.next_sibling())
+      for (pugi::xml_node face = sprite.child("face"); face; face = face.next_sibling())
       {
-         auto id = face.attribute("id").value();
+         const char *id = face.attribute("id").value();
          std::basic_string<char> path   = Utils::join(basedir, "/", face.attribute("source").value());
 
          std::shared_ptr<const Blit::Surface::Data> ptr = cache[path];
