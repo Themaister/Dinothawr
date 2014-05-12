@@ -11,7 +11,6 @@
 #include <chrono>
 #include <queue>
 #include <mutex>
-#include <atomic>
 #include <vorbis/vorbisfile.h>
 
 namespace Audio
