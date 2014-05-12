@@ -25,13 +25,15 @@ namespace Audio
       streams.push_back(move(str));
    }
 
+   static bool erase_mixer_stream(const shared_ptr<Stream> &str)
+   {
+      return !str->valid();
+   }
+
    void Mixer::purge_dead_streams()
    {
       LockGuard guard(*m_lock);
-      streams.erase(remove_if(streams.begin(), streams.end(),
-               [](const shared_ptr<Stream> &str) {
-                  return !str->valid();
-               }), streams.end());
+      streams.erase(remove_if(streams.begin(), streams.end(), erase_mixer_stream), streams.end());
    }
 
    void Mixer::render(float* out_buffer, size_t frames)
@@ -296,12 +298,14 @@ namespace Audio
                }));
    }
 
+   static bool erase_vorbis_stream(const future<vector<float>>& fut)
+   {
+      return !fut.valid();
+   }
+
    void VorbisLoader::cleanup()
    {
-      inflight.erase(remove_if(inflight.begin(),
-               inflight.end(), [](const future<vector<float>>& fut) {
-               return !fut.valid();
-               }), inflight.end());
+      inflight.erase(remove_if(inflight.begin(), inflight.end(), erase_vorbis_stream), inflight.end());
    }
 
    shared_ptr<vector<float>> VorbisLoader::flush()
