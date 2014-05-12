@@ -133,7 +133,7 @@ namespace Blit
       T pixel;
    };
 
-   typedef PixelBase<std::uint32_t,
+   typedef PixelBase<uint32_t,
            8, 24, // A
            8, 16, // R
            8,  8, // G
@@ -160,13 +160,13 @@ namespace Blit
       bool operator<(Pos pos) const
       {
          //static_assert(CHAR_BIT * sizeof(int) == 32, "int is not 32-bit. This algorithm will fail.");
-         std::uint64_t self = static_cast<std::uint32_t>(x);
+         uint64_t self = static_cast<uint32_t>(x);
          self <<= 32;
-         self |= static_cast<std::uint32_t>(y);
+         self |= static_cast<uint32_t>(y);
 
-         std::uint64_t other = static_cast<std::uint32_t>(pos.x);
+         uint64_t other = static_cast<uint32_t>(pos.x);
          other <<= 32;
-         other |= static_cast<std::uint32_t>(pos.y);
+         other |= static_cast<uint32_t>(pos.y);
 
          return self < other;
       }
