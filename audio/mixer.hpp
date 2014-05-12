@@ -1,7 +1,7 @@
 #ifndef MIXER_HPP__
 #define MIXER_HPP__
 
-#include <cstdint>
+#include <stdint.h>
 #include <vector>
 #include <memory>
 #include <utility>
