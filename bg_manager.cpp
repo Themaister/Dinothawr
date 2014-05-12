@@ -1,5 +1,5 @@
 #include "game.hpp"
-#include <cstdlib>
+#include <stdlib.h>
 
 using namespace std;
 

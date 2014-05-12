@@ -3,7 +3,7 @@
 
 #include "utils.hpp"
 #include <algorithm>
-#include <cstdint>
+#include <stdint.h>
 #include <vector>
 
 #include <climits>

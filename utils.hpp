@@ -1,7 +1,7 @@
 #ifndef UTILS_HPP__
 #define UTILS_HPP__
 
-#include <cstdint>
+#include <stdint.h>
 #include <vector>
 
 #include <string>
@@ -9,7 +9,7 @@
 #include <cctype>
 #include <algorithm>
 #include <iterator>
-#include <cstdlib>
+#include <stdlib.h>
 #include <stdexcept>
 #include <iterator>
 #include <limits>
