@@ -121,11 +121,11 @@ namespace Icy
    {
       won_frame_cnt++;
 
-      auto goal_blocks = get_tiles_with_attr("blocks", "goal", "true");
+      std::vector<std::reference_wrapper<Blit::SurfaceCluster::Elem> > goal_blocks = get_tiles_with_attr("blocks", "goal", "true");
 
       const unsigned frame_per_iter = 24;
 
-      auto state = "frozen";
+      std::string state = "frozen";
       if (won_frame_cnt >= 3 * frame_per_iter)
       {
          bool jump = ((won_frame_cnt / frame_per_iter - 3) >> 1) & 1;
@@ -170,11 +170,21 @@ namespace Icy
       return m_won_early || (won_frame_cnt >= won_frame_cnt_limit);
    }
 
+   static bool is_game_won(const Blit::SurfaceCluster::Elem& a, const Blit::SurfaceCluster::Elem& b)
+   {
+      return a.surf.rect().pos == b.surf.rect().pos;
+   }
+
+   static bool sort_blocks(const SurfaceCluster::Elem& a, const SurfaceCluster::Elem& b)
+   {
+      return a.surf.rect().pos < b.surf.rect().pos;
+   }
+
    // Checks if all goals on floor and blocks are aligned with each other.
    bool Game::won_condition()
    {
-      auto goal_floor  = get_tiles_with_attr("floor", "goal", "true");
-      auto goal_blocks = get_tiles_with_attr("blocks", "goal", "true");
+      std::vector<std::reference_wrapper<Blit::SurfaceCluster::Elem> > goal_floor  = get_tiles_with_attr("floor", "goal", "true");
+      std::vector<std::reference_wrapper<Blit::SurfaceCluster::Elem> > goal_blocks = get_tiles_with_attr("blocks", "goal", "true");
 
       if (goal_floor.size() != goal_blocks.size())
          throw logic_error("Number of goal floors and goal blocks do not match.");
@@ -182,17 +192,11 @@ namespace Icy
       if (goal_floor.empty() || goal_blocks.empty())
          throw logic_error("Goal floor or blocks are empty.");
 
-      auto func = [](const SurfaceCluster::Elem& a, const SurfaceCluster::Elem& b) {
-         return a.surf.rect().pos < b.surf.rect().pos;
-      };
-
-      sort(goal_floor.begin(), goal_floor.end(), func);
-      sort(goal_blocks.begin(), goal_blocks.end(), func);
+      sort(goal_floor.begin(), goal_floor.end(), sort_blocks);
+      sort(goal_blocks.begin(), goal_blocks.end(), sort_blocks);
 
       return equal(goal_floor.begin(), goal_floor.end(),
-            goal_blocks.begin(), [](const SurfaceCluster::Elem& a, const SurfaceCluster::Elem& b) {
-               return a.surf.rect().pos == b.surf.rect().pos;
-            });
+            goal_blocks.begin(), is_game_won);
    }
 
    void Game::update_player()

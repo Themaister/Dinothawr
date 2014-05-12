@@ -42,7 +42,8 @@ namespace Icy
          first = false;
       }
 
-      auto ret = loader.flush();
+      std::shared_ptr<std::vector<float> > ret = loader.flush();
+
       if (ret)
       {
          current = make_shared<Audio::PCMStream>(ret);
