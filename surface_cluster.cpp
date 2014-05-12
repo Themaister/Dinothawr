@@ -19,9 +19,11 @@ namespace Blit
 
    void SurfaceCluster::render(RenderTarget& target) const
    {
-      for (auto& surf : elems)
-         target.blit_offset(surf.surf, Rect(),
-               position + (func ? func(surf.offset) : surf.offset));
+      for (std::vector<Blit::SurfaceCluster::Elem>::const_iterator surf = elems.begin(); surf != elems.end(); surf++) 
+      {
+         target.blit_offset(surf->surf, Rect(),
+               position + (func ? func(surf->offset) : surf->offset));
+      }
    }
 }
 

@@ -242,8 +242,8 @@ namespace Icy
                unsigned cleared_count() const
                {
                   unsigned clear_cnt = 0;
-                  for (auto& level : m_levels)
-                     clear_cnt += level.get_completion();
+                  for (std::vector<Icy::GameManager::Level>::const_iterator level = m_levels.begin(); level != m_levels.end(); level++)
+                     clear_cnt += level->get_completion();
 
                   return clear_cnt;
                }

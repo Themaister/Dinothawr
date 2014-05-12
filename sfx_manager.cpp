@@ -13,7 +13,7 @@ namespace Icy
 
    void SFXManager::play_sfx(const string &ident, float volume) const
    {
-      auto sfx = effects.find(ident);
+      std::map<std::basic_string<char>, std::shared_ptr<std::vector<float> > >::const_iterator sfx = effects.find(ident);
       if (sfx == effects.end())
          throw runtime_error("Invalid SFX!");
 

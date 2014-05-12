@@ -80,7 +80,7 @@ namespace Blit
          return;
 
       const Blit::PixelBase<unsigned int, 8u, 24u, 8u, 16u, 8u, 8u, 8u, 0u>* src_data = surf.pixel_raw(blit_rect.pos);
-      auto dst_data = ignore_camera ?
+      Blit::PixelBase<unsigned int, 8u, 24u, 8u, 16u, 8u, 8u, 8u, 0u>* dst_data = ignore_camera ?
          pixel_raw_no_offset(blit_rect.pos) : pixel_raw(blit_rect.pos);
 
       for (int y = 0; y < blit_rect.h; y++, src_data += surf_rect.w, dst_data += rect.w)

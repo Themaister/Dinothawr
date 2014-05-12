@@ -41,8 +41,8 @@ namespace Blit
 
       for (auto node = parent.child(child.c_str()); node; node = node.next_sibling(child.c_str()))
       {
-         auto name = node.attribute("name").value();
-         auto value = node.attribute("value").value();
+         const char *name = node.attribute("name").value();
+         const char *value = node.attribute("value").value();
          attrs.insert({name, value});
       }
 
@@ -57,7 +57,7 @@ namespace Blit
       int tileheight = node.attribute("tileheight").as_int();
 
       pugi::xml_node image     = node.child("image");
-      auto source    = image.attribute("source").value();
+      const char *source    = image.attribute("source").value();
       int width      = image.attribute("width").as_int();
       int height     = image.attribute("height").as_int();
 
