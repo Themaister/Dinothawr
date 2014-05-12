@@ -70,7 +70,7 @@ namespace Blit
    {
       int orig_x = x;
 
-      auto lines = Utils::split(str, '\n');
+      std::vector<std::basic_string<char> > lines = Utils::split(str, '\n');
       for (auto& line : lines)
       {
          x -= Font::adjust_x(line, dir);
