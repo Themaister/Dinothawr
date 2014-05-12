@@ -131,7 +131,7 @@ namespace Audio
          void clear();
 
          void render(float *buffer, std::size_t frames);
-         void render(std::int16_t *buffer, std::size_t frames);
+         void render(int16_t *buffer, std::size_t frames);
          void master_volume(float vol) { master_vol = vol; }
          float master_volume() const { return master_vol; }
 
