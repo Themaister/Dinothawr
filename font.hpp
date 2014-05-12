@@ -62,6 +62,9 @@ namespace Blit
 
          std::map<std::string, std::vector<OffsetFont>> fonts_map;
          std::string current_id;
+
+         static bool func_x (const OffsetFont& a, const OffsetFont& b);
+         static bool func_y(const OffsetFont& a, const OffsetFont& b);
    };
 }
 
