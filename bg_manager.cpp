@@ -10,6 +10,7 @@ namespace Icy
       this->tracks = tracks;
       srand(time(NULL));
       first = true;
+      last = 0;
    }
 
    void BGManager::step(Audio::Mixer& mixer)

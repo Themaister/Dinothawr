@@ -144,7 +144,7 @@ namespace Audio
          if (channels == 1)
          {
             pcm_data.resize(2 * wave_size / sizeof(int16_t));
-            auto ptr = pcm_data.begin();
+            std::vector<float>::iterator ptr = pcm_data.begin();
             for (auto val : wave)
             {
                float fval = static_cast<float>(val) / 0x8000;
@@ -156,7 +156,7 @@ namespace Audio
          else
          {
             pcm_data.resize(wave_size / sizeof(int16_t));
-            auto ptr = pcm_data.begin();
+            std::vector<float>::iterator ptr = pcm_data.begin();
             for (auto val : wave)
             {
                float fval = static_cast<float>(val) / 0x8000;
