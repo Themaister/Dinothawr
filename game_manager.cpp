@@ -103,7 +103,7 @@ namespace Icy
       for (auto& val : walk)
          sfxs.push_back({val, ""});
 
-      auto itr = begin(sfxs);
+      vector<pair<string, string> >::iterator itr = sfxs.begin();
       for (auto& val : walk_source)
       {
          itr->second = val;
@@ -123,7 +123,7 @@ namespace Icy
       for (auto& val : walk)
          levels.push_back({Utils::join(dir, "/", val), game_bg});
 
-      auto itr = levels.begin();
+      std::vector<Icy::GameManager::Level>::iterator itr = levels.begin();
       for (auto& val : walk_name)
       {
          itr->set_name(val);
@@ -600,14 +600,14 @@ namespace Icy
          log_cb(RETRO_LOG_INFO, "Dinothawr: Save file: \n%s\n", save.c_str());
 
       std::vector<std::basic_string<char> > chapters = Utils::split(save, '\n');
-      auto chap_itr = chaps.begin();
+      std::vector<Icy::GameManager::Chapter>::iterator chap_itr = chaps.begin();
       for (auto& chap : chapters)
       {
          if (chap_itr == chaps.end())
             return;
 
          std::vector<std::basic_string<char> > levels = Utils::split(chap, ',');
-         auto level_itr = begin(chap_itr->levels());
+         std::vector<Icy::GameManager::Level>::iterator level_itr = chap_itr->levels().begin();
          for (auto& level : levels)
          {
             if (level_itr == chap_itr->levels().end())

@@ -196,7 +196,7 @@ namespace Blit
       Blit::Tilemap::Layer& layer = m_layers.at(layer_index);
       std::vector<Blit::SurfaceCluster::Elem>& elems = layer.cluster.vec();
 
-      auto itr = std::find_if(elems.begin(), elems.end(), [offset](const SurfaceCluster::Elem& elem) {
+      std::vector<Blit::SurfaceCluster::Elem>::iterator itr = std::find_if(elems.begin(), elems.end(), [offset](const SurfaceCluster::Elem& elem) {
                return (elem.surf.rect().pos + elem.offset) == offset;
             });
 
@@ -208,7 +208,7 @@ namespace Blit
 
    Surface* Tilemap::find_tile(const std::string& name, Pos pos)
    {
-      auto layer = std::find_if(m_layers.begin(), m_layers.end(), [&name](const Layer& layer) {
+      std::vector<Blit::Tilemap::Layer>::iterator layer = std::find_if(m_layers.begin(), m_layers.end(), [&name](const Layer& layer) {
                return Utils::tolower(layer.name) == name;
             });
 
