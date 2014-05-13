@@ -82,7 +82,7 @@ namespace Icy
       for (auto& val : walk)
          tracks.push_back({Utils::join(dir, "/", val), 1.0f});
 
-      auto itr = begin(tracks);
+      vector<BGManager::Track>::iterator itr = tracks.begin();
       Utils::xml_node_walker walk_volume(sfx, "bg", "volume");
       for (auto& val : walk_volume)
       {
@@ -99,7 +99,7 @@ namespace Icy
       Utils::xml_node_walker walk(sfx, "sound", "name");
       Utils::xml_node_walker walk_source(sfx, "sound", "source");
 
-      vector<pair<string, string>> sfxs;
+      vector<pair<string, string> > sfxs;
       for (auto& val : walk)
          sfxs.push_back({val, ""});
 
@@ -123,7 +123,7 @@ namespace Icy
       for (auto& val : walk)
          levels.push_back({Utils::join(dir, "/", val), game_bg});
 
-      auto itr = begin(levels);
+      auto itr = levels.begin();
       for (auto& val : walk_name)
       {
          itr->set_name(val);
@@ -534,11 +534,11 @@ namespace Icy
          {
             for (unsigned x = 0; x < width; x += scale_factor)
             {
-               auto a0 = pix[pitch * (y + 0) + (x + 0)];
-               auto a1 = pix[pitch * (y + 0) + (x + 1)];
-               auto b0 = pix[pitch * (y + 1) + (x + 0)];
-               auto b1 = pix[pitch * (y + 1) + (x + 1)];
-               auto res = Pixel::blend(Pixel::blend(a0, a1), Pixel::blend(b0, b1));
+               Blit::PixelBase<unsigned int, 8u, 24u, 8u, 16u, 8u, 8u, 8u, 0u> a0 = pix[pitch * (y + 0) + (x + 0)];
+               Blit::PixelBase<unsigned int, 8u, 24u, 8u, 16u, 8u, 8u, 8u, 0u> a1 = pix[pitch * (y + 0) + (x + 1)];
+               Blit::PixelBase<unsigned int, 8u, 24u, 8u, 16u, 8u, 8u, 8u, 0u> b0 = pix[pitch * (y + 1) + (x + 0)];
+               Blit::PixelBase<unsigned int, 8u, 24u, 8u, 16u, 8u, 8u, 8u, 0u> b1 = pix[pitch * (y + 1) + (x + 1)];
+               Blit::PixelBase<unsigned int, 8u, 24u, 8u, 16u, 8u, 8u, 8u, 0u> res = Pixel::blend(Pixel::blend(a0, a1), Pixel::blend(b0, b1));
 
                data[preview_width * (y / scale_factor) + (x / scale_factor)] = res | static_cast<Pixel>(Pixel::alpha_mask);
             }
