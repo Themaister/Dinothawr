@@ -33,11 +33,13 @@ namespace Icy
    class SFXManager
    {
       public:
-         void add_stream(const std::string &ident, const std::string &path);
-         void play_sfx(const std::string &ident, float volume = 1.0f) const;
+         void add_stream(const std::string &ident, const std::string &path) {}
+         void play_sfx(const std::string &ident, float volume = 1.0f) const {}
 
+/*
       private:
          std::map<std::string, std::shared_ptr<std::vector<float>>> effects;
+*/
    };
 
    SFXManager& get_sfx();
@@ -50,15 +52,17 @@ namespace Icy
             std::string path;
             float gain;
          };
-         void init(const std::vector<Track>& tracks);
-         void step(Audio::Mixer& mixer);
+         void init(const std::vector<Track>& tracks) {}
+         void step(Audio::Mixer& mixer) {}
 
+/*
       private:
          std::shared_ptr<Audio::Stream> current;
          Audio::VorbisLoader loader;
          std::vector<Track> tracks;
          bool first;
          unsigned last;
+*/
    };
 
    BGManager& get_bg();

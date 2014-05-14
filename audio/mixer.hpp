@@ -2,19 +2,21 @@
 #define MIXER_HPP__
 
 #include <stdint.h>
-#include <vector>
-#include <memory>
-#include <utility>
-#include <cmath>
+//#include <vector>
+//#include <memory>
+//#include <utility>
+//#include <cmath>
 #include <string>
-#include <future>
-#include <chrono>
-#include <queue>
-#include <mutex>
-#include <vorbis/vorbisfile.h>
+//#include <future>
+//#include <chrono>
+//#include <queue>
+//#include <mutex>
+//#include <vorbis/vorbisfile.h>
+#include <string.h>
 
 namespace Audio
 {
+/*
    class Stream
    {
       public:
@@ -117,29 +119,31 @@ namespace Audio
 
          void cleanup();
    };
+*/
 
    class Mixer
    {
       public:
          static const unsigned channels = 2;
 
-         Mixer();
+         Mixer() {}
 
-         void add_stream(std::shared_ptr<Stream> str);
+         //void add_stream(std::shared_ptr<Stream> str);
 
-         void clear();
+         //void clear();
 
-         void render(float *buffer, std::size_t frames);
-         void render(int16_t *buffer, std::size_t frames);
-         void master_volume(float vol) { master_vol = vol; }
-         float master_volume() const { return master_vol; }
+         void render(float *buffer, std::size_t frames) { memset(buffer, 0, sizeof(float)*frames); }
+         void render(int16_t *buffer, std::size_t frames) { memset(buffer, 0, sizeof(int16_t)*frames); }
+         //void master_volume(float vol) { master_vol = vol; }
+         //float master_volume() const { return master_vol; }
 
-         void lock() { m_lock->lock(); }
-         void unlock() { m_lock->unlock(); }
+         //void lock() { m_lock->lock(); }
+         //void unlock() { m_lock->unlock(); }
 
-         void enable(bool enable) { m_enabled->store(enable); }
-         bool enabled() const { return m_enabled->load(); }
+         void enable(bool enable) { }
+         bool enabled() const { return false; }
 
+/*
       private:
          std::vector<float> buffer;
          std::vector<float> conv_buffer;
@@ -149,6 +153,7 @@ namespace Audio
 
          float master_vol;
          void purge_dead_streams();
+*/
    };
 }
 
