@@ -1,4 +1,5 @@
 DEBUG = 0
+USE_CXX03 = 0
 
 ifeq ($(platform),)
 platform = unix
@@ -17,6 +18,16 @@ LIBRETRO := dinothawr
 LIBDIR = $(DESTDIR)/usr/lib/libretro
 ASSETDIR = $(DESTDIR)/usr/share/dinothawr
 
+ifeq ($(USE_CXX03),1)
+CXXFLAGS += -DUSE_CXX03
+#note that this actually doesn't enable C++03 yet
+CXX11 = -std=c++11
+CXX0X = -std=c++0x
+else
+CXX11 = -std=c++11
+CXX0X = -std=c++0x
+endif
+
 ifneq (,$(findstring unix,$(platform)))
    TARGET := $(LIBRETRO)_libretro.so
    fpic := -fPIC
@@ -26,7 +37,7 @@ else ifeq ($(platform), osx)
    fpic := -fPIC
    SHARED := -dynamiclib
    LDFLAGS += -stdlib=libc++
-   CXXFLAGS += -std=c++11 $(LDFLAGS)
+   CXXFLAGS += $(CXX11) $(LDFLAGS)
 OSXVER = `sw_vers -productVersion | cut -c 4`
 ifneq ($(OSXVER),9)
    fpic += -mmacosx-version-min=10.7
@@ -38,7 +49,7 @@ else ifeq ($(platform), ios)
    LDFLAGS += -stdlib=libc++
    CC = clang -arch armv7 -isysroot $(IOSSDK)
    CXX = clang++ -arch armv7 -isysroot $(IOSSDK)
-   CXXFLAGS += -std=c++11 $(LDFLAGS)
+   CXXFLAGS += $(CXX11) $(LDFLAGS)
 OSXVER = `sw_vers -productVersion | cut -c 4`
 ifneq ($(OSXVER),9)
    CC += -miphoneos-version-min=5.0
@@ -76,7 +87,7 @@ endif
 
 ifneq ($(platform), osx)
 ifneq ($(platform), ios)
-CXXFLAGS += -std=gnu++0x
+CXXFLAGS += $(CXX0X)
 CFLAGS += -std=gnu99
 endif
 endif

@@ -1,4 +1,5 @@
 #include "mixer.hpp"
+#ifndef USE_CXX03
 #include "utils.h"
 #include "../utils.hpp"
 #include <algorithm>
@@ -336,4 +337,4 @@ namespace Audio
       }
    }
 }
-
+#endif

@@ -2,6 +2,8 @@
 #define MIXER_HPP__
 
 #include <stdint.h>
+#include <string.h>
+#ifndef USE_CXX03
 #include <vector>
 #include <memory>
 #include <utility>
@@ -12,9 +14,11 @@
 #include <queue>
 #include <mutex>
 #include <vorbis/vorbisfile.h>
+#endif
 
 namespace Audio
 {
+#ifndef USE_CXX03
    class Stream
    {
       public:
@@ -150,6 +154,21 @@ namespace Audio
          float master_vol;
          void purge_dead_streams();
    };
+#else
+   class Mixer
+   {
+      public:
+         static const unsigned channels = 2;
+
+         Mixer() {}
+
+         void render(float *buffer, size_t frames) { memset(buffer, 0, sizeof(float)*frames); }
+         void render(int16_t *buffer, size_t frames) { memset(buffer, 0, sizeof(int16_t)*frames); }
+
+         void enable(bool enable) { }
+         bool enabled() const { return false; }
+   };
+#endif
 }
 
 #endif

@@ -1,4 +1,5 @@
 #include "game.hpp"
+#ifndef USE_CXX03
 #include <stdlib.h>
 
 using namespace std;
@@ -57,4 +58,4 @@ namespace Icy
          mixer.add_stream(current);
    }
 }
-
+#endif

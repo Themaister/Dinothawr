@@ -1,4 +1,5 @@
 #include "game.hpp"
+#ifndef USE_CXX03
 #include <string>
 #include <memory>
 
@@ -24,4 +25,4 @@ namespace Icy
          mixer.add_stream(duped);
    }
 }
-
+#endif
