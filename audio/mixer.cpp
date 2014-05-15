@@ -1,5 +1,5 @@
 #include "mixer.hpp"
-#if false
+#ifndef USE_CXX03
 #include "utils.h"
 #include "../utils.hpp"
 #include <algorithm>

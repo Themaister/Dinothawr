@@ -1,5 +1,5 @@
 #include "game.hpp"
-#if false
+#ifndef USE_CXX03
 #include <string>
 #include <memory>
 

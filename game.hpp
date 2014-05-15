@@ -32,20 +32,41 @@ namespace Icy
 
    class SFXManager
    {
+#ifndef USE_CXX03
+      public:
+         void add_stream(const std::string &ident, const std::string &path);
+         void play_sfx(const std::string &ident, float volume = 1.0f) const;
+
+      private:
+         std::map<std::string, std::shared_ptr<std::vector<float>>> effects;
+#else
       public:
          void add_stream(const std::string &ident, const std::string &path) {}
          void play_sfx(const std::string &ident, float volume = 1.0f) const {}
-
-/*
-      private:
-         std::map<std::string, std::shared_ptr<std::vector<float>>> effects;
-*/
+#endif
    };
 
    SFXManager& get_sfx();
 
    class BGManager
    {
+#ifndef USE_CXX03
+      public:
+         struct Track
+         {
+            std::string path;
+            float gain;
+         };
+         void init(const std::vector<Track>& tracks);
+         void step(Audio::Mixer& mixer);
+
+      private:
+         std::shared_ptr<Audio::Stream> current;
+         Audio::VorbisLoader loader;
+         std::vector<Track> tracks;
+         bool first;
+         unsigned last;
+#else
       public:
          struct Track
          {
@@ -54,15 +75,7 @@ namespace Icy
          };
          void init(const std::vector<Track>& tracks) {}
          void step(Audio::Mixer& mixer) {}
-
-/*
-      private:
-         std::shared_ptr<Audio::Stream> current;
-         Audio::VorbisLoader loader;
-         std::vector<Track> tracks;
-         bool first;
-         unsigned last;
-*/
+#endif
    };
 
    BGManager& get_bg();

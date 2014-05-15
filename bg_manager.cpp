@@ -1,5 +1,5 @@
 #include "game.hpp"
-#if false
+#ifndef USE_CXX03
 #include <stdlib.h>
 
 using namespace std;
