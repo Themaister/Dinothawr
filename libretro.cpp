@@ -50,6 +50,13 @@ namespace Icy
 #define AUDIO_FRAMES (44100 / 60)
 static int16_t audio_buffer[2 * AUDIO_FRAMES];
 
+static void check_system_specs(void)
+{
+   // TODO : Ballpark average
+   unsigned level = 4;
+   environ_cb(RETRO_ENVIRONMENT_SET_PERFORMANCE_LEVEL, &level);
+}
+
 void retro_init(void)
 {
    struct retro_log_callback log;
@@ -57,6 +64,7 @@ void retro_init(void)
       log_cb = log.log;
    else
       log_cb = NULL;
+   check_system_specs();
 }
 
 void retro_deinit(void)
