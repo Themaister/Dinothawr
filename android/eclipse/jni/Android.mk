@@ -20,9 +20,11 @@ CORE_DIR := ../../..
 
 LOCAL_MODULE := retro_dino
 
+include $(CORE_DIR)/Makefile.common
+
 LOCAL_SRC_FILES = $(SOURCES_CXX) $(SOURCES_C)
-LOCAL_CPPFLAGS := -Wall -std=gnu++11 -fexceptions -DOV_EXCLUDE_STATIC_CALLBACKS -Wno-literal-suffix
-LOCAL_CFLAGS := -O2 -ffast-math -D_GLIBCXX_HAS_GTHREADS -DANDROID
+LOCAL_CPPFLAGS := -Wall -std=gnu++11 -fexceptions -DOV_EXCLUDE_STATIC_CALLBACKS -Wno-literal-suffix $(INCFLAGS)
+LOCAL_CFLAGS := -O2 -ffast-math -D_GLIBCXX_HAS_GTHREADS -DANDROID $(INCFLAGS)
 LOCAL_C_INCLUDES += $(INCFLAGS)
 LOCAL_LDLIBS += -lz -llog
 
