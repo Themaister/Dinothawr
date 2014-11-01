@@ -18,7 +18,7 @@ endif
 
 CORE_DIR := ../../..
 
-LOCAL_MODULE := retro_dino
+LOCAL_MODULE := retro
 
 include $(CORE_DIR)/Makefile.common
 
