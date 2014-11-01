@@ -99,10 +99,12 @@ CFLAGS += -std=gnu99
 endif
 endif
 
-HEADERS := $(wildcard *.hpp) $(wildcard */*.hpp) $(wildcard vorbis/*.h) $(wildcard ogg/*.h)
-SOURCES := $(wildcard *.cpp) $(wildcard */*.cpp)
-CSOURCES := $(wildcard ogg/*.c) $(wildcard vorbis/*.c)
-OBJECTS := $(SOURCES:.cpp=.o) $(CSOURCES:.c=.o)
+CORE_DIR := .
+
+include Makefile.common
+
+HEADERS := $(INCFLAGS)
+OBJECTS := $(SOURCES_CXX:.cpp=.o) $(SOURCES_C:.c=.o)
 CXXFLAGS += -ffast-math -Wall -pedantic $(fpic) -I. -DOV_EXCLUDE_STATIC_CALLBACKS
 CFLAGS += -ffast-math $(fpic) -I. -Ivorbis
 

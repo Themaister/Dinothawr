@@ -1,0 +1,44 @@
+INCFLAGS := -I$(CORE_DIR) -I$(CORE_DIR)/audio -I$(CORE_DIR)/pugixml -I$(CORE_DIR)/vorbis -I$(CORE_DIR)/ogg
+
+SOURCES_CXX := $(CORE_DIR)/bg_manager.cpp \
+	$(CORE_DIR)/font.cpp \
+	$(CORE_DIR)/game.cpp \
+	$(CORE_DIR)/game_manager.cpp \
+	$(CORE_DIR)/libretro.cpp \
+	$(CORE_DIR)/render_target.cpp \
+	$(CORE_DIR)/rpng.cpp \
+	$(CORE_DIR)/sfx_manager.cpp \
+	$(CORE_DIR)/surface.cpp \
+	$(CORE_DIR)/surface_cache.cpp \
+	$(CORE_DIR)/surface_cluster.cpp \
+	$(CORE_DIR)/tilemap.cpp \
+	$(CORE_DIR)/pugixml/pugixml.cpp \
+	$(CORE_DIR)/audio/mixer.cpp \
+	$(CORE_DIR)/audio/utils.cpp
+
+SOURCES_C := $(CORE_DIR)/ogg/bitwise.c \
+	$(CORE_DIR)/ogg/framing.c \
+	$(CORE_DIR)/vorbis/analysis.c \
+	$(CORE_DIR)/vorbis/barkmel.c \
+	$(CORE_DIR)/vorbis/bitrate.c \
+	$(CORE_DIR)/vorbis/block.c \
+	$(CORE_DIR)/vorbis/codebook.c \
+	$(CORE_DIR)/vorbis/envelope.c \
+	$(CORE_DIR)/vorbis/floor0.c \
+	$(CORE_DIR)/vorbis/floor1.c \
+	$(CORE_DIR)/vorbis/info.c \
+	$(CORE_DIR)/vorbis/lookup.c \
+	$(CORE_DIR)/vorbis/lpc.c \
+	$(CORE_DIR)/vorbis/lsp.c \
+	$(CORE_DIR)/vorbis/mapping0.c \
+	$(CORE_DIR)/vorbis/mdct.c \
+	$(CORE_DIR)/vorbis/psy.c \
+	$(CORE_DIR)/vorbis/registry.c \
+	$(CORE_DIR)/vorbis/res0.c \
+	$(CORE_DIR)/vorbis/sharedbook.c \
+	$(CORE_DIR)/vorbis/smallft.c \
+	$(CORE_DIR)/vorbis/synthesis.c \
+	$(CORE_DIR)/vorbis/vorbisenc.c \
+	$(CORE_DIR)/vorbis/vorbisfile.c \
+	$(CORE_DIR)/vorbis/window.c
+
