@@ -63,6 +63,27 @@ ifeq ($(OSX_LT_MAVERICKS),"YES")
    CXX += -miphoneos-version-min=5.0
    CXXFLAGS += -miphoneos-version-min=5.0
 endif
+else ifeq ($(platform), theos_ios)
+DEPLOYMENT_IOSVERSION = 5.0
+TARGET = iphone:latest:$(DEPLOYMENT_IOSVERSION)
+ARCHS = armv7 armv7s
+TARGET_IPHONEOS_DEPLOYMENT_VERSION=$(DEPLOYMENT_IOSVERSION)
+THEOS_BUILD_DIR := objs
+include $(THEOS)/makefiles/common.mk
+
+LIBRARY_NAME = $(TARGET_NAME)_libretro_ios
+
+else ifeq ($(platform), qnx)
+	# QNX
+	TARGET := $(TARGET_NAME)_libretro_qnx.so
+	fpic := -fPIC
+	SHARED := -shared -Wl,--version-script=link.T
+	CC = qcc -Vgcc_notarmv7le
+	CXX = QCC -Vgcc_notarmv7le_cpp
+	AR = QCC -Vgcc_ntoarmv7le
+	CXXFLAGS += -D__BLACKBERRY_QNX__
+	CXXFLAGS += -DARM
+
 else ifeq ($(platform), wii)
    TARGET := $(TARGET_NAME)_libretro_wii.a
    CC = $(DEVKITPPC)/bin/powerpc-eabi-gcc$(EXE_EXT)
@@ -88,14 +109,15 @@ ifeq ($(DEBUG), 1)
    CXXFLAGS += -O0 -g
    CFLAGS += -O0 -g
 else
-   CXXFLAGS += -O3
-   CFLAGS += -O3
+   CXXFLAGS += -O3 -DNDEBUG
+   CFLAGS += -O3 -DNDEBUG
 endif
 
 ifneq ($(platform), osx)
 ifneq ($(platform), ios)
+ifneq ($(platform), theos_ios)
 CXXFLAGS += $(CXX0X)
-CFLAGS += -std=gnu99
+endif
 endif
 endif
 
@@ -108,6 +130,19 @@ OBJECTS := $(SOURCES_CXX:.cpp=.o) $(SOURCES_C:.c=.o)
 CXXFLAGS += -ffast-math -Wall -pedantic $(fpic) -I. -DOV_EXCLUDE_STATIC_CALLBACKS
 CFLAGS += -ffast-math $(fpic) -I. -Ivorbis
 
+%.o: %.cpp $(HEADERS)
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+
+%.o: %.c $(HEADERS)
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+ifeq ($(platform), theos_ios)
+COMMON_FLAGS := -DIOS $(COMMON_DEFINES) $(INCFLAGS) -I$(THEOS_INCLUDE_PATH) -Wno-error
+$(LIBRARY_NAME)_CFLAGS += $(CFLAGS) $(COMMON_FLAGS)
+$(LIBRARY_NAME)_CXXFLAGS += $(CXXFLAGS) -std=c++11 -stdlib=libc++ $(COMMON_FLAGS)
+${LIBRARY_NAME}_FILES = $(SOURCES_CXX) $(SOURCES_C)
+include $(THEOS_MAKE_PATH)/library.mk
+else
 all: $(TARGET)
 
 $(TARGET): $(OBJECTS)
@@ -116,12 +151,6 @@ ifeq ($(STATIC_LINKING), 1)
 else
 	$(CXX) $(fpic) $(SHARED) $(LDFLAGS) $(INCLUDES) -o $@ $(OBJECTS) $(LIBS) -lm -lz
 endif
-
-%.o: %.cpp $(HEADERS)
-	$(CXX) $(CXXFLAGS) -c -o $@ $<
-
-%.o: %.c $(HEADERS)
-	$(CC) $(CFLAGS) -c -o $@ $<
 
 clean:
 	rm -f $(OBJECTS) $(TARGET)
@@ -133,4 +162,4 @@ install: all
 	cp -r dinothawr/* $(ASSETDIR)
 
 .PHONY: clean install
-
+endif
