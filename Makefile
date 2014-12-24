@@ -139,7 +139,7 @@ CFLAGS += -ffast-math $(fpic) -I. -Ivorbis
 ifeq ($(platform), theos_ios)
 COMMON_FLAGS := -DIOS $(COMMON_DEFINES) $(INCFLAGS) -I$(THEOS_INCLUDE_PATH) -Wno-error
 $(LIBRARY_NAME)_CFLAGS += $(CFLAGS) $(COMMON_FLAGS)
-$(LIBRARY_NAME)_CXXFLAGS += $(CXXFLAGS) -std=c++11 -stdlib=libc++ $(COMMON_FLAGS)
+$(LIBRARY_NAME)_CPPFLAGS += $(CXXFLAGS) $(CXX0X) $(COMMON_FLAGS)
 ${LIBRARY_NAME}_FILES = $(SOURCES_CXX) $(SOURCES_C)
 include $(THEOS_MAKE_PATH)/library.mk
 else
