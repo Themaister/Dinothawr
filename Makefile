@@ -64,6 +64,7 @@ ifeq ($(OSX_LT_MAVERICKS),"YES")
    CXXFLAGS += -miphoneos-version-min=5.0
 endif
 else ifeq ($(platform), theos_ios)
+TARGET_CXX=clang++
 DEPLOYMENT_IOSVERSION = 5.0
 TARGET = iphone:latest:$(DEPLOYMENT_IOSVERSION)
 ARCHS = armv7 armv7s
@@ -138,10 +139,12 @@ CFLAGS += -ffast-math $(fpic) -I. -Ivorbis
 
 ifeq ($(platform), theos_ios)
 COMMON_FLAGS := -DIOS $(COMMON_DEFINES) $(INCFLAGS) -I$(THEOS_INCLUDE_PATH) -Wno-error
-$(LIBRARY_NAME)_CFLAGS += $(CFLAGS) $(COMMON_FLAGS)
+$(LIBRARY_NAME)_CFLAGS += $(CFLAGS)  $(COMMON_FLAGS)
 $(LIBRARY_NAME)_CPPFLAGS += $(CXXFLAGS) $(COMMON_FLAGS)
 ${LIBRARY_NAME}_FILES = $(SOURCES_CXX) $(SOURCES_C)
-ADDITIONAL_CCFLAGS = -std=c++11
+${LIBRARY_NAME}_LIBRARIES = z
+ADDITIONAL_CCFLAGS = -std=c++11 -stdlib=libc++
+ADDITIONAL_LDFLAGS = -std=c++11 -stdlib=libc++
 include $(THEOS_MAKE_PATH)/library.mk
 else
 all: $(TARGET)
