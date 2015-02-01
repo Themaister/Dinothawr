@@ -43,6 +43,11 @@ else ifeq ($(platform), osx)
 ifeq ($(OSX_LT_MAVERICKS),"YES")
    fpic += -mmacosx-version-min=10.7
 endif
+ifndef ($(NOUNIVERSAL))
+   CFLAGS += $(ARCHFLAGS)
+   CXXFLAGS += $(ARCHFLAGS)
+   LDFLAGS += $(ARCHFLAGS)
+endif
 else ifeq ($(platform), ios)
    TARGET := $(LIBRETRO)_libretro_ios.dylib
    fpic := -fPIC
