@@ -109,7 +109,7 @@ else ifeq ($(platform), psp1)
 	CC = psp-gcc$(EXE_EXT)
 	CXX = psp-g++$(EXE_EXT)
 	AR = psp-ar$(EXE_EXT)
-	PLATFORM_DEFINES += -DPSP -G0 -DLSB_FIRST -std=gnu++0x
+	PLATFORM_DEFINES += -DPSP -G0 -std=gnu++0x
 	STATIC_LINKING = 1
 
 # Windows
