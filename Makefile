@@ -43,9 +43,7 @@ else ifeq ($(platform), osx)
 	CXXFLAGS += $(CXX11) $(LDFLAGS)
 	OSXVER = `sw_vers -productVersion | cut -d. -f 2`
 	OSX_LT_MAVERICKS = `(( $(OSXVER) <= 9)) && echo "YES"`
-	ifeq ($(OSX_LT_MAVERICKS),"YES")
-		fpic += -mmacosx-version-min=10.7
-	endif
+        fpic += -mmacosx-version-min=10.7
 	ifndef ($(NOUNIVERSAL))
 		CFLAGS += $(ARCHFLAGS)
 		CXXFLAGS += $(ARCHFLAGS)
