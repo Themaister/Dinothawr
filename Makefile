@@ -150,8 +150,8 @@ include Makefile.common
 
 HEADERS := $(INCFLAGS)
 OBJECTS := $(SOURCES_CXX:.cpp=.o) $(SOURCES_C:.c=.o)
-CXXFLAGS += -ffast-math -Wall -pedantic $(fpic) -I. -DOV_EXCLUDE_STATIC_CALLBACKS
-CFLAGS += -ffast-math $(fpic) -I. -Ivorbis
+CXXFLAGS += -ffast-math -Wall -pedantic $(fpic) -I. -DOV_EXCLUDE_STATIC_CALLBACKS $(INCFLAGS)
+CFLAGS += -ffast-math $(fpic) $(INCFLAGS)
 
 %.o: %.cpp $(HEADERS)
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
