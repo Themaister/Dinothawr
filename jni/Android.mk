@@ -16,7 +16,7 @@ ifeq ($(TARGET_ARCH),mips)
   LOCAL_CFLAGS += -DANDROID_MIPS
 endif
 
-CORE_DIR := ../../..
+CORE_DIR := ../
 
 LOCAL_MODULE := retro
 
@@ -26,7 +26,7 @@ LOCAL_SRC_FILES = $(SOURCES_CXX) $(SOURCES_C)
 LOCAL_CPPFLAGS := -Wall -std=gnu++11 -fexceptions -DOV_EXCLUDE_STATIC_CALLBACKS -Wno-literal-suffix $(INCFLAGS)
 LOCAL_CFLAGS := -O2 -ffast-math -D_GLIBCXX_HAS_GTHREADS -DANDROID $(INCFLAGS)
 LOCAL_C_INCLUDES += $(INCFLAGS)
-LOCAL_LDLIBS += -lz -llog
+LOCAL_LDLIBS += -lz
 
 include $(BUILD_SHARED_LIBRARY)
 
