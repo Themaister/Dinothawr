@@ -18,6 +18,11 @@ LIBRETRO := dinothawr
 LIBDIR = $(DESTDIR)/usr/lib/libretro
 ASSETDIR = $(DESTDIR)/usr/share/dinothawr
 
+GIT_VERSION := " $(shell git rev-parse --short HEAD || echo unknown)"
+ifneq ($(GIT_VERSION)," unknown")
+	CXXFLAGS += -DGIT_VERSION=\"$(GIT_VERSION)\"
+endif
+
 ifeq ($(USE_CXX03),1)
 	CXXFLAGS += -DUSE_CXX03
 	#note that this actually doesn't enable C++03 yet
