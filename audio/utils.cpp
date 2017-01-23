@@ -8,7 +8,8 @@
 
 void audio_mix_volume_C(float *out, const float *in, float vol, size_t samples)
 {
-   for (size_t i = 0; i < samples; i++)
+   size_t i;
+   for (i = 0; i < samples; i++)
       out[i] += in[i] * vol;
 }
 
