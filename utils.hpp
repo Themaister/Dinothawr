@@ -16,8 +16,7 @@
 #include <memory>
 #include <errno.h>
 
-
-#include "pugixml/pugixml.hpp"
+#include <pugixml/pugixml.hpp>
 
 namespace Blit
 {
