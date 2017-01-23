@@ -14,7 +14,7 @@ ifeq ($(platform),)
 	endif
 endif
 
-LIBRETRO := dinothawr
+TARGET_NAME := dinothawr
 LIBDIR = $(DESTDIR)/usr/lib/libretro
 ASSETDIR = $(DESTDIR)/usr/share/dinothawr
 
@@ -35,13 +35,13 @@ endif
 
 # Unix
 ifneq (,$(findstring unix,$(platform)))
-	TARGET := $(LIBRETRO)_libretro.so
+	TARGET := $(TARGET_NAME)_libretro.so
 	fpic := -fPIC
 	SHARED := -shared -Wl,--version-script=link.T -Wl,--no-undefined
 
 # OS X
 else ifeq ($(platform), osx)
-	TARGET := $(LIBRETRO)_libretro.dylib
+	TARGET := $(TARGET_NAME)_libretro.dylib
 	fpic := -fPIC
 	SHARED := -dynamiclib
 	LDFLAGS += -stdlib=libc++
@@ -58,7 +58,7 @@ else ifeq ($(platform), osx)
 # iOS
 else ifneq (,$(findstring ios,$(platform)))
 
-	TARGET := $(LIBRETRO)_libretro_ios.dylib
+	TARGET := $(TARGET_NAME)_libretro_ios.dylib
 	fpic := -fPIC
 	SHARED := -dynamiclib
 	LDFLAGS += -stdlib=libc++
@@ -132,7 +132,7 @@ else ifeq ($(platform), vita)
 else
 	CC = gcc
 	CXX = g++
-	TARGET := $(LIBRETRO)_libretro.dll
+	TARGET := $(TARGET_NAME)_libretro.dll
 	SHARED := -shared -static-libgcc -static-libstdc++ -static -s -Wl,--version-script=link.T -Wl,--no-undefined
 
 endif
