@@ -83,8 +83,12 @@ namespace Audio
 
       if (to_write < frames && loop())
       {
+         size_t to_write_loop;
+
          rewind();
-         size_t to_write_loop = min(frames * Mixer::channels - to_write, data->size() - (ptr + to_write));
+
+         to_write_loop = min(frames * Mixer::channels - to_write, data->size() - (ptr + to_write));
+
          copy(begin(*data) + ptr + to_write,
                begin(*data) + ptr + to_write + to_write_loop,
                buffer + to_write);
@@ -104,9 +108,11 @@ namespace Audio
       file.exceptions(ifstream::badbit | ifstream::failbit | ifstream::eofbit);
       try
       {
-         file.open(path, ifstream::in | ifstream::binary);
-
          char header[44];
+         vector<int16_t> wave;
+         vector<float> pcm_data;
+
+         file.open(path, ifstream::in | ifstream::binary);
          file.read(header, sizeof(header));
 
          if (!equal(header + 0, header + 4, "RIFF"))
@@ -134,8 +140,6 @@ namespace Audio
          if (bits != 16)
             throw logic_error("Invalid bit depth.");
 
-         vector<int16_t> wave;
-
          unsigned wave_size = read_le32(header + 4);
          wave_size += 8;
          wave_size -= sizeof(header);
@@ -143,7 +147,6 @@ namespace Audio
 
          file.read(reinterpret_cast<char*>(wave.data()), wave_size);
 
-         vector<float> pcm_data;
          if (channels == 1)
          {
             pcm_data.resize(2 * wave_size / sizeof(int16_t));
@@ -179,11 +182,12 @@ namespace Audio
    vector<float> VorbisFile::decode()
    {
       vector<float> data;
+      float buffer[4096 * Mixer::channels];
+      size_t rendered = 0;
+
       rewind();
       loop(false);
 
-      float buffer[4096 * Mixer::channels];
-      size_t rendered = 0;
       while ((rendered = render(buffer, 4096)))
          data.insert(data.end(), buffer, buffer + rendered * Mixer::channels);
 
@@ -193,13 +197,16 @@ namespace Audio
    VorbisFile::VorbisFile(const string& path)
       : path(path), is_eof(false), is_mono(false)
    {
+      vorbis_info *info = NULL;
+
       if (ov_fopen(path.c_str(), &vf) < 0)
          throw runtime_error(join("Failed to open vorbis file: ", path));
 
       cerr << "Vorbis info:" << endl;
       cerr << "\tStreams: " << ov_streams(&vf) << endl;
 
-      vorbis_info *info = (vorbis_info*)ov_info(&vf, 0);
+      info = (vorbis_info*)ov_info(&vf, 0);
+
       if (info)
       {
          switch (info->channels)
@@ -274,19 +281,25 @@ namespace Audio
 
          if (!is_mono)
          {
-            for (unsigned c = 0; c < Mixer::channels; c++)
-               for (long i = 0; i < ret; i++)
+            long i;
+            unsigned c;
+
+            for (c = 0; c < Mixer::channels; c++)
+               for (i = 0; i < ret; i++)
                   buffer[2 * i + c] = pcm[c][i];
          }
          else
          {
-            for (unsigned c = 0; c < Mixer::channels; c++)
-               for (long i = 0; i < ret; i++)
+            long i;
+            unsigned c;
+
+            for (c = 0; c < Mixer::channels; c++)
+               for (i = 0; i < ret; i++)
                   buffer[2 * i + c] = pcm[0][i];
          }
 
-         buffer += ret * Mixer::channels;
-         frames -= ret;
+         buffer   += ret * Mixer::channels;
+         frames   -= ret;
          rendered += ret;
       }
 
