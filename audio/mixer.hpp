@@ -52,9 +52,10 @@ namespace Audio
 
          std::size_t render(float* buffer, std::size_t frames)
          {
-            for (std::size_t i = 0; i < frames; i++, index += omega)
+            std::size_t i;
+            for (i = 0; i < frames; i++, index += omega)
             {
-               float val = std::sin(index);
+               float val         = std::sin(index);
                buffer[2 * i + 0] = buffer[2 * i + 1] = val;
             }
 
