@@ -53,7 +53,8 @@ SOURCES_C += $(LIBRETRO_COMM_DIR)/audio/conversion/float_to_s16.c \
 				 $(LIBRETRO_COMM_DIR)/audio/conversion/s16_to_float.c \
 				 $(LIBRETRO_COMM_DIR)/features/features_cpu.c \
 				 $(LIBRETRO_COMM_DIR)/compat/compat_strl.c \
-				 $(LIBRETRO_COMM_DIR)/compat/compat_posix_string.c
+				 $(LIBRETRO_COMM_DIR)/compat/compat_posix_string.c \
+				 $(LIBRETRO_COMM_DIR)/streams/file_stream.c
 
 ifeq ($(HAVE_NEON),1)
 	SOURCES_ASM += $(LIBRETRO_COMM_DIR)/audio/conversion/float_to_s16_neon.S \
