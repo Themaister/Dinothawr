@@ -1,12 +1,12 @@
 #include "mixer.hpp"
 #ifndef USE_CXX03
-#include "utils.h"
 #include "../utils.hpp"
 #include <algorithm>
 #include <stdexcept>
 #include <iostream>
 #include <fstream>
 
+#include <audio/audio_mix.h>
 #include <audio/conversion/float_to_s16.h>
 
 using namespace Blit::Utils;
