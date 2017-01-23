@@ -1,4 +1,5 @@
-INCFLAGS := -I$(CORE_DIR) -I$(CORE_DIR)/audio -I$(CORE_DIR)/pugixml -I$(CORE_DIR)/vorbis -I$(CORE_DIR)/ogg
+LIBRETRO_COMM_DIR := $(CORE_DIR)/libretro-common
+INCFLAGS := -I$(CORE_DIR) -I$(CORE_DIR)/audio -I$(CORE_DIR)/pugixml -I$(CORE_DIR)/vorbis -I$(CORE_DIR)/ogg -I$(LIBRETRO_COMM_DIR)/include
 
 SOURCES_CXX := $(CORE_DIR)/bg_manager.cpp \
 	$(CORE_DIR)/font.cpp \
@@ -42,3 +43,11 @@ SOURCES_C := $(CORE_DIR)/ogg/bitwise.c \
 	$(CORE_DIR)/vorbis/vorbisfile.c \
 	$(CORE_DIR)/vorbis/window.c
 
+ifeq ($(STATIC_LINKING), 1)
+else
+SOURCES_C += $(LIBRETRO_COMM_DIR)/audio/conversion/float_to_s16.c \
+				 $(LIBRETRO_COMM_DIR)/audio/conversion/s16_to_float.c \
+				 $(LIBRETRO_COMM_DIR)/features/features_cpu.c \
+				 $(LIBRETRO_COMM_DIR)/compat/compat_strl.c \
+				 $(LIBRETRO_COMM_DIR)/compat/compat_posix_string.c
+endif
