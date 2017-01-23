@@ -7,6 +7,8 @@
 #include <iostream>
 #include <fstream>
 
+#include <audio/conversion/float_to_s16.h>
+
 using namespace Blit::Utils;
 using namespace std;
 
@@ -58,7 +60,7 @@ namespace Audio
       conv_buffer.reserve(frames * channels);
       render(conv_buffer.data(), frames);
 
-      audio_convert_float_to_s16(out_buffer, conv_buffer.data(), frames * channels);
+      convert_float_to_s16(out_buffer, conv_buffer.data(), frames * channels);
    }
 
    void Mixer::clear()

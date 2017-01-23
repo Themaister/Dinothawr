@@ -1,6 +1,8 @@
 LIBRETRO_COMM_DIR := $(CORE_DIR)/libretro-common
 INCFLAGS := -I$(CORE_DIR) -I$(CORE_DIR)/audio -I$(CORE_DIR)/pugixml -I$(CORE_DIR)/vorbis -I$(CORE_DIR)/ogg -I$(LIBRETRO_COMM_DIR)/include
 
+SOURCES_ASM := 
+
 SOURCES_CXX := $(CORE_DIR)/bg_manager.cpp \
 	$(CORE_DIR)/font.cpp \
 	$(CORE_DIR)/game.cpp \
@@ -50,4 +52,9 @@ SOURCES_C += $(LIBRETRO_COMM_DIR)/audio/conversion/float_to_s16.c \
 				 $(LIBRETRO_COMM_DIR)/features/features_cpu.c \
 				 $(LIBRETRO_COMM_DIR)/compat/compat_strl.c \
 				 $(LIBRETRO_COMM_DIR)/compat/compat_posix_string.c
+
+ifeq ($(HAVE_NEON),1)
+	SOURCES_ASM += $(LIBRETRO_COMM_DIR)/audio/conversion/float_to_s16_neon.S \
+						$(LIBRETRO_COMM_DIR)/audio/conversion/s16_to_float_neon.S
+endif
 endif

@@ -1,5 +1,6 @@
 DEBUG = 0
 USE_CXX03 = 0
+HAVE_NEON=0
 
 ifeq ($(platform),)
 	platform = unix
