@@ -21,6 +21,7 @@ void audio_mix_volume_SSE2(float *out, const float *in, float vol, size_t sample
 
    for (i = 0; i + 16 <= samples; i += 16, out += 16, in += 16)
    {
+      unsigned j;
       __m128 input[4] = {
          _mm_loadu_ps(out +  0),
          _mm_loadu_ps(out +  4),
@@ -35,8 +36,8 @@ void audio_mix_volume_SSE2(float *out, const float *in, float vol, size_t sample
          _mm_mul_ps(volume, _mm_loadu_ps(in + 12)),
       };
 
-      for (unsigned i = 0; i < 4; i++)
-         _mm_storeu_ps(out + 4 * i, _mm_add_ps(input[i], additive[i]));
+      for (j = 0; j < 4; j++)
+         _mm_storeu_ps(out + 4 * j, _mm_add_ps(input[j], additive[j]));
    }
 
    audio_mix_volume_C(out, in, vol, samples - i);
