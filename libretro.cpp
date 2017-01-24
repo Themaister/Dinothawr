@@ -251,46 +251,42 @@ void retro_reset(void)
 
 bool retro_load_game(const struct retro_game_info* info)
 {
-   try
-   {
-      struct retro_audio_callback cb = { audio_callback, audio_set_state };
-      use_audio_cb = environ_cb(RETRO_ENVIRONMENT_SET_AUDIO_CALLBACK, &cb);
+   struct retro_audio_callback cb = { audio_callback, audio_set_state };
+   use_audio_cb = environ_cb(RETRO_ENVIRONMENT_SET_AUDIO_CALLBACK, &cb);
 
-      struct retro_input_descriptor desc[] = {
-         { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_LEFT,  "D-Pad Left" },
-         { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_UP,    "D-Pad Up" },
-         { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_DOWN,  "D-Pad Down" },
-         { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_RIGHT, "D-Pad Right" },
-         { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_B,     "Push" },
-         { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_A,     "Menu" },
-         { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_X,     "Reset" },
+   struct retro_input_descriptor desc[] = {
+      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_LEFT,  "D-Pad Left" },
+      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_UP,    "D-Pad Up" },
+      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_DOWN,  "D-Pad Down" },
+      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_RIGHT, "D-Pad Right" },
+      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_B,     "Push" },
+      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_A,     "Menu" },
+      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_X,     "Reset" },
 
-         { 0 },
-      };
+      { 0 },
+   };
 
-      environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, desc);
-
-      time_reference = 1000000 / 60;
-      present_frame = false;
-      struct retro_frame_time_callback frame_cb = { frame_time_cb, time_reference };
-      use_frame_time_cb = environ_cb(RETRO_ENVIRONMENT_SET_FRAME_TIME_CALLBACK, &frame_cb);
-
-      game_path = info->path;
-      game_path_dir = basedir(game_path);
-      load_game(game_path);
-      mixer = Audio::Mixer();
-
-      retro_pixel_format fmt = RETRO_PIXEL_FORMAT_XRGB8888;
-      environ_cb(RETRO_ENVIRONMENT_SET_PIXEL_FORMAT, &fmt);
-
-      update_variables();
-      return true;
-   }
-   catch (const exception& e)
-   {
-      cerr << e.what() << endl;
+   if (!info)
       return false;
-   }
+
+   environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, desc);
+
+   time_reference = 1000000 / 60;
+   present_frame = false;
+   struct retro_frame_time_callback frame_cb = { frame_time_cb, time_reference };
+   use_frame_time_cb = environ_cb(RETRO_ENVIRONMENT_SET_FRAME_TIME_CALLBACK, &frame_cb);
+
+   game_path     = info->path;
+   game_path_dir = basedir(game_path);
+   load_game(game_path);
+
+   mixer         = Audio::Mixer();
+
+   retro_pixel_format fmt = RETRO_PIXEL_FORMAT_XRGB8888;
+   environ_cb(RETRO_ENVIRONMENT_SET_PIXEL_FORMAT, &fmt);
+
+   update_variables();
+   return true;
 }
 
 bool retro_load_game_special(unsigned, const struct retro_game_info*, size_t)
