@@ -66,8 +66,9 @@ else ifneq (,$(findstring ios,$(platform)))
 	ifeq ($(IOSSDK),)
 		IOSSDK := $(shell xcodebuild -version -sdk iphoneos Path)
 	endif
-	CC = cc -arch armv7 -isysroot $(IOSSDK)
-	CXX = c++ -arch armv7 -isysroot $(IOSSDK)
+         HAVE_NEON=1
+	CC = cc -arch armv7 -isysroot $(IOSSDK) -marm
+	CXX = c++ -arch armv7 -isysroot $(IOSSDK) -marm
 	LD  = armv7-apple-darwin11-ld
 	CXXFLAGS += $(CXX11) $(LDFLAGS)
 ifeq ($(platform),ios9)
@@ -159,7 +160,7 @@ CORE_DIR := .
 include Makefile.common
 
 HEADERS := $(INCFLAGS)
-OBJECTS := $(SOURCES_CXX:.cpp=.o) $(SOURCES_C:.c=.o)
+OBJECTS := $(SOURCES_CXX:.cpp=.o) $(SOURCES_C:.c=.o) $(SOURCES_ASM:.S=.o)
 CXXFLAGS += -ffast-math -Wall -pedantic $(fpic) -I. -DOV_EXCLUDE_STATIC_CALLBACKS $(INCFLAGS)
 CFLAGS += -ffast-math $(fpic) $(INCFLAGS)
 
