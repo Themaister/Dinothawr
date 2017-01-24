@@ -1,6 +1,6 @@
 #include "surface.hpp"
 #include "pugixml/pugixml.hpp"
-#include "rpng.h"
+#include "rpng_front.h"
 #include <stdexcept>
 #include <stdio.h>
 #include <new>
@@ -50,8 +50,9 @@ namespace Blit
    std::shared_ptr<const Surface::Data> SurfaceCache::load_image(const std::string& path)
    {
       uint32_t *image = NULL;
-      unsigned width = 0, height = 0;
-      bool loaded = rpng_load_image_argb(path.c_str(), &image, &width, &height);
+      unsigned width  = 0;
+      unsigned height = 0;
+      bool loaded     = rpng_load_image_argb(path.c_str(), &image, &width, &height);
 
       if (!loaded)
          throw std::runtime_error(Utils::join("RPNG failed to load image: ", path));

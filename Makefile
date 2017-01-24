@@ -159,10 +159,10 @@ CORE_DIR := .
 
 include Makefile.common
 
-HEADERS := $(INCFLAGS)
-OBJECTS := $(SOURCES_CXX:.cpp=.o) $(SOURCES_C:.c=.o) $(SOURCES_ASM:.S=.o)
-CXXFLAGS += -ffast-math -Wall -pedantic $(fpic) -I. -DOV_EXCLUDE_STATIC_CALLBACKS $(INCFLAGS)
-CFLAGS += -ffast-math $(fpic) $(INCFLAGS)
+HEADERS  := $(INCFLAGS)
+OBJECTS  := $(SOURCES_CXX:.cpp=.o) $(SOURCES_C:.c=.o) $(SOURCES_ASM:.S=.o)
+CXXFLAGS += -DHAVE_ZLIB -ffast-math -Wall -pedantic $(fpic) -I. -DOV_EXCLUDE_STATIC_CALLBACKS $(INCFLAGS)
+CFLAGS   += -DHAVE_ZLIB -ffast-math $(fpic) $(INCFLAGS)
 
 %.o: %.cpp $(HEADERS)
 	$(CXX) $(CXXFLAGS) -c -o $@ $<

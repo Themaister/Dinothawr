@@ -10,7 +10,6 @@ SOURCES_CXX := $(CORE_DIR)/bg_manager.cpp \
 	$(CORE_DIR)/game_manager.cpp \
 	$(CORE_DIR)/libretro.cpp \
 	$(CORE_DIR)/render_target.cpp \
-	$(CORE_DIR)/rpng.cpp \
 	$(CORE_DIR)/sfx_manager.cpp \
 	$(CORE_DIR)/surface.cpp \
 	$(CORE_DIR)/surface_cache.cpp \
@@ -48,13 +47,20 @@ SOURCES_C := \
 
 ifeq ($(STATIC_LINKING), 1)
 else
-SOURCES_C += $(LIBRETRO_COMM_DIR)/audio/conversion/float_to_s16.c \
+SOURCES_C += \
+				 $(CORE_DIR)/rpng_front.c \
+				 $(LIBRETRO_COMM_DIR)/file/nbio/nbio_stdio.c \
+				 $(LIBRETRO_COMM_DIR)/audio/conversion/float_to_s16.c \
 				 $(LIBRETRO_COMM_DIR)/audio/conversion/s16_to_float.c \
 				 $(LIBRETRO_COMM_DIR)/audio/audio_mix.c \
 				 $(LIBRETRO_COMM_DIR)/features/features_cpu.c \
 				 $(LIBRETRO_COMM_DIR)/compat/compat_strl.c \
 				 $(LIBRETRO_COMM_DIR)/compat/compat_posix_string.c \
+				 $(LIBRETRO_COMM_DIR)/formats/png/rpng.c \
 				 $(LIBRETRO_COMM_DIR)/streams/file_stream.c \
+				 $(LIBRETRO_COMM_DIR)/streams/trans_stream.c \
+				 $(LIBRETRO_COMM_DIR)/streams/trans_stream_pipe.c \
+				 $(LIBRETRO_COMM_DIR)/streams/trans_stream_zlib.c
 
 ifeq ($(HAVE_NEON),1)
 	SOURCES_ASM += $(LIBRETRO_COMM_DIR)/audio/conversion/float_to_s16_neon.S \

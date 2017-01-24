@@ -17,8 +17,17 @@
 #define RPNG_H__
 
 #include <stdint.h>
+#include <boolean.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 bool rpng_load_image_argb(const char *path, uint32_t **data, unsigned *width, unsigned *height);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 
