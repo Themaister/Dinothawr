@@ -165,7 +165,7 @@ static void update_variables()
          option_use_frame_time = false;
 
       if (log_cb)
-         log_cb(RETRO_LOG_INFO, "Dinothawr: ", "Using timer as FPS reference: %s.\n", option_use_frame_time ? "enabled" : "disabled");
+         log_cb(RETRO_LOG_INFO, "Dinothawr: Using timer as FPS reference: %s.\n", option_use_frame_time ? "enabled" : "disabled");
    }
 }
 
