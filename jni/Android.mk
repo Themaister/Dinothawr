@@ -27,7 +27,7 @@ LOCAL_MODULE := retro
 include $(CORE_DIR)/Makefile.common
 
 LOCAL_SRC_FILES = $(SOURCES_CXX) $(SOURCES_C)
-LOCAL_CPPFLAGS := -DHAVE_ZLIB -Wall -std=gnu++11 -fexceptions -DOV_EXCLUDE_STATIC_CALLBACKS -Wno-literal-suffix $(INCFLAGS)
+LOCAL_CPPFLAGS := -DHAVE_ZLIB -Wall -std=gnu++11 -fexceptions -DOV_EXCLUDE_STATIC_CALLBACKS -Wno-literal-suffix $(INCFLAGS) -std=c++11
 LOCAL_CFLAGS := -O2 -ffast-math -DHAVE_ZLIB -D_GLIBCXX_HAS_GTHREADS -DANDROID $(INCFLAGS)
 LOCAL_C_INCLUDES += $(INCFLAGS)
 LOCAL_LDLIBS += -lz
