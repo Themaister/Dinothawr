@@ -76,9 +76,9 @@ ifeq ($(platform),ios9)
 	CXX += -miphoneos-version-min=8.0
 	CXXFLAGS += -miphoneos-version-min=8.0
 else
-	CC += -miphoneos-version-min=5.0
-	CXX += -miphoneos-version-min=5.0
-	CXXFLAGS += -miphoneos-version-min=5.0
+	CC += -miphoneos-version-min=6.0
+	CXX += -miphoneos-version-min=6.0
+	CXXFLAGS += -miphoneos-version-min=6.0
 endif
 
 # Theos
