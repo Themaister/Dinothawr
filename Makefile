@@ -103,6 +103,20 @@ else ifeq ($(platform), qnx)
 	CXXFLAGS += -D__BLACKBERRY_QNX__
 	CXXFLAGS += -DARM
 
+# Nintendo Switch (libnx)
+else ifeq ($(platform), libnx)
+    include $(DEVKITPRO)/libnx/switch_rules
+    EXT=a
+    TARGET := $(TARGET_NAME)_libretro_$(platform).$(EXT)
+    DEFINES := -DSWITCH=1 -U__linux__ -U__linux
+    CFLAGS	:=	 $(DEFINES) -g -O3 \
+                 -fPIE -I$(LIBNX)/include/ -ffunction-sections -fdata-sections -ftls-model=local-exec -Wl,--allow-multiple-definition -specs=$(LIBNX)/switch.specs
+    CFLAGS += $(INCDIRS)
+    CFLAGS	+=	-D__SWITCH__ -DHAVE_LIBNX -march=armv8-a -mtune=cortex-a57 -mtp=soft
+    CXXFLAGS := $(ASFLAGS) $(CFLAGS) -fno-rtti -std=gnu++11
+    CFLAGS += -std=gnu11
+    STATIC_LINKING = 1
+
 # Nintendo Wii
 else ifeq ($(platform), wii)
 	TARGET := $(TARGET_NAME)_libretro_wii.a
