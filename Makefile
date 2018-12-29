@@ -239,13 +239,11 @@ else
 all: $(TARGET)
 
 $(TARGET): $(OBJECTS)
-	@echo "** BUILDING $(TARGET) FOR PLATFORM $(platform) **"
 ifeq ($(STATIC_LINKING), 1)
 	$(AR) rcs $@ $(OBJECTS)
 else
 	$(CXX) $(fpic) $(SHARED) $(LDFLAGS) $(INCLUDES) -o $@ $(OBJECTS) $(LIBS) -lm -lz -lpthread
 endif
-	@echo "** BUILD SUCCESSFUL! GG NO RE **"
   
 clean:
 	rm -f $(OBJECTS) $(TARGET)
