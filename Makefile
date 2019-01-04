@@ -24,6 +24,15 @@ ifneq ($(GIT_VERSION)," unknown")
 	CXXFLAGS += -DGIT_VERSION=\"$(GIT_VERSION)\"
 endif
 
+SPACE :=
+SPACE := $(SPACE) $(SPACE)
+BACKSLASH :=
+BACKSLASH := \$(BACKSLASH)
+filter_out1 = $(filter-out $(firstword $1),$1)
+filter_out2 = $(call filter_out1,$(call filter_out1,$1))
+unixpath = $(subst \,/,$1)
+unixcygpath = /$(subst :,,$(call unixpath,$1))
+
 ifeq ($(USE_CXX03),1)
 	CXXFLAGS += -DUSE_CXX03
 	#note that this actually doesn't enable C++03 yet
@@ -272,7 +281,7 @@ else ifneq (,$(findstring windows_msvc2017,$(platform)))
 	INCLUDE := $(shell IFS=$$'\n'; cygpath -w "$(VcCompilerToolsDir)/include")
 	LIB := $(shell IFS=$$'\n'; cygpath -w "$(VcCompilerToolsDir)/lib/$(TargetArchMoniker)")
 	ifneq (,$(findstring uwp,$(PlatformSuffix)))
-		LIB := $(shell IFS=$$'\n'; cygpath -w "$(LIB)/store")
+		LIB := $(LIB);$(shell IFS=$$'\n'; cygpath -w "$(LIB)/store")
 	endif
     
 	export INCLUDE := $(INCLUDE);$(WindowsSDKSharedIncludeDir);$(WindowsSDKUCRTIncludeDir);$(WindowsSDKUMIncludeDir)
