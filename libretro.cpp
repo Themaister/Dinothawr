@@ -10,6 +10,8 @@
 #include "utils.hpp"
 #include "audio/mixer.hpp"
 
+#include "libretro_core_options.h"
+
 using namespace Blit::Utils;
 using namespace Icy;
 using namespace std;
@@ -102,11 +104,7 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
 void retro_set_environment(retro_environment_t cb)
 {
    environ_cb = cb;
-   retro_variable vars[] = {
-      { "dino_timer", "Timer as FPS reference; enabled|disabled" },
-      { NULL, NULL },
-   };
-   cb(RETRO_ENVIRONMENT_SET_VARIABLES, vars);
+   libretro_set_core_options(environ_cb);
 }
 
 void retro_set_audio_sample(retro_audio_sample_t cb)
