@@ -320,10 +320,10 @@ CORE_DIR := .
 include Makefile.common
 
 OBJECTS  := $(SOURCES_CXX:.cpp=.o) $(SOURCES_C:.c=.o) $(SOURCES_ASM:.S=.o)
-CXXFLAGS += -DHAVE_ZLIB -ffast-math -Wall $(fpic) -I. -DOV_EXCLUDE_STATIC_CALLBACKS $(INCFLAGS)
-CFLAGS   += -DHAVE_ZLIB -ffast-math $(fpic) $(INCFLAGS)
+CXXFLAGS += -DWANT_ZLIB -ffast-math -Wall $(fpic) -I. -DOV_EXCLUDE_STATIC_CALLBACKS $(INCFLAGS)
+CFLAGS   += -DWANT_ZLIB -ffast-math $(fpic) $(INCFLAGS)
 
-LIBS += -lm -lz -lpthread
+LIBS += -lm -lpthread
 
 OBJOUT   = -o 
 LINKOUT  = -o 
@@ -368,7 +368,6 @@ COMMON_FLAGS := -DIOS $(COMMON_DEFINES) $(INCFLAGS) -I$(THEOS_INCLUDE_PATH) -Wno
 $(LIBRARY_NAME)_CFLAGS += $(CFLAGS)  $(COMMON_FLAGS)
 $(LIBRARY_NAME)_CPPFLAGS += $(CXXFLAGS) $(COMMON_FLAGS)
 ${LIBRARY_NAME}_FILES = $(SOURCES_CXX) $(SOURCES_C)
-${LIBRARY_NAME}_LIBRARIES = z
 ADDITIONAL_CCFLAGS = -std=c++11 -stdlib=libc++
 ADDITIONAL_LDFLAGS = -std=c++11 -stdlib=libc++
 include $(THEOS_MAKE_PATH)/library.mk
@@ -381,7 +380,7 @@ ifeq ($(STATIC_LINKING), 1)
 else
 	$(LD) $(fpic) $(LINKOUT)$@ $(SHARED) $(OBJECTS) $(LDFLAGS) $(LIBS)
 endif
-  
+
 clean:
 	rm -f $(OBJECTS) $(TARGET)
 
