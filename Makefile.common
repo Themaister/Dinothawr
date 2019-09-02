@@ -1,6 +1,6 @@
 LIBRETRO_COMM_DIR := $(CORE_DIR)/libretro-common
 DEPS_DIR          := $(CORE_DIR)/deps
-INCFLAGS := -I$(DEPS_DIR) -I$(CORE_DIR)/audio -I$(DEPS_DIR)/pugixml -I$(DEPS_DIR)/vorbis -I$(DEPS_DIR)/ogg -I$(LIBRETRO_COMM_DIR)/include
+INCFLAGS := -I$(DEPS_DIR) -I$(CORE_DIR)/audio -I$(DEPS_DIR)/pugixml -I$(DEPS_DIR)/vorbis -I$(DEPS_DIR)/ogg -I$(DEPS_DIR)/libz -I$(LIBRETRO_COMM_DIR)/include
 
 SOURCES_ASM := 
 
@@ -43,7 +43,22 @@ SOURCES_C := \
 	$(DEPS_DIR)/vorbis/synthesis.c \
 	$(DEPS_DIR)/vorbis/vorbisenc.c \
 	$(DEPS_DIR)/vorbis/vorbisfile.c \
-	$(DEPS_DIR)/vorbis/window.c
+	$(DEPS_DIR)/vorbis/window.c \
+	$(DEPS_DIR)/libz/adler32.c \
+	$(DEPS_DIR)/libz/compress.c \
+	$(DEPS_DIR)/libz/crc32.c \
+	$(DEPS_DIR)/libz/deflate.c \
+	$(DEPS_DIR)/libz/gzclose.c \
+	$(DEPS_DIR)/libz/gzlib.c \
+	$(DEPS_DIR)/libz/gzread.c \
+	$(DEPS_DIR)/libz/gzwrite.c \
+	$(DEPS_DIR)/libz/infback.c \
+	$(DEPS_DIR)/libz/inffast.c \
+	$(DEPS_DIR)/libz/inflate.c \
+	$(DEPS_DIR)/libz/inftrees.c \
+	$(DEPS_DIR)/libz/trees.c \
+	$(DEPS_DIR)/libz/uncompr.c \
+	$(DEPS_DIR)/libz/zutil.c
 
 ifeq ($(STATIC_LINKING), 1)
 else
