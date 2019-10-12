@@ -66,6 +66,31 @@ else ifeq ($(platform), osx)
 	endif
 
 # iOS
+else ifeq ($(platform), ios-arm64)
+        TARGET := $(TARGET_NAME)_libretro_ios.dylib
+        APPLE := 1
+        SHARED := -dynamiclib
+        fpic := -fPIC
+        ifeq ($(IOSSDK),)
+                IOSSDK := $(shell xcodebuild -version -sdk iphoneos Path)
+        endif
+        CC = clang -arch arm64 -isysroot $(IOSSDK)
+        CXX = clang++ -arch arm64 -isysroot $(IOSSDK)
+        CC_AS = perl ./tools/gas-preprocessor.pl $(CC)
+        CFLAGS += -DIOS -DDONT_WANT_ARM_OPTIMIZATIONS
+
+        CC     += -miphoneos-version-min=8.0
+        CXX    += -miphoneos-version-min=8.0
+        CC_AS  += -miphoneos-version-min=8.0
+        CFLAGS += -miphoneos-version-min=8.0
+        ARCH := arm64
+        HAVE_NEON = 0
+        use_cyclone = 0
+        use_fame = 1
+        use_drz80 = 0
+        use_cz80 = 1
+        use_sh2drc = 0
+        use_svpdrc = 0
 else ifneq (,$(findstring ios,$(platform)))
 
 	TARGET := $(TARGET_NAME)_libretro_ios.dylib
